@@ -41,7 +41,7 @@
 * [如何找出国际化文件(xxxx.strings)中未国际化的文件](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md)
 * [Extract Function/Extract Method](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md)
 * [React Native中自定义iconfont图标库](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md)
-* [判断是否在主队列运行](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md#判断是否在主队列运行)
+* [10-判断是否在主队列运行](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md#10-判断是否在主队列运行)
 
 ## 感谢
 
