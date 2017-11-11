@@ -31,17 +31,14 @@
 
 我们会定期整理微博上分享的内容，然后将最新的内容标题放在这里。更多内容可以查看每月的具体内容。
 
-[2017 年 10 月](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md)
+[2017 年 11 月](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
 
-* [查找未国际化的文字](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md#查找未国际化的文字)
-* [Xcode 9.1对崩溃提示的改进](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md)
-* [删除 iOS 项目中未使用的图片](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md)
-* [Dictionary的mapValue(_:)方法](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md)
-* [如何1秒找出国际化文件(en.lproj/Localizable.strings)语法错误](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md)
-* [如何找出国际化文件(xxxx.strings)中未国际化的文件](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md)
-* [Extract Function/Extract Method](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md)
-* [React Native中自定义iconfont图标库](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md)
-* [判断是否在主队列运行](https://github.com/southpeak/iOS-tech-set/blob/master/2017/10.md#判断是否在主队列运行)
+* [判断代码在哪个队列中运行](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#判断代码在哪个队列中运行)
+* [React Native引入realm网络不好会卡](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#ReactNative引入realm网络不好会卡)
+* [Shell脚本在iOS中的应用 【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#Shell脚本在iOS中的应用)
+* [RxSwift总结 【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#RxSwift总结)
+* [iOS10之后多边形绘制 【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#iOS10之后多边形绘制)
+* [通过导入DSYM使用Instruments做性能分析【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#通过导入DSYM使用Instruments做性能分析)
 
 ## 感谢
 
