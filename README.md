@@ -33,16 +33,17 @@
 
 [2017 年 11 月](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
 
-* [判断代码在哪个队列中运行](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#判断代码在哪个队列中运行)
-* [React Native引入realm网络不好会卡](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#ReactNative引入realm网络不好会卡)
-* [Shell脚本在iOS中的应用 【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#Shell脚本在iOS中的应用)
 * [RxSwift总结 【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#RxSwift总结)
-* [iOS10之后多边形绘制 【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#iOS10之后多边形绘制)
+* [解决React Native引入realm导致编译卡顿问题](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#解决React Native引入realm导致编译卡顿问题)
+* [判断代码在哪个队列中运行](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#判断代码在哪个队列中运行)
 * [通过导入DSYM使用Instruments做性能分析【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#通过导入DSYM使用Instruments做性能分析)
+* [Shell脚本在iOS中的应用 【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#Shell脚本在iOS中的应用)
+* [iOS10之后多边形绘制 【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#iOS10之后多边形绘制)
 
 ## 感谢
 
 在此，感谢以下作者的分享：
 
 [bestswifter](https://weibo.com/bestswifter)
+[Vong_HUST](https://weibo.com/VongLo)
 
