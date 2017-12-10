@@ -60,6 +60,11 @@
 [2017 年 12 月](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
 
 * [iOS中的mach\_continuous\_time()方法【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
+* [objc_getClass和object_getClass【南峰子_老驴】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
+* [Gerrit 是阻挡不了你使用 SourceTree【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
+* [是谁调了我的底层库【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
+* [指定构造器在 UITableViewController 中的坑【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
+* [为断点加条件和简单命令【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
 
 [查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2017/%E7%9B%AE%E5%BD%95.md)
 
