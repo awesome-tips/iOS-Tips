@@ -53,9 +53,5 @@ We really appreciate works done by:
 
 [bestswifter](https://weibo.com/bestswifter)
 
-[Vong_HUST](https://weibo.com/VongLo)
-
 [iOS_OneByte](https://weibo.com/u/5549095051)
-
-[高老师很忙](https://weibo.com/517082456)
 
