@@ -49,6 +49,8 @@
 * [SourceTree 搭配 Kaleidoscope 进行 Code Review【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
 * [Swift 4.0 中 Dictionary 编码成类数组结构的字符串【南峰子_老驴】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
 * [CoreAnimation 与 pop 的对比【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
+* [宏中的 ## 的含义【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
+* [iOS快速解析崩溃日志【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
 
 [查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2017/%E7%9B%AE%E5%BD%95.md)
 
