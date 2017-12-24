@@ -6,6 +6,8 @@
 
 </p>
 
+**[English]()**
+
 ## 初衷
 
 16年某一天，在[__叶孤城](https://weibo.com/u/1438670852)的豪宅里，几个基友讨论了一些技术问题，颇有收获，回去整理了一下。于是就在微博上开了个话题`iOS知识小集`，来分享这些技术点。
@@ -36,27 +38,6 @@
 
 我们会定期整理微博上分享的内容，然后将最新的内容标题放在这里。更多内容可以查看每月的具体内容。
 
-[2017 年 11 月](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
-
-* [RxSwift总结 【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#RxSwift总结)
-* [解决React Native引入realm导致编译卡顿问题](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
-* [判断代码在哪个队列中运行](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#判断代码在哪个队列中运行)
-* [通过导入DSYM使用Instruments做性能分析【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#通过导入DSYM使用Instruments做性能分析)
-* [Shell脚本在iOS中的应用 【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#Shell脚本在iOS中的应用)
-* [iOS10之后多边形绘制 【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md#iOS10之后多边形绘制)
-* [iOS 11中隐藏section头尾的实现【iOS_OneByte】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
-* [小程序和iOS数据绑定【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
-* [ViewController关联XIB文件时初始化方法的调用【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
-* [iOS 清理 cookies](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
-* [判断子类是否实现父类的方法](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
-* [Git恢复被删除的Stash代码【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
-* [使用NSLog可能出现的安全问题【iOS_OneByte】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
-* [pod install 和 pod update 的区别【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
-* [利用Attach方式调试推送、Today、3DTouch【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
-* [为什么我放弃使用系统自带的终端【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
-* [当 iTerm 遇上 ZSH，他们相爱了【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
-* [NSFetchedResultsController兼容性问题【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/11.md)
-
 [2017 年 12 月](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
 
 * [iOS中的mach\_continuous\_time()方法【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
@@ -65,6 +46,8 @@
 * [是谁调了我的底层库【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
 * [指定构造器在 UITableViewController 中的坑【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
 * [为断点加条件和简单命令【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
+* [宏中的 ## 的含义【Lefe_x】]()
+* [iOS快速解析崩溃日志【Vong_HUST】]()
 
 [查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2017/%E7%9B%AE%E5%BD%95.md)
 
