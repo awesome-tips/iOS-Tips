@@ -6,6 +6,8 @@
 
 </p>
 
+**[English](https://github.com/southpeak/iOS-tech-set/blob/master/README_EN.md)**
+
 ## 初衷
 
 16年某一天，在[__叶孤城](https://weibo.com/u/1438670852)的豪宅里，几个基友讨论了一些技术问题，颇有收获，回去整理了一下。于是就在微博上开了个话题`iOS知识小集`，来分享这些技术点。
