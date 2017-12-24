@@ -6,8 +6,6 @@
 
 </p>
 
-**[English]()**
-
 ## 初衷
 
 16年某一天，在[__叶孤城](https://weibo.com/u/1438670852)的豪宅里，几个基友讨论了一些技术问题，颇有收获，回去整理了一下。于是就在微博上开了个话题`iOS知识小集`，来分享这些技术点。
@@ -46,8 +44,9 @@
 * [是谁调了我的底层库【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
 * [指定构造器在 UITableViewController 中的坑【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
 * [为断点加条件和简单命令【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
-* [宏中的 ## 的含义【Lefe_x】]()
-* [iOS快速解析崩溃日志【Vong_HUST】]()
+* [SourceTree 搭配 Kaleidoscope 进行 Code Review【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
+* [Swift 4.0 中 Dictionary 编码成类数组结构的字符串【南峰子_老驴】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
+* [CoreAnimation 与 pop 的对比【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
 
 [查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2017/%E7%9B%AE%E5%BD%95.md)
 
