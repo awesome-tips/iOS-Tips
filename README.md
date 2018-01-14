@@ -29,7 +29,7 @@
  <a href="https://weibo.com/touristdiary"><img style="border-radius: 30px" src="https://tva1.sinaimg.cn/crop.1.0.1366.1366.180/c5ff030ejw8f5bbc70i61j212011yq80.jpg" title="南峰子_老驴" width="60"/></a> | [南峰子_老驴](https://weibo.com/touristdiary) | <a href="https://weibo.com/u/5953150140"><img style="border-radius: 30px" src="https://tva4.sinaimg.cn/crop.8.0.1226.1226.180/006uSOiEjw8f9h4ihstq4j30yi0y2gnq.jpg" title="Lefe_x" width="60"/></a> | [Lefe_x](https://weibo.com/u/5953150140) 
 ------------- | ------------- | ------------- | -------------
 <a href="https://weibo.com/VongLo"><img style="border-radius: 30px" src="https://tvax3.sinaimg.cn/crop.0.0.667.667.180/ba81ca29ly8fhu4meonedj20ij0ijgmh.jpg" title="Vong_HUST" width="60"/></a> | [Vong_HUST](https://weibo.com/VongLo) | <a href="https://weibo.com/soapyigu"><img style="border-radius: 30px" src="https://tva4.sinaimg.cn/crop.14.0.721.721.180/6cf34ee4jw8f8rdmtzzgmj20ku0k10t5.jpg" title="故胤道长" width="60"/></a> | [故胤道长](https://weibo.com/soapyigu)
-<a href="https://weibo.com/517082456"><img style="border-radius: 30px" src="https://tva4.sinaimg.cn/crop.0.0.1242.1242.180/5fe18d75jw8evft9qcjh5j20yi0yigo5.jpg" title="高老师很忙" width="60"/></a> | [高老师很忙](https://weibo.com/517082456) | |
+<a href="https://weibo.com/517082456"><img style="border-radius: 30px" src="https://tva4.sinaimg.cn/crop.0.0.1242.1242.180/5fe18d75jw8evft9qcjh5j20yi0yigo5.jpg" title="高老师很忙" width="60"/></a> | [高老师很忙](https://weibo.com/517082456) |  <a href="https://weibo.com/u/2293476232"><img style="border-radius: 30px" src="https://tvax1.sinaimg.cn/crop.6.0.737.737.180/88b3ab88ly8fnassmyvedj20ku0khgma.jpg" title="_拿破仑的_风火轮_" width="60"/></a>|[\_拿破仑的\_风火轮\_](https://weibo.com/u/2293476232)
 
 
 
@@ -47,6 +47,10 @@
 
 * [为什么音频播放器突然没声音了呢？【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 * [iOS 中音量控制解惑【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [动态修改应用程序的icon【南峰子_老驴】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [iOS 关于音频播放调研【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [iOS中NSArray/NSSet的一些巧妙用法【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [对清除图片缓存的思考【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 
 [查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2018/%E7%9B%AE%E5%BD%95.md)
 
