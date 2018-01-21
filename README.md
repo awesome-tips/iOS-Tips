@@ -51,6 +51,11 @@
 * [iOS 关于音频播放调研【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 * [iOS中NSArray/NSSet的一些巧妙用法【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 * [对清除图片缓存的思考【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [打印App中加载的库【南峰子_老驴】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [自定义WebView的UserAgent【_拿破仑的_风火轮_】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [动画实现竟然可以这么简单，支持 NA 与 Web【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [关于断言的一些用法和坑【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [证书勿随意Revoke【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 
 [查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2018/%E7%9B%AE%E5%BD%95.md)
 
