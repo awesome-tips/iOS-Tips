@@ -51,6 +51,11 @@ Current members:
 * [动画实现竟然可以这么简单，支持 NA 与 Web【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 * [关于断言的一些用法和坑【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 * [证书勿随意Revoke【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [动态加载Framework/Library【南峰子_老驴】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [缓存 NSDateFormatter【_拿破仑的_风火轮_】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [定时器引发的思考【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [另一种形式定时器【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [弱持有容器方案【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 
 [For More: [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2018/%E7%9B%AE%E5%BD%95.md)
 
