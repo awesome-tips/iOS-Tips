@@ -1,10 +1,6 @@
 
 
-<p align="center">
-
-<img src="http://upload-images.jianshu.io/upload_images/1664496-e6faccf569878220.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" title="iOS知识小集" width="557"/>
-
-</p>
+![](https://github.com/southpeak/iOS-tech-set/blob/master/images/Banner.png?raw=true)
 
 **[English](https://github.com/southpeak/iOS-tech-set/blob/master/README_EN.md)**
 
@@ -38,34 +34,21 @@
 
 我们会定期整理微博上分享的内容，然后将最新的内容标题放在这里。更多内容可以查看每月的具体内容。
 
-[2017 年 12 月](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
-
-* [宏中的 ## 的含义【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
-* [iOS快速解析崩溃日志【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2017/12.md)
-
 [2018 年 1 月](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 
-* [为什么音频播放器突然没声音了呢？【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
-* [iOS 中音量控制解惑【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
-* [动态修改应用程序的icon【南峰子_老驴】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
-* [iOS 关于音频播放调研【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
-* [iOS中NSArray/NSSet的一些巧妙用法【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
-* [对清除图片缓存的思考【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
-* [打印App中加载的库【南峰子_老驴】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
-* [自定义WebView的UserAgent【_拿破仑的_风火轮_】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
-* [动画实现竟然可以这么简单，支持 NA 与 Web【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
-* [关于断言的一些用法和坑【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
-* [证书勿随意Revoke【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 * [动态加载Framework/Library【南峰子_老驴】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 * [缓存 NSDateFormatter【_拿破仑的_风火轮_】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 * [定时器引发的思考【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 * [另一种形式定时器【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 * [弱持有容器方案【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
-* [谈一谈iOS平台跨域访问漏洞【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
-* [编译源文件的流程【南峰子_老驴】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
 * [使用AVCaptureSession踩的一个坑【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
-* [利用 Custom event 解决一个小问题【_拿破仑的_风火轮_】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
-* [用xcconfig配置BuildSettings【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+* [谈一谈iOS平台跨域访问漏洞【Lefe_x】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/01.md)
+
+[2018 年 2 月](https://github.com/southpeak/iOS-tech-set/blob/master/2018/02.md)
+
+* [编译源文件的流程【南峰子_老驴】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/02.md)
+* [利用 Custom event 解决一个小问题【_拿破仑的_风火轮_】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/02.md)
+* [用xcconfig配置BuildSettings【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/02.md)
 
 
 [查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2018/%E7%9B%AE%E5%BD%95.md)
