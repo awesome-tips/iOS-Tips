@@ -12,7 +12,8 @@
 
 综合起来整个过程如图所示
 
-![](https://github.com/southpeak/iOS-tech-set/blob/master/images/2018/03/1-1.j'p'g?raw=true)
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/03/1-1.jpg?raw=true)
+
 
 参考链接：https://github.com/CocoaPods/CocoaPods/issues/1822
 
