@@ -6,7 +6,7 @@ def TEACHSET_DESPATH():
 
 # 小集 TEMP 目录，存放每周上传的小集
 def TEACHSET_DESPATH_TEMP():
-    return TEACHSET_DESPATH() + '/TEMP'
+    return TEACHSET_DESPATH() + '/temp'
 
 # 分格线
 def TEACHSET_LINE_CONSTANT():
