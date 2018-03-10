@@ -1,4 +1,4 @@
-iOS知识小集#「 再谈 timer 之 CFRunLoopTimerRef 」
+再谈 timer 之 CFRunLoopTimerRef
 ----
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 

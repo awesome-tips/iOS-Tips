@@ -130,7 +130,7 @@ def save_catalog(catalog):
 
         index += 1
 
-        catalog_one = '* [%s. %s 【%s】](https://github.com/southpeak/iOS-tech-set/blob/master/%s/%s#%s)'%(str(index), teachset_title,author,year,month+tec_constant.TEACHSET_FILE_EXTENSION(),teachset_title)
+        catalog_one = '* [%s. %s 【%s】](https://github.com/southpeak/iOS-tech-set/blob/master/%s/%s)'%(str(index), teachset_title,author,year,month+tec_constant.TEACHSET_FILE_EXTENSION())
 
         year_catalog_file.write('\n' + catalog_one)
 

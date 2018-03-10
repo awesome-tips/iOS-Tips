@@ -49,8 +49,6 @@ def tempfile_teachset_titles_authors():
     return results
 
 
-
-
 # 判断小集的内容模版是否正确
 def is_valid_teachset_template(path):
     teach_set_file = open(path)
@@ -71,6 +69,7 @@ def is_valid_teachset_template(path):
     teach_set_file.close()
 
     return len(matchs_line1) > 0 and len(matchs_line2) > 0
+
 
 # 每个文件中的标题集合
 def all_teachset_titles(path):

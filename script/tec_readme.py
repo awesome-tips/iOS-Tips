@@ -80,6 +80,7 @@ def update_readme_file():
                     else:
                         month_str = '0' + str(month_int - 1)
 
+                temp_file.write('\n')
                 temp_file.write('[%s 年 %s 月](https://github.com/southpeak/iOS-tech-set/blob/master/%s/%s)\n' % (
                 year_str, month_str, year_str, month_str + tec_constant.TEACHSET_FILE_EXTENSION()))
                 catalogs = tec_year_catagoy.catalog_from_month(year_str, month_str)
