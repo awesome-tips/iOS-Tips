@@ -1,4 +1,6 @@
-## Pod 关于 unknown UUID 警告的解决方式
+Pod 关于 unknown UUID 警告的解决方式
+----
+**作者**: [Vong_HUST](https://weibo.com/VongLo)
 
 最近某次在 pod install 之后会发现终端会输出类似
 
@@ -15,5 +17,5 @@
 ![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/03/1-1.jpg?raw=true)
 
 
-参考链接：https://github.com/CocoaPods/CocoaPods/issues/1822
+[参考链接](https://github.com/CocoaPods/CocoaPods/issues/1822)
 

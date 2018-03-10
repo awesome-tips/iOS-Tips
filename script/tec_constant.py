@@ -27,4 +27,4 @@ def TEACHSET_README_FILE_NAME():
 
 # 小集成员
 def TEACHSET_MEMBERS():
-    return  set(['南峰子_老驴.md','Lefe_x.md','Vong_HUST.md','高老师很忙.md','halohily.md'])
+    return  set(['nanfengzi.md','Lefe_x.md','Vong_HUST.md','高老师很忙.md','halohily.md','KANGZUBIN.md'])
