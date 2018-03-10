@@ -116,7 +116,8 @@ def save_catalog(catalog):
         year_catalog_file.write('\n## ' + month + '\n')
 
     index = len(catalog_titles)
-    for (author, teachset_title) in techset_dic.items():
+    for (key, teachset_title) in techset_dic.items():
+        author = key.split('_')[0]
         is_find = False
         # 防止重复插入
         for catalog in catalog_titles:

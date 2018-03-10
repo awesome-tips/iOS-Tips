@@ -27,11 +27,13 @@ def tempfile_teachset_titles_authors():
     root_path = tec_constant.TEACHSET_DESPATH_TEMP()
     paths = os.listdir(root_path)
     results = dict()
+    # 区分作者
+    index = 0
     for compent in paths:
         # 过滤掉隐藏文件
         if compent.startswith('.'):
             continue
-
+        index += 1
         # 每个人的小集目录
         teach_set_path = os.path.join(root_path, compent)
         ext = os.path.splitext(teach_set_path)[1]
@@ -44,7 +46,7 @@ def tempfile_teachset_titles_authors():
                 matchs_author = re.findall(regx, lines[2])
                 if matchs_author:
                     author = matchs_author[0]
-                    results[author] = lines[0].replace('\n','')
+                    results[author + '_' + str(index)] = lines[0].replace('\n','')
 
     return results
 
