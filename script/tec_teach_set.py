@@ -116,7 +116,7 @@ def write_teach_set_to_file(path):
             if len(lines) > 0:
                 f_line = lines[0]
                 if f_line in titles:
-                    print("该小集已经添加：" + f_line)
+                    print("该小集已经添加：" + f_line.strip('\n'))
                     month_temp_file.close()
                     return
             month_temp_file.close()

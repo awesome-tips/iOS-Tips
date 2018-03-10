@@ -70,16 +70,21 @@ def parse_teach_set_file(path):
         print('开始处理 ' + file_name + tec_constant.TEACHSET_LINE_CONSTANT())
         tec_teach_set.write_teach_set_to_file(aPath)
         print('处理完成 ' + file_name + tec_constant.TEACHSET_LINE_CONSTANT())
+        print('\n')
 
     # 保存小集年目录
-    print('\n开始写入目录中 ' + tec_constant.TEACHSET_LINE_CONSTANT())
+    print('开始写入目录中 ' + tec_constant.TEACHSET_LINE_CONSTANT())
     tec_year_catagoy.save_catalog(valid_file_names)
-    print('\n目录写入成功 ' + tec_constant.TEACHSET_LINE_CONSTANT())
+    print('目录写入成功 ' + tec_constant.TEACHSET_LINE_CONSTANT())
+    print('\n')
 
     # 更新 readme 文件
-    print('\n开始写入 readme 文件中 ' + tec_constant.TEACHSET_LINE_CONSTANT())
+    print('开始写入 readme 文件中 ' + tec_constant.TEACHSET_LINE_CONSTANT())
     tec_readme.update_readme_file()
-    print('\nreadme 文件写入成功 ' + tec_constant.TEACHSET_LINE_CONSTANT())
+    print('readme 文件写入成功 ' + tec_constant.TEACHSET_LINE_CONSTANT())
+    print('\n')
+
+    print('本次小集已整理完成，提交前检查一遍')
 
 # 脚本入口
 if __name__ == '__main__':
