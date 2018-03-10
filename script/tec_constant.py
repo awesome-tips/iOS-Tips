@@ -2,7 +2,7 @@
 
  # 小集项目所在的目录
 def TEACHSET_DESPATH():
-    return "/Users/wangsuyan/Desktop/project/iOS-tech-set"
+    return ".."
 
 # 小集 TEMP 目录，存放每周上传的小集
 def TEACHSET_DESPATH_TEMP():
