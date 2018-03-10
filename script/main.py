@@ -52,16 +52,7 @@ def parse_teach_set_file(path):
     if not check_teachsets_valid(path):
         return
 
-    if not  check_members_valid(path):
-        # 需要是否继续执行
-        try:
-            is_continue = input("有成员没有提交小集，是否继续？(1／0）")
-            print(is_continue)
-            if is_continue != 1:
-                return
-        except:
-            print("请输入 0 或 1")
-            return
+    check_members_valid(path)
 
     # 3.所有小集检查成功，开始解析
     print('\n文件合法行检查成功，正在写入' + tec_constant.TEACHSET_LINE_CONSTANT() + '\n')
