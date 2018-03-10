@@ -2,9 +2,9 @@
 
 import os
 import tec_year_catagoy
-import tec_time
 import tec_teach_set
 import tec_constant
+import tec_readme
 
 # 小集零时目录的标题
 valid_file_names = set()
@@ -76,7 +76,10 @@ def parse_teach_set_file(path):
     tec_year_catagoy.save_catalog(valid_file_names)
     print('\n目录写入成功 ' + tec_constant.TEACHSET_LINE_CONSTANT())
 
-
+    # 更新 readme 文件
+    print('\n开始写入 readme 文件中 ' + tec_constant.TEACHSET_LINE_CONSTANT())
+    tec_readme.update_readme_file()
+    print('\nreadme 文件写入成功 ' + tec_constant.TEACHSET_LINE_CONSTANT())
 
 # 脚本入口
 if __name__ == '__main__':

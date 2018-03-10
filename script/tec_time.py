@@ -1,6 +1,5 @@
 # coding=UTF-8
 
-import os
 import datetime
 
 # 当前年，用来定位年文件

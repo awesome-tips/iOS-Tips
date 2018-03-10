@@ -16,6 +16,40 @@ import tec_constant
 import tec_teach_set
 import re
 
+def catalog_from_month(year, month):
+    results = []
+
+    # 某年对应的目录文件
+    year_catalog_file_path = tec_constant.TEACHSET_DESPATH() + '/' + year + '/' + tec_constant.TEACHSET_MONTH_FILE_NAME()
+    if not os.path.exists(year_catalog_file_path):
+        return results
+
+    year_catalog_file = open(year_catalog_file_path, 'r')
+    is_find = False
+    for index, line in enumerate(year_catalog_file):
+        # * [1. Swift中lazy作惰性求值](https://github.com/southpeak/iOS-tech-set/blob/master/2017/01.md#Swift中lazy作惰性求值)
+        line = line.strip('\n')
+        if is_find == False:
+            month_regex = r'^(?:##)\s+([0-9]+)'
+            month_match = re.findall(month_regex, line)
+            if month_match:
+                # 是月标题
+                if month_match[0] == month:
+                    is_find = True
+                    continue
+
+        if not is_find:
+            continue
+
+        # 下个月的标题，结束
+        if line.startswith('##'):
+            break
+
+        results.append(line)
+
+    year_catalog_file.close()
+    return results
+
 def current_month_catalog_titles():
     results = set()
 
