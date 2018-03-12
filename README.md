@@ -28,8 +28,13 @@
 <a href="https://weibo.com/517082456"><img style="border-radius: 30px" src="https://tva4.sinaimg.cn/crop.0.0.1242.1242.180/5fe18d75jw8evft9qcjh5j20yi0yigo5.jpg" title="高老师很忙" width="60"/></a> | [高老师很忙](https://weibo.com/517082456) | <a href="https://weibo.com/u/2293476232"><img style="border-radius: 30px" src="https://tvax1.sinaimg.cn/crop.6.0.737.737.180/88b3ab88ly8fnassmyvedj20ku0khgma.jpg" title="_拿破仑的_风火轮_" width="60"/></a> | [_拿破仑的_风火轮_](https://weibo.com/u/2293476232) 
 <a href="http://weibo.com/halohily"><img style="border-radius: 30px" src="http://ww4.sinaimg.cn/mw690/d9ec7ffcjw8f8a753z961j20e80dp0t3.jpg" title="halohily" width="60"/></a> | [halohily](http://weibo.com/halohily) | <a href="https://weibo.com/kangzubin"><img style="border-radius: 30px" src="https://tva3.sinaimg.cn/crop.0.0.440.440.180/621b53aejw8ekybg28hxzj20c80c83z0.jpg" title="KANGZUBIN" width="60"/></a> | [KANGZUBIN](https://weibo.com/kangzubin) 
 
+## 公众号与Medium
 
+2018年1月份，在 [故胤道长](https://weibo.com/soapyigu) 的推动下，「 小集 」团队在 `Medium` 上开通了账号 [iOS Tech Set](https://medium.com/@iostechset)，并将小集的内容转换成英文，让小集走向了国际化。
 
+2018年3月份，我们又开通了微信公众号`「 知识小集 」`，我们希望通过这个平台来分享更多的开发小知识。在这个平台上，我们会以文章的形式来呈现更多的内容。另外，我们会将每周微博 `#iOS知识小集#` 话题的内容整理成合集放到这个公众号，希望能带来更好的客户端阅读体验。欢迎大家我们的公众号。
+
+<img src="https://raw.githubusercontent.com/iOS-Tips/iOS-tech-set/master/images/qrcode.jpg" title="知识小集" width="200"/>
 
 ## 最新内容
 我们会定期整理微博上分享的内容，然后将最新的内容标题放在这里。更多内容可以查看每月的具体内容。
