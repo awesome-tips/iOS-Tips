@@ -1,76 +1,55 @@
-Objective-C中自定义泛型类
+三个打印类信息的私有方法
 ----
+
 **作者**: [南峰子_老驴](https://weibo.com/touristdiary)
 
+想在 `NSLog` 打印变量的类型信息，无意中找到了看到 `Extended Type Info in Objective-C` 这篇文章，发现了 `NSObject` 的打印类相关信息的三个私有方法，分享一下：
 
-最近看 `Facebook` 的 `promise` 源码，看到 `FBLPromise` 类定义为一个泛型类，所以就温习一下。
+1. `_methodDescription/_shortMethodDescription`：打印接收者的所有实例方法和类方法，包括私有方法；
+2. `_ivarDescription`：打印接收者的成员变量，包括类型和值；
 
-苹果在2015年就为 Objective-C 增加了泛型，我们现在用 `Array`、`Dictionary`、`Set`、`HashTable` 这些类时，一般都会使用泛型来指定元素的类型。除此之外，我们也可以自定义泛型类。如下代码所示，我们定义了一个 `Queue` 泛型类，并使用了 `ObjectType` 作为泛型类型的占位符。然后 `ObjectType` 就可以用于 `Queue` 类的属性、方法参数、成员变量中，作为这些值的类型。
-
-```objc
-@interface Queue<ObjectType> : NSObject
-
-- (void)enqueue:(ObjectType)value;
-- (ObjectType)dequeue;
-
-@end
-
-@implementation Queue {
-    NSMutableArray *_array;
-}
-
-- (instancetype)init {
-    self = [super init];
-    
-    if (self) {
-        _array = [[NSMutableArray alloc] init];
-    }
-    
-    return self;
-}
-
-- (void)enqueue:(id)value {
-    [_array addObject:value];
-}
-
-- (id)dequeue {
-    if (_array.count > 0) {
-        id value = _array[0];
-        [_array removeObjectAtIndex:0];
-        return value;
-    }
-    
-    return nil;
-}
-
-- (NSString *)description {
-    return [NSString stringWithFormat:@"The queue is [%@]", _array];
-}
-
-@end
-```
-
-不过有两点需要注意：
-
-1. `ObjectType` 只能用于类的声明中，即 `@interface` 和 对应的 `@end` 区间内。如果用在类的实现中，即 `@implementation` 中，编译器会报错，提示 “Excepted a type”。因此，在 `@implementation` 中，对应的需要改成 id 。如上代码所示；
-
-2. 在创建对象时，如果指定了泛型类型，那么在具体使用过程中，如果违反了规则，编译器会给出警告，如下代码所示。不过仅此而已，在运行时，你依然可以传递其它类型的值。当然，如果创建对象时没有指定泛型类型，编译器也不会给出警告；
+我们可以如下使用这几个方法：
 
 ```objc
-int main(int argc, const char * argv[]) {
-    @autoreleasepool {
-        // insert code here...
-        NSLog(@"Hello, World!");
-        
-        Queue<NSNumber *> *queue = [[Queue alloc] init];
-        [queue enqueue:@123];
-        [queue enqueue:@"abc"];		// Warning: Incompatible pointer types sending 'NSString *' to parameter of type 'NSNumber *'
-        
-        NSLog(@"%@", queue);
-    }
-    return 0;
-}
+UIView *view = [[UIView alloc] init];
+NSLog(@"%@", [view performSelector:@selector(_ivarDescription)]);
 ```
 
-Objective-C 的泛型是所谓的 `Lightweight Generics`，主要是为了和 Swift 做混编，同时保证了与之前版本的兼容性。
+打印的信息如下所示。
+
+```
+<UIView: 0x7fa18a7022d0>:
+in UIView:
+	_constraintsExceptingSubviewAutoresizingConstraints (NSMutableArray*): nil
+	_cachedTraitCollection (UITraitCollection*): nil
+	_layer (CALayer*): <CALayer: 0x604000222ac0>
+	_layerRetained (CALayer*): <CALayer: 0x604000222ac0>
+	_enabledGestures (int): 0
+	_gestureRecognizers (NSMutableArray*): nil
+	_window (UIWindow*): nil
+	_subviewCache (NSArray*): nil
+	_templateLayoutView (UIView*): nil
+	_charge (float): 0
+	_tag (long): 0
+	_viewDelegate (UIViewController*): nil
+	_backgroundColorSystemColorName (NSString*): nil
+	_countOfMotionEffectsInSubtree (unsigned long): 0
+	_unsatisfiableConstraintsLoggingSuspensionCount (unsigned long): 0
+	_countOfTraitChangeRespondersInDirectSubtree (unsigned long): 1
+	_cachedScreenScale (double): 0
+	_viewFlags (struct ?): {
+		userInteractionDisabled (b1): NO
+		implementsDrawRect (b1): NO
+		implementsDidScroll (b1): NO
+		implementsMouseTracking (b1): NO
+		implementsIntrinsicContentSize (b1): NO
+		hasBackgroundColor (b1): NO
+		......
+```
+
+如果对这些信息感兴趣，可以重写类的 `debugDescription()` 方法，在这个方法里面调用上面几个方法。
+
+需要注意一个问题：这些方法在是 `iOS 7+` 中，在 `UIKit` 里面实现的，所以在 `Mac OS` 中用不了，可以尝试建一个控制台程序，看看结果。
+
+参考：[Extended Type Info in Objective-C](http://bou.io/ExtendedTypeInfoInObjC.html)
 
