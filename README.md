@@ -52,6 +52,11 @@
 * [9. 利用 Git-hook 自动配置不同仓库的用户信息 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/03.md)
 * [10. 三个打印类信息的私有方法 【南峰子】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/03.md)
 * [11. 换一种 Hook 的姿势 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/03.md)
+* [12. iOS9 以后 openURL 和 canOpenURL 使用限制的小误区 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/03.md)
+* [13. 断案高手之otool 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/03.md)
+* [14. 打包时 Xcode 无法及时更新 Provisioning Profile 的解决办法 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/03.md)
+* [15. 使用 Apple Configuration 配置自动加入 Wi-Fi 【南峰子】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/03.md)
+* [16. “偷窥”第三方APP头文件 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/03.md)
 
 ## 感谢
 
