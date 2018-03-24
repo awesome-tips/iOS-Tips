@@ -13,7 +13,7 @@ iOS9 以后 openURL 和 canOpenURL 使用限制的小误区
 
 在查阅了苹果官方文档后，我们发现其实并不是这样的，如下图：
 
-![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/03/6-1.jpg)
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/03/6-1.png)
 
 >**！！！只有 `canOpenURL:` 方法的使用受 `Info.plist` 中声明的 `Scheme` 的限制，而 `openURL:` 方法是不受限制的，不需要事先声明，也没有个数限制。**（其实在 `iOS9` 的某 Beta 版上，`openURL:` 也受同样限制，但苹果后面确认是 Bug，在正式版中已更正过来）
 
@@ -23,7 +23,7 @@ iOS9 以后 openURL 和 canOpenURL 使用限制的小误区
 
 我写了一个 `Demo` 验证了以上说法，如下图所示，在 `Info.plist` 中我先添加了超过 100 个 `Scheme` 后再添加 "weixin"，仍可以通过 `canOpenURL:` 判断是否安装了微信，另外即使没有添加微博的 `Scheme` "sinaweibo" 也可以通过 `openURL:` 正常打开。
 
-![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/03/6-2.jpg)
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/03/6-2.png)
 
 Demo 地址：[TestOpenURL](https://github.com/kangzubin/DevDemo/tree/master/TestOpenURL)
 
