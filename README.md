@@ -58,6 +58,9 @@
 * [15. 使用 Apple Configuration 配置自动加入 Wi-Fi 【南峰子】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/03.md)
 * [16. “偷窥”第三方APP头文件 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/03.md)
 
+[查看更多: [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2018/%E7%9B%AE%E5%BD%95.md)
+[查看更多: [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2017/%E7%9B%AE%E5%BD%95.md)
+
 ## 感谢
 
 在此，感谢以下作者的分享：
