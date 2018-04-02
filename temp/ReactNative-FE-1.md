@@ -44,7 +44,7 @@ ReactNative从入门到精通(2)-理解iOS开发-FE向
 
 ## iOS的编译过程
 
-![iOS开发三剑客](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/04/2-2.png)
+![iOS编译过程](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/04/2-2.png)
 
 这里我们不展开讲了, 在你按Command+R的时候系统会帮你做很多. 具体的编译过程可以查看[动手玩 LLVM](https://xiaozhuanlan.com/topic/3169254807)
 
@@ -73,7 +73,7 @@ FE这里很多时候会被接口的错误返回值给坑了. 不过FE表现是�
 
 ## 包管理方案对比
 
-![iOS开发三剑客](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/04/2-3.png)
+![cocoaPods vs npm](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/04/2-3.png)
 
 
 这个就要好好吐槽一下iOS开发了, 苹果爸爸这么有钱都没有把自己的开发人员搞舒服.
@@ -93,7 +93,7 @@ iOS上使用CocoaPods来做包管理. 和NPM做下对比
 
 这里值得一提的是 很多 第三方的RN组件, 都选择用NPM来管理 iOS/Android 的源代码. RN本身的安装包也托管在 NPM的cdn上. 然后 iOS项目从 ../node_modules/ 中去加载iOS代码
 
-![iOS开发三剑客](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/04/2-4.png)
+![Podfile](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/04/2-4.png)
 
 
 ## RN-Cli  命令
@@ -105,7 +105,7 @@ iOS上使用CocoaPods来做包管理. 和NPM做下对比
 
 问: 为什么我在Xcode中 Command+R 可以自动打开 NodeServer 和 模拟器
 
-![iOS开发三剑客](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/04/2-5.png)
+![Build Phase/shell](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/04/2-5.png)
 
 答: Xcode 可以配置在你 Run的时候顺便执行一些 shell脚本. 基本都在 `node_modules/react-native/Packager` 中
 
