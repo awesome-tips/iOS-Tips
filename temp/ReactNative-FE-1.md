@@ -93,7 +93,7 @@ iOS上使用CocoaPods来做包管理. 和NPM做下对比
 
 这里值得一提的是 很多 第三方的RN组件, 都选择用NPM来管理 iOS/Android 的源代码. RN本身的安装包也托管在 NPM的cdn上. 然后 iOS项目从 ../node_modules/ 中去加载iOS代码
 
-![Podfile](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/04/2-4.png)
+![Podfile](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/04/2-4.png)
 
 
 ## RN-Cli  命令
