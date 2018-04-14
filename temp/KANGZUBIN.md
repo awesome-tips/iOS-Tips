@@ -1,6 +1,5 @@
 如何优雅地获取 ScrollView 的滚动方向
 --------
-
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
 在有些场景，我们可能需要获取 `UIScrollView`（及其子类）的滚动方向来做不同的操作。
