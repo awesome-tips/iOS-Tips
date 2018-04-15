@@ -15,6 +15,7 @@ import tec_time
 import tec_constant
 import tec_teach_set
 import re
+from urllib import quote
 
 def catalog_from_month(year, month):
     results = []
@@ -131,7 +132,12 @@ def save_catalog(catalog):
 
         index += 1
 
-        catalog_one = '* [%s. %s 【%s】](https://github.com/southpeak/iOS-tech-set/blob/master/%s/%s)'%(str(index), teachset_title,author,year,month+tec_constant.TEACHSET_FILE_EXTENSION())
+        header = '* [%s. %s 【%s】]'%(str(index), teachset_title,author)
+        url_source = 'https://github.com/southpeak/iOS-tech-set/blob/master'
+        url_end = '#' + teachset_title
+        teach_set_url = '%s/%s/%s%s'%(url_source,year,month+tec_constant.TEACHSET_FILE_EXTENSION(),url_end)
+        encode_url = quote(teach_set_url)
+        catalog_one = '%s(%s)'%(header,encode_url)
 
         year_catalog_file.write('\n' + catalog_one)
 
