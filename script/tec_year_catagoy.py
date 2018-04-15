@@ -60,6 +60,7 @@ def catalog_from_month(year, month):
     year_catalog_file.close()
     return results
 
+# 根据年目录查找标题
 def current_month_catalog_titles():
     results = set()
 
@@ -150,6 +151,44 @@ def save_catalog(catalog):
         year_catalog_file.write('\n' + catalog_one)
 
 
+# 根据年月录查找标题
+def year_month_catalog_titles(year, month):
+    results = []
+
+    # 某年对应的目录文件
+    year_catalog_file_path = tec_constant.TEACHSET_DESPATH() + '/' + year + '/' + tec_constant.TEACHSET_MONTH_FILE_NAME()
+    if not os.path.exists(year_catalog_file_path):
+        return results
+
+    year_catalog_file = open(year_catalog_file_path, 'r')
+    is_find = False
+    for index, line in enumerate(year_catalog_file):
+        print(line)
+        # * [1. Swift中lazy作惰性求值](https://github.com/southpeak/iOS-tech-set/blob/master/2017/01.md#Swift中lazy作惰性求值)
+        line = line.strip()
+        if is_find == False:
+            month_regex = r'^(?:##)\s+([0-9]+)'
+            month_match = re.findall(month_regex, line)
+            if month_match:
+                # 是月标题
+                if month_match[0] == month:
+                    is_find = True
+                    continue
+
+        if not is_find:
+            continue
+
+        # 下个月的标题，结束
+        if line.startswith('##'):
+            break
+
+        regex = r'^(?:\*)\s*\[(.{0,})\]'
+        title_match = re.findall(regex, line)
+        for item in title_match:
+            results.append(item)
+
+    year_catalog_file.close()
+    return results
 
 # 脚本入口
 if __name__ == '__main__':
@@ -187,3 +226,6 @@ if __name__ == '__main__':
         print('falied')
     print('=======')
     print(encode_title)
+
+    titles = year_month_catalog_titles('2018', '01')
+    print(titles)
