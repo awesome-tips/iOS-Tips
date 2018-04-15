@@ -17,6 +17,15 @@ import tec_teach_set
 import re
 from urllib import quote
 
+def github_url_encode(url):
+    encode_title = url
+    encode_title = encode_title.replace(' ', '-')
+    encode_title = encode_title.replace('?', '')
+    encode_title = encode_title.lower()
+    encode_title = quote(encode_title)
+
+    return encode_title
+
 def catalog_from_month(year, month):
     results = []
 
@@ -134,7 +143,7 @@ def save_catalog(catalog):
 
         header = '* [%s. %s 【%s】]'%(str(index), teachset_title,author)
         url_source = 'https://github.com/southpeak/iOS-tech-set/blob/master/%s/%s#'%(year,month+tec_constant.TEACHSET_FILE_EXTENSION())
-        encode_title = quote(teachset_title)
+        encode_title = github_url_encode(teachset_title)
 
         catalog_one = '%s(%s%s)'%(header,url_source,encode_title)
 
@@ -161,3 +170,20 @@ if __name__ == '__main__':
     authorMatch = re.findall(author_regx, author)
     for item in authorMatch:
         print(item)
+
+
+
+    encode_title = 'iOS 你的APP中能藏的住秘密吗?'
+    encode_result = 'ios-%E4%BD%A0%E7%9A%84app%E4%B8%AD%E8%83%BD%E8%97%8F%E7%9A%84%E4%BD%8F%E7%A7%98%E5%AF%86%E5%90%97'
+                    #'ios-%E4%BD%A0%E7%9A%84app%E4%B8%AD%E8%83%BD%E8%97%8F%E7%9A%84%E4%BD%8F%E7%A7%98%E5%AF%86%E5%90%97'
+                    #'ios-%E4%BD%A0%E7%9A%84app%E4%B8%AD%E8%83%BD%E8%97%8F%E7%9A%84%E4%BD%8F%E7%A7%98%E5%AF%86%E5%90%97%EF%BC%9F'
+    encode_title = encode_title.replace(' ', '-')
+    encode_title = encode_title.replace('?', '')
+    encode_title = encode_title.lower()
+    encode_title = quote(encode_title)
+    if encode_result == encode_title:
+        print('successful')
+    else:
+        print('falied')
+    print('=======')
+    print(encode_title)
