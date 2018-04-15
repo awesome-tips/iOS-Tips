@@ -133,11 +133,10 @@ def save_catalog(catalog):
         index += 1
 
         header = '* [%s. %s 【%s】]'%(str(index), teachset_title,author)
-        url_source = 'https://github.com/southpeak/iOS-tech-set/blob/master'
-        url_end = '#' + teachset_title
-        teach_set_url = '%s/%s/%s%s'%(url_source,year,month+tec_constant.TEACHSET_FILE_EXTENSION(),url_end)
-        encode_url = quote(teach_set_url)
-        catalog_one = '%s(%s)'%(header,encode_url)
+        url_source = 'https://github.com/southpeak/iOS-tech-set/blob/master/%s/%s#'%(year,month+tec_constant.TEACHSET_FILE_EXTENSION())
+        encode_title = quote(teachset_title)
+
+        catalog_one = '%s(%s%s)'%(header,url_source,encode_title)
 
         year_catalog_file.write('\n' + catalog_one)
 
