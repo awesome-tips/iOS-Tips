@@ -87,17 +87,17 @@ def update_readme_file():
                 for line in catalogs:
                     temp_file.write(line + '\n')
 
-                # 查看更多
-                current_year = datetime.datetime.now().year
+            # 查看更多
+            current_year = datetime.datetime.now().year
+            year_path = tec_constant.TEACHSET_DESPATH() + '/' + str(
+            current_year) + '/' + tec_constant.TEACHSET_MONTH_FILE_NAME()
+            temp_file.write('\n')
+            while (os.path.exists(year_path)):
+                temp_file.write(
+                    '[[%s]查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/%s/%s)\n\n' %(current_year, current_year, tec_constant.TEACHSET_MONTH_FILE_NAME()))
+                current_year -= 1
                 year_path = tec_constant.TEACHSET_DESPATH() + '/' + str(
                     current_year) + '/' + tec_constant.TEACHSET_MONTH_FILE_NAME()
-                temp_file.write('\n')
-                while (os.path.exists(year_path)):
-                    temp_file.write(
-                        '[[%s]查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/%s/%s)\n\n' %(current_year, current_year, tec_constant.TEACHSET_MONTH_FILE_NAME()))
-                    current_year -= 1
-                    year_path = tec_constant.TEACHSET_DESPATH() + '/' + str(
-                        current_year) + '/' + tec_constant.TEACHSET_MONTH_FILE_NAME()
 
     readme_file.close()
     temp_file.close()
