@@ -1,0 +1,238 @@
+/*http://md.aclickall.com/*/
+
+/* 代码主题：atelier-seaside-light */
+
+/*可任意修改样式，或恢复预设值，保存后生效
+相对“默认样式”而作的修改会用  红色 标注*/
+
+/*此属性为全局*/
+.output_wrapper {
+  font-size: 16px;
+  color: #3e3e3e;
+  line-height: 2.5;
+  word-spacing: 0px; 
+  letter-spacing: 0px;
+  font-family: "Helvetica Neue",Helvetica,"Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;   
+}
+
+.output_wrapper * {
+  font-size: inherit;
+  color: inherit;
+  line-height: inherit;
+  margin: 0px;
+  padding: 0px;
+}
+
+p { margin: 1.5em 0px; }
+
+h1,h2,h3,h4,h5,h6 {
+  margin: 1.5em 0px;
+  font-weight:bold;
+  color: #E26A00 !important;
+  text-align: left;
+  margin: 1em 0px !important;
+  padding: 0.2em 0em !important;
+}
+
+h1 { font-size: 24px; }
+h2 { font-size: 20px; border-bottom: 1px solid rgb(238, 238, 238) !important;}
+h3 { font-size: 18px; }
+h4 { font-size: 16px; }
+h5 { font-size: 16px; }
+h6 { font-size: 14px; }
+
+ul, ol { padding-left: 32px; }
+ul { list-style-type: disc; }           /*无序列表*/
+ol { list-style-type: decimal; }        /*有序列表*/
+li * { /* color: #3e3e3e;*/ } 
+
+/*在公众号下，改变不了li符号的属性（如颜色），并会影响其子元素的属性; 而在其它博客平台中，则能正常使用*/ 
+li { margin-bottom: 0.5em; }
+
+/*代码块默认size*/
+.code_size_default {
+  line-height: 18px;
+  font-size: 14px; 
+  font-weight:normal;
+  word-spacing:0px; 
+  letter-spacing:0px; 
+}
+
+/*代码块紧凑size*/
+.code_size_tight 
+{
+  line-height: 15px; 
+  font-size: 11px; 
+  font-weight:normal;
+  word-spacing:-3px; 
+  letter-spacing:0px; 
+}
+
+/*代码块*/
+pre code {           
+  font-family: Consolas, Inconsolata, Courier, monospace;
+  border-radius: 0px;
+}
+
+/*引用块*/
+blockquote { 
+  display: block;
+  padding: 15px 1rem;
+  font-size: 0.9em;
+  padding-right: 15px;
+  margin: 1em 0;
+  color: rgb(119, 119, 119);
+  border-left: 3px solid rgb(0, 150, 136);
+  quotes: none;
+  background: #f2f7fb;
+  overflow: auto;
+  overflow-scrolling: touch; 
+  word-wrap: normal;
+  word-break: normal;  
+}
+
+blockquote p {
+  margin: 0px;
+  color: #898989;
+}
+
+
+/*超链接*/
+a { 
+  text-decoration: none;
+  color: #1e6bb8;
+  word-wrap:break-word;
+}
+
+strong { font-weight: bold; }   /*强调*/
+em { font-style:italic; }       /*斜体*/
+del { font-style:italic; }      /*删除线*/
+
+strong em { font-weight: bold; }  /*强调的斜体*/
+
+/*分隔线*/
+hr {  
+  height: 1px;
+  margin: 1.5rem 0px;
+  border: none;
+  border-top: 1px dashed #A5A5A5;
+}
+
+/*行内代码*/
+code {
+  word-wrap: break-word;
+  padding: 2px 4px;
+  border-radius: 4px;
+  margin:0 2px;
+  color:#e96900;
+  background:#f8f8f8;
+}
+
+img {
+  display: block;
+  margin:0 auto;  /*图片水平居中*/
+  /* margin:0 0;  */ /*图片水平居左，如需要请打开*/
+  max-width:100%;
+}
+
+/*图片描述文字*/
+figcaption {
+  margin-top:10px;
+  text-align:center;
+   /* text-align:left;  */ /*当图片水平居左时，请打开*/
+  color:#999;
+  font-size: 0.7em;
+}
+
+/*================表格开始================*/
+table {
+  display:table;
+  width: 100% ;
+  text-align: left;
+}
+
+tbody {
+  border: 0;
+}
+
+table tr {
+  border: 0;
+  border-top: 1px solid #CCC;
+  background-color: white; 
+}
+
+/*隔行改变行的背景色，如需要请打开*/
+/*
+table tr:nth-child(2n) {
+  background-color: #F8F8F8;
+}
+*/
+
+table tr th, table tr td {
+  font-size: 1em;
+  border: 1px solid #CCC;
+  padding: 0.5em 1em;
+  text-align: left;
+}
+
+/*表头的属性*/
+table tr th {
+ font-weight: bold;
+  background-color: #F0F0F0;
+}
+
+/*================表格结束================*/
+
+/*数学公式*/
+.katex-display {
+  font-size: 1.5em;
+}
+
+a[href^="#"] sup
+{/*注脚*/
+  vertical-align:super;
+  margin:0 2px;  
+  padding:1px 3px; 
+  color: #ffffff;
+  background:#666666;
+  font-size:0.7em;
+}
+
+/*================任务列表开始================*/
+.task-list-list { list-style-type: none; }
+.task-list-list.checked { color: #3e3e3e; }   /*已完成*/
+.task-list-list.uncheck { color: #bfc1bf; }   /*未完成*/
+.task-list-list .icon_uncheck, .task-list-list .icon_check {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+/*已完成*/
+.task-list-list .icon_check:before {
+  content: "√";
+  border: 2px solid #3e3e3e;
+  color:red;
+}
+
+/*未完成*/
+.task-list-list .icon_uncheck:before {
+  content: "x";
+  border: 2px solid #bfc1bf;
+  color: #bfc1bf;
+}
+
+/*标志框*/
+.task-list-list .icon_check:before, .task-list-list .icon_uncheck:before {
+  padding:2px;
+  padding-left: 5px;
+  padding-right: 8px;
+  border-radius:5px;
+}
+/*================任务列表结束================*/
+
+.toc { margin-left:25px; }            /*总目录*/
+.toc_item { display:block; }          /*每条目录*/
+.toc_left { margin-left:25px; }       /*每级目录的缩进*/
+
+.num { font-size: 40px; color: #e26a00; }
