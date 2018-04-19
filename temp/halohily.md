@@ -1,18 +1,19 @@
-webview关闭时手动停止音频播放
+我们可以利用 NSURLProtocol 做什么
 --------
 **作者**: [halohily](https://weibo.com/halohily)
 
-当我们使用 webview 展示网页时，页面内若含有音频标签，点击播放，这时关闭带有 webview 的 VC，会发现即使 webview 已经被释放，音频还是没有停止。这时可以采用比较快捷的方法来做到 webview 被关闭时停止正在播放的音频：webview 重新 load 页面，或者执行停止音频播放的 JavaScript 语句。
+今天和大家聊一聊 NSURLProtocol，可能你已经听说过它。因篇幅有限，这里不讲解具体的使用方式，主要是和大家聊一聊我们可以利用 NSURLProtocol 做的一系列事情，权当抛砖引玉，大家可以根据自己的需要去深入了解。
 
-这里以 UIWebview 举例，WKWebview 同理。
+简单来说 NSURLProtocol 是苹果 URL Loading System 中的一个抽象类。通过实现其子类并注册到 app 中，我们可以拦截 app 中的网络请求。那么拦截网络请求可以做什么呢？这里举几个小例子：
 
-方法一：重新 load 一个空白页面
+- app 内置了测试服、正式服的切换开关，需要通过开关一键切换所有网络请求使用的 server地址。
+- 项目内部分模块使用了 ReactNative，需要动态配置由前端发出的网络请求 server 地址（特殊在于虽然是前端发出，但并非来自 webview ）。这个例子和例 1 类似。
+- 项目内含有 hybrid 模块。对 hybrid 页面加速的一个策略，可以是客户端在合适时机提前缓存资源文件，并且以与 webview 加载资源的路径相对应的方式存储在本地。这样当 webview 加载资源时，通过拦截判断是否是本地已经存在的资源的请求，如果是，则使用本地资源构造 response 。这样可以显著提升被过多资源请求影响的加载速度。
+- 限制 app 内 webview 的跳转行为，例如禁止向某域名下的跳转，或者对于某个域名下的跳转做重定向操作。当然这些使用 webview 的代理方法也可以做到。
+- 对于 app 内发出的所有网络请求，需要添加公共的 header 内容。
+- 需要统计 app 内各处对某个 api 的调用次数等数据。
+- 需要统计 app 内的网络请求失败率。
 
-> [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
-
-方法二：手动执行停止音频的 JavaScript 语句
-
-> [self.webView stringByEvaluatingJavaScriptFromString:@"audioPause()"];
-
-当然，这两种方法都是比较简便但不优雅的实现方式，适合轻度使用 webview 的场景。如果你们对于 webview 做了比较多的加工，是可以监听 webview 中的音频、视频任务，来手动停止的。
+参考链接：
+- https://juejin.im/post/584f9d0a128fe10058b8c4b6
 
