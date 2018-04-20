@@ -28,7 +28,7 @@
 <a href='https://weibo.com/VongLo'>
 <img src='https://tvax3.sinaimg.cn/crop.0.0.667.667.180/ba81ca29ly8fhu4meonedj20ij0ijgmh.jpg'>
 </a>
-<h4 align='center'><a href=''>Vong_HUST</a></h4>
+<h4 align='center'><a href='http://vongloo.me/'>Vong_HUST</a></h4>
 <h6 align='center'>OC,Swift</h6>
 </td>
 
