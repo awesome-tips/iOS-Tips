@@ -61,7 +61,7 @@
 <a href='https://weibo.com/kangzubin'>
 <img src='https://tva3.sinaimg.cn/crop.0.0.440.440.180/621b53aejw8ekybg28hxzj20c80c83z0.jpg'>
 </a>
-<h4 align='center'><a href=''>KANGZUBIN</a></h4>
+<h4 align='center'><a href='https://kangzubin.com'>KANGZUBIN</a></h4>
 <h6 align='center'>OC,Swift</h6>
 </td>
 </tr>
