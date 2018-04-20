@@ -39,7 +39,6 @@
 <h4 align='center'><a href=''>故胤道长</a></h4>
 <h6 align='center'>OC,Swift</h6>
 </td>
-</tr>
 
 <td id='高老师很忙'>
 <a href='https://weibo.com/517082456'>
