@@ -13,7 +13,6 @@
     NSArray *testArray = @[@"1", @"2", @"3"];
     NSLog(@"%@", testArray[4]);
 }
-
 ```
 
 此时在控制台执行如下命令：
