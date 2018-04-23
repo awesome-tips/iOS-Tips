@@ -1,19 +1,50 @@
-我们可以利用 NSURLProtocol 做什么
+说说 NSTimer 的新 API
 --------
 **作者**: [halohily](https://weibo.com/halohily)
 
-今天和大家聊一聊 NSURLProtocol，可能你已经听说过它。因篇幅有限，这里不讲解具体的使用方式，主要是和大家聊一聊我们可以利用 NSURLProtocol 做的一系列事情，权当抛砖引玉，大家可以根据自己的需要去深入了解。
+在以往的 iOS 版本中，我们为了避免 NSTimer 的循环引用问题，一个比较常用的解决办法是为 NSTimer 添加一个 category，新增传入 block 类型参数的接口。分类内部实现是将此 block 作为 NSTimer 的 userInfo 参数传入，而 NSTimer的 target 则设置为 timer 自己。以此来避免 NSTimer 持有 VC。代码如下:
 
-简单来说 NSURLProtocol 是苹果 URL Loading System 中的一个抽象类。通过实现其子类并注册到 app 中，我们可以拦截 app 中的网络请求。那么拦截网络请求可以做什么呢？这里举几个小例子：
+```objective-c
+// NSTimer+BlocksSupport.h
+#import <Foundation/Foundation.h>
 
-- app 内置了测试服、正式服的切换开关，需要通过开关一键切换所有网络请求使用的 server地址。
-- 项目内部分模块使用了 ReactNative，需要动态配置由前端发出的网络请求 server 地址（特殊在于虽然是前端发出，但并非来自 webview ）。这个例子和例 1 类似。
-- 项目内含有 hybrid 模块。对 hybrid 页面加速的一个策略，可以是客户端在合适时机提前缓存资源文件，并且以与 webview 加载资源的路径相对应的方式存储在本地。这样当 webview 加载资源时，通过拦截判断是否是本地已经存在的资源的请求，如果是，则使用本地资源构造 response 。这样可以显著提升被过多资源请求影响的加载速度。
-- 限制 app 内 webview 的跳转行为，例如禁止向某域名下的跳转，或者对于某个域名下的跳转做重定向操作。当然这些使用 webview 的代理方法也可以做到。
-- 对于 app 内发出的所有网络请求，需要添加公共的 header 内容。
-- 需要统计 app 内各处对某个 api 的调用次数等数据。
-- 需要统计 app 内的网络请求失败率。
+@interface NSTimer (BlocksSupport)
++ (NSTimer *)ly_scheduledTimerWithTimeInterval:(NSTimeInterval)interval
+repeats:(BOOL)repeats
+block:(void(^)())block;
+@end
 
-参考链接：
-- https://juejin.im/post/584f9d0a128fe10058b8c4b6
+// NSTimer+BlocksSupport.m
+#import "NSTimer+BlocksSupport.h"
+
+@implementation NSTimer (BlocksSupport)
++ (NSTimer *)ly_scheduledTimerWithTimeInterval:(NSTimeInterval)interval
+repeats:(BOOL)repeats
+block:(void(^)())block;
+{
+return [self scheduledTimerWithTimeInterval:interval
+target:self
+selector:@selector(ly_blockInvoke:)
+userInfo:[block copy]
+repeats:repeats];
+}
++ (void)ly_blockInvoke:(NSTimer *)timer {
+void (^block)() = timer.userInfo;
+if(block) {
+block();
+}
+}
+@end
+```
+
+而在 iOS 10 之后，苹果终于为 NSTimer 添加了一个官方 API，支持传入 block 类型参数。可谓是千呼万唤始出来。新官方 API 包括：
+
+```objective-c
++ (NSTimer *)timerWithTimeInterval:(NSTimeInterval)interval
+repeats:(BOOL)repeats
+block:(void (^)(NSTimer *timer))block API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0));
++ (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)interval
+repeats:(BOOL)repeats
+block:(void (^)(NSTimer *timer))block API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0));
+```
 
