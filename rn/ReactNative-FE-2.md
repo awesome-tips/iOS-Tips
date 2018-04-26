@@ -37,8 +37,12 @@ ReactNative从入门到精通(2)-理解iOS开发-FE向
 
 主要变化有二
 
-1. 增加了Library目录. 如果你使用`react-native init`来初始化程序的话也会RN的主文件也会在Library目录下. 但这非常不 `Cocoapods`
-![rn-2-2](../images/2018/04/rn-2-2.png)
+1. 增加了Library目录. 如果你使用`react-native init`来初始化程序的话也会RN的主文件也会在Library目录下. 但这非常不 `Cocoapods`. 下面举例的是已经Pod化的项目又运行了`react-native link` 后的效果
+![react-native link](../images/2018/04/rn-2-2.png)
+
+大家可以对比下`react-native init AwesomeProject` 初始化之后的项目结构. 有没有和上面很像, 其实他就是通过批量执行`link`, 把RN自身的一些Project 统统放到了Libraries下面. 并且帮你加好`Linked Frameworks and Libraries`. 这个原理和 [`carthage`](http://swiftcafe.io/2015/10/25/swift-daily-carthage-package)(iOS 上另一个包管理工具) 不太一样
+
+![react-native init AwesomeProject](../images/2018/04/rn-2-5.png)
 
 
 2. Build Phases 中的Link Binary with Libraries 增加了静态库的依赖. 这个变动打破了我们使用Pod来管理项目的优美感.还加个了 tvOS.a 搞得我们会为AppleTV作支持一样,-_-!
