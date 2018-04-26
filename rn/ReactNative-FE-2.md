@@ -22,7 +22,7 @@ ReactNative从入门到精通(2)-理解iOS开发-FE向
 
 大家可以先想一下`Pod install`帮你做了什么,详情查看[细聊 Cocoapods 与 Xcode 工程配置](https://bestswifter.com/cocoapods/)
 
-简单总结如下: 
+### 简单总结如下: 
 
 * 项目结构改变: 主工程.xcodeproj + pod.xcodeproj编译, 同时生成了 .xcworkspace项目 
 * 项目依赖改变: 会自动引入第三库依赖的系统动态库,前提repo的`podspec`中声明了需要哪些frameworks. 
@@ -35,9 +35,10 @@ ReactNative从入门到精通(2)-理解iOS开发-FE向
 
 它会同时在你帮你修改Android项目和iOS项目.实际上他在调用`react-native link`的前身是[`rnpm-install`](https://github.com/rnpm/rnpm),主要开发人员也加入了RNCoreTeam,下面会解释`react-native link`做了什么.
 
-主要变化有二
+### 主要变化有二:
 
-1. 增加了Library目录. 如果你使用`react-native init`来初始化程序的话也会RN的主文件也会在Library目录下. 但这非常不 `Cocoapods`. 下面举例的是已经Pod化的项目又运行了`react-native link` 后的效果
+1.增加了Library目录. 如果你使用`react-native init`来初始化程序的话也会RN的主文件也会在Library目录下. 但这非常不 `Cocoapods`. 下面举例的是已经Pod化的项目又运行了`react-native link` 后的效果
+
 ![react-native link](../images/2018/04/rn-2-2.png)
 
 大家可以对比下`react-native init AwesomeProject` 初始化之后的项目结构. 有没有和上面很像, 其实他就是通过批量执行`link`, 把RN自身的一些Project 统统放到了Libraries下面. 并且帮你加好`Linked Frameworks and Libraries`. 这个原理和 [`carthage`](http://swiftcafe.io/2015/10/25/swift-daily-carthage-package)(iOS 上另一个包管理工具) 不太一样
@@ -45,7 +46,7 @@ ReactNative从入门到精通(2)-理解iOS开发-FE向
 ![react-native init AwesomeProject](../images/2018/04/rn-2-5.png)
 
 
-2. Build Phases 中的Link Binary with Libraries 增加了静态库的依赖. 这个变动打破了我们使用Pod来管理项目的优美感.还加个了 tvOS.a 搞得我们会为AppleTV作支持一样,-_-!
+2.Build Phases 中的Link Binary with Libraries 增加了静态库的依赖. 这个变动打破了我们使用Pod来管理项目的优美感.还加个了 tvOS.a 搞得我们会为AppleTV作支持一样,-_-!
 
 ![rn-2-4](../images/2018/04/rn-2-4.png)
 
@@ -66,7 +67,8 @@ pod 'RNSVG', :path => '../node_modules/react-native-svg'
 ```
 几乎所有的第三方RN库都支持 Pod 的方式引入的.
 
-最终效果长这样
+
+我使用了SVG搞了个小demo,下一步会用它做图标字体.效果如下,空心字,绘图等
 ![rn-2-3](../images/2018/04/rn-2-6.png)
 
 
@@ -88,12 +90,13 @@ pod 'RNSVG', :path => '../node_modules/react-native-svg'
 ##  Android 上如何理解
 
 首先Gradle是一个Java系语言的自动化构建工具, 使用一种基于Groovy的特定领域语言来声明项目设置，而不是XML也不是JSON.这个世界里ruby没有去插手. 
-Android 项目的依赖是使用的`Maven`(Java的包管理工具,也支持多种repo源, 也支持私有部署)的去管理的, 类比`Cocoapods`.
-`Gradle` 可以类比成 `Fastlane`.大部分功能重合, 签名,打包,发布.
+
+Android 项目的依赖是使用的`Maven`(Java的包管理工具,支持多种repo源, 也支持私有部署)去管理, 可以类比`Cocoapods`.
+`Gradle` 可以类比 `Fastlane`. 大部分功能重合,例如: 签名,打包,发布.
 
 ## 总结
 
-使用 Cocoapods/Gradle 可以更简单的整合RN三方组件, 进一步降低了FE同学们学习的难度.全程不需要打开Xcode.
+使用 Cocoapods/Gradle 可以更简单的整合RN三方组件, 进一步降低了FE同学们学习的难度.而且全程不需要打开Xcode.
 
 `Dive Deep & Enjoy Coding`
 
