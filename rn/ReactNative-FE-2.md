@@ -8,6 +8,7 @@ ReactNative从入门到精通(2)-理解iOS开发-FE向
 ## 和RN相关的一些Native知识
 
 上一篇文章主要简单介绍了iOS的编译过程, 对比了下两个平台的包管理工具.
+
 这里值得一提的是`React-Native`自身和一些第三方的库都使用了NPM来管理和托管代码, 不像`Pod`依赖github来托管. 这样`Pod`或者`Gradle`(Android Build Tool)都可以从本地的node_modules目录中加载代码了.
 
 那么问题来了

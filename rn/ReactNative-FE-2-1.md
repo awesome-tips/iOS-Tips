@@ -7,7 +7,7 @@ ReactNative从入门到精通(2)-第三方库的管理
 
 上一篇文章主要简单介绍了 `iOS` 的开发工具、编译过程，对比了下两个平台的包管理工具。
 
-这里值得一提的是 `React Native` 自身和一些第三方的库都使用了 **`NPM`** 来管理代码，实际上 `Pod` 或者 `Gradle` (Android Build Tool) 都是从 `node_modules` 目录中加载 `Native` 的库。
+这里值得一提的是`React-Native`自身和一些第三方的库都使用了 **`NPM`** 来管理和托管代码, 不像`Pod`依赖github来托管. 这样`Pod`或者`Gradle`(Android Build Tool)都可以从本地的node_modules目录中加载代码了.
 
 那么问题来了......
 
@@ -24,13 +24,18 @@ ReactNative从入门到精通(2)-第三方库的管理
 * 项目结构改变: 主工程由单一的 `.xcodeproj` 变成 `.xcodeproj + pod.xcodeproj` ，同时生成了 `.xcworkspace` 项目；
 * 项目依赖改变: 会自动引入第三库依赖的系统动态库，前提是依赖库的 `podspec` 中声明了需要哪些 `frameworks`；
 * 主工程不显式的依赖各个第三方库，但是引用了 `libPods-xxx.a` 这个 `Cocoapods` 库；
-* 主工程 `.xcodeproj` 尽量不改动；
+* `主工程.xcodeproj` 尽量不改动；
 
 那么 `react-native link` 又做了什么呢？
 
 ![react-native link react-native-svg](../images/2018/04/rn-2-1.png)
 
-它会同时帮你修改 `Android` 项目和 `iOS` 项目。实际上它在调用 `react-native link` 的前身 **rnpm-install** `https://github.com/rnpm/rnpm`（项目主要开发人员也加入了 `RNCoreTeam`）。下面会解释 `react-native link` 做了什么。
+它会同时帮你修改 `Android` 项目和 `iOS` 项目, 实际上它在调用 `react-native link`.
+
+
+`react-native link`的前身是 **rnpm-install** `https://github.com/rnpm/rnpm`,其主要开发人员也加入了RNCoreTeam,下面会解释`react-native link`做了什么.
+
+和`link`相对的还有,`react-native unlink` 做的是相反的事情.
 
 ### 主要变化有二
 
@@ -44,7 +49,7 @@ ReactNative从入门到精通(2)-第三方库的管理
 
 ![rn-2-4](../images/2018/04/rn-2-4.png)
 
-这些改动都体现在了主工程 `.xcodeproj` 的改动上, 谁让 `xcodebuild` 就是根据 `.xcodeproj` 文件来进行编译的呢？
+这些改动都体现在了 `主工程.xcodeproj` 的改动上, 谁让 `xcodebuild` 就是根据 `.xcodeproj` 文件来进行编译的呢？
 
 ![rn-2-3](../images/2018/04/rn-2-3.png)
 
