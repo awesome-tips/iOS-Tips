@@ -43,8 +43,6 @@ ReactNative从入门到精通(2)-理解iOS开发-FE向
 
 大家可以对比下`react-native init AwesomeProject` 初始化之后的项目结构. 有没有和上面很像, 其实他就是通过批量执行`link`, 把RN自身的一些Project 统统放到了Libraries下面. 并且帮你加好`Linked Frameworks and Libraries`. 这个原理和 [`carthage`](http://swiftcafe.io/2015/10/25/swift-daily-carthage-package)(iOS 上另一个包管理工具) 不太一样
 
-![react-native init AwesomeProject](../images/2018/04/rn-2-5.png)
-
 
 2.Build Phases 中的Link Binary with Libraries 增加了静态库的依赖. 这个变动打破了我们使用Pod来管理项目的优美感.还加个了 tvOS.a 搞得我们会为AppleTV作支持一样,-_-!
 
@@ -71,6 +69,15 @@ pod 'RNSVG', :path => '../node_modules/react-native-svg'
 我使用了SVG搞了个小demo,下一步会用它做图标字体.效果如下,空心字,绘图等
 ![rn-2-3](../images/2018/04/rn-2-6.png)
 
+## 一个`react-native init project` 创建的项目如何 pod化
+[官方指南](https://facebook.github.io/react-native/docs/integration-with-existing-apps.html#configuring-cocoapods-dependencies)里有,除此之外
+
+1. gem install cocoapods //保证pods是最新版本
+2. pod install // pod 第一次初始化的时候会拉取 500M的文件到本地
+3. pod update (可选)也可以手动升级下本地的repo, 以防有些新包或者新版本找不到. 
+4. 删掉原来 `主工程.xcodeproj`中的Libraries目录引用. `Linked Frameworks and Libraries`也会自动消失,如下图
+
+![react-native init AwesomeProject](../images/2018/04/rn-2-5.png)
 
 
 ## 那么 `react-native link` 是怎么实现的呢?
