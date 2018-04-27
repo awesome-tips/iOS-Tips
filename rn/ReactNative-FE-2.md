@@ -8,7 +8,7 @@ ReactNative从入门到精通(2)-理解iOS开发-FE向
 ## 和RN相关的一些Native知识
 
 上一篇文章主要简单介绍了iOS的编译过程, 对比了下两个平台的包管理工具.
-这里值得一提的是`React-Native`自身和一些第三方的库都使用了NPM来管理代码, 那么`Pod`或者`Gradle`(Android Build Tool)都从node_modules目录中加载.
+这里值得一提的是`React-Native`自身和一些第三方的库都使用了NPM来管理和托管代码, 不像`Pod`依赖github来托管. 这样`Pod`或者`Gradle`(Android Build Tool)都可以从本地的node_modules目录中加载代码了.
 
 那么问题来了
 
@@ -33,7 +33,11 @@ ReactNative从入门到精通(2)-理解iOS开发-FE向
 
 ![react-native link react-native-svg](../images/2018/04/rn-2-1.png)
 
-它会同时在你帮你修改Android项目和iOS项目.实际上他在调用`react-native link`的前身是[`rnpm-install`](https://github.com/rnpm/rnpm),主要开发人员也加入了RNCoreTeam,下面会解释`react-native link`做了什么.
+它会同时在你帮你修改Android项目和iOS项目.实际上他在调用`react-native link`.
+
+`react-native link`的前身是[`rnpm-install`](https://github.com/rnpm/rnpm),其主要开发人员也加入了RNCoreTeam,下面会解释`react-native link`做了什么.
+
+和`link`相对的还有,`react-native unlink` 做的是相反的事情.
 
 ### 主要变化有二:
 
