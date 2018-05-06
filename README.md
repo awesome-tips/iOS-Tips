@@ -52,7 +52,7 @@
 * [16. 模块化带来的痛之模块之间的数据同步 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/04.md#%E6%A8%A1%E5%9D%97%E5%8C%96%E5%B8%A6%E6%9D%A5%E7%9A%84%E7%97%9B%E4%B9%8B%E6%A8%A1%E5%9D%97%E4%B9%8B%E9%97%B4%E7%9A%84%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5)
 * [17. CoreData 关系的4种删除规则 【Vong】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/04.md#coredata-%E5%85%B3%E7%B3%BB%E7%9A%844%E7%A7%8D%E5%88%A0%E9%99%A4%E8%A7%84%E5%88%99)
 * [18. Objective-C 可变容器对象的初始化方法使用总结 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/04.md#objective-c-%E5%8F%AF%E5%8F%98%E5%AE%B9%E5%99%A8%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93)
-* [19. 水平可者竖直布局方案【高老师很忙】](https://github.com/awesome-tips/iOS-Tips/blob/master/2018/04.md#%E6%B0%B4%E5%B9%B3%E6%88%96%E8%80%85%E7%AB%96%E7%9B%B4%E5%B8%83%E5%B1%80%E6%96%B9%E6%A1%88)
+* [19. 水平或者竖直布局方案【高老师很忙】](https://github.com/awesome-tips/iOS-Tips/blob/master/2018/04.md#%E6%B0%B4%E5%B9%B3%E6%88%96%E8%80%85%E7%AB%96%E7%9B%B4%E5%B8%83%E5%B1%80%E6%96%B9%E6%A1%88)
 
 [[2018]查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2018/目录.md)
 
