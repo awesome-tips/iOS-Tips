@@ -1,50 +1,18 @@
-说说 NSTimer 的新 API
+如何重写自定义对象的 hash 方法
 --------
 **作者**: [halohily](https://weibo.com/halohily)
 
-在以往的 iOS 版本中，我们为了避免 NSTimer 的循环引用问题，一个比较常用的解决办法是为 NSTimer 添加一个 category，新增传入 block 类型参数的接口。分类内部实现是将此 block 作为 NSTimer 的 userInfo 参数传入，而 NSTimer的 target 则设置为 timer 自己。以此来避免 NSTimer 持有 VC。代码如下:
+hash 是 NSObject 协议中定义的一个属性，也就是说，任何一个 NSObject 的子类都会有 hash 方法（对应属性的 getter，下文称哈希方法）。一般情况下，手动调用自定义对象的哈希方法，会返回当前对象的十进制内存地址，这是哈希方法的父类实现。
 
-```objective-c
-// NSTimer+BlocksSupport.h
-#import <Foundation/Foundation.h>
+什么时候对象的哈希方法会被调用呢？那就是它被加入 NSSet 中，或者作为 NSDictionary 的 key 时。为什么这个时候调用呢？其实不难猜测，是为了利用哈希来加快这些无序集合的检索速度。
 
-@interface NSTimer (BlocksSupport)
-+ (NSTimer *)ly_scheduledTimerWithTimeInterval:(NSTimeInterval)interval
-repeats:(BOOL)repeats
-block:(void(^)())block;
-@end
+当我们需要重写某个类的 isEqual 方法时，配套地便要重写对象的哈希方法，因为被判等的两个对象需要有相同的哈希值，这里可以参考系统对 NSString 的实现，具有相同内容的两个 NSString 的实例 isEqual 方法会返回 true，它们的哈希值也会相同，而它们的内存地址当然是不相同的。此时，对于我们的自定义对象，若依然使用父类的哈希方法实现（返回对象内存地址）自然是不可取的。
 
-// NSTimer+BlocksSupport.m
-#import "NSTimer+BlocksSupport.h"
+那么，该如何正确地重写哈希方法呢？Mattt Thompson 给出了自己的建议：对关键属性的 hash 值进行位或运算作为自己的 hash 值。在我的偶像 @ibireme 的 YYModel 中，他对 yy_modelHash 方法的实现也是采用了这种方案。
 
-@implementation NSTimer (BlocksSupport)
-+ (NSTimer *)ly_scheduledTimerWithTimeInterval:(NSTimeInterval)interval
-repeats:(BOOL)repeats
-block:(void(^)())block;
-{
-return [self scheduledTimerWithTimeInterval:interval
-target:self
-selector:@selector(ly_blockInvoke:)
-userInfo:[block copy]
-repeats:repeats];
-}
-+ (void)ly_blockInvoke:(NSTimer *)timer {
-void (^block)() = timer.userInfo;
-if(block) {
-block();
-}
-}
-@end
-```
+参考资料：
 
-而在 iOS 10 之后，苹果终于为 NSTimer 添加了一个官方 API，支持传入 block 类型参数。可谓是千呼万唤始出来。新官方 API 包括：
+- [iOS开发 之 不要告诉我你真的懂isEqual与hash!](https://www.jianshu.com/p/915356e280fc)
+- [Implementing Equality and Hashing](https://www.mikeash.com/pyblog/friday-qa-2010-06-18-implementing-equality-and-hashing.html)
 
-```objective-c
-+ (NSTimer *)timerWithTimeInterval:(NSTimeInterval)interval
-repeats:(BOOL)repeats
-block:(void (^)(NSTimer *timer))block API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0));
-+ (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)interval
-repeats:(BOOL)repeats
-block:(void (^)(NSTimer *timer))block API_AVAILABLE(macosx(10.12), ios(10.0), watchos(3.0), tvos(10.0));
-```
 
