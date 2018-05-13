@@ -46,13 +46,16 @@
 * [3. 你的遍历方法用对@autoreleasepool了么 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%E4%BD%A0%E7%9A%84%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95%E7%94%A8%E5%AF%B9%40autoreleasepool%E4%BA%86%E4%B9%88)
 * [4. 使用 YYFPSLabel 快速检测页面滑动的流畅度【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%e4%bd%bf%e7%94%a8+YYFPSLabel+%e5%bf%ab%e9%80%9f%e6%a3%80%e6%b5%8b%e9%a1%b5%e9%9d%a2%e6%bb%91%e5%8a%a8%e7%9a%84%e6%b5%81%e7%95%85%e5%ba%a6)
 
-[2018 年 04 月](https://github.com/southpeak/iOS-tech-set/blob/master/2018/04.md)
 
-* [15. 说说 NSTimer 的新 API 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/04.md#%E8%AF%B4%E8%AF%B4-nstimer-%E7%9A%84%E6%96%B0-api)
-* [16. 模块化带来的痛之模块之间的数据同步 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/04.md#%E6%A8%A1%E5%9D%97%E5%8C%96%E5%B8%A6%E6%9D%A5%E7%9A%84%E7%97%9B%E4%B9%8B%E6%A8%A1%E5%9D%97%E4%B9%8B%E9%97%B4%E7%9A%84%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5)
-* [17. CoreData 关系的4种删除规则 【Vong】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/04.md#coredata-%E5%85%B3%E7%B3%BB%E7%9A%844%E7%A7%8D%E5%88%A0%E9%99%A4%E8%A7%84%E5%88%99)
-* [18. Objective-C 可变容器对象的初始化方法使用总结 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/04.md#objective-c-%E5%8F%AF%E5%8F%98%E5%AE%B9%E5%99%A8%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93)
-* [19. 水平或者竖直布局方案【高老师很忙】](https://github.com/awesome-tips/iOS-Tips/blob/master/2018/04.md#%E6%B0%B4%E5%B9%B3%E6%88%96%E8%80%85%E7%AB%96%E7%9B%B4%E5%B8%83%E5%B1%80%E6%96%B9%E6%A1%88)
+
+
+
+
+* [5. 如何重写自定义对象的 hash 方法 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%E5%A6%82%E4%BD%95%E9%87%8D%E5%86%99%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AF%B9%E8%B1%A1%E7%9A%84-hash-%E6%96%B9%E6%B3%95)
+* [6. NSFetchedResultsController 的另一个坑 【Vong】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#nsfetchedresultscontroller-%E7%9A%84%E5%8F%A6%E4%B8%80%E4%B8%AA%E5%9D%91)
+* [7. 再谈 UITableView 的 estimatedRowHeight 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%E5%86%8D%E8%B0%88-uitableview-%E7%9A%84-estimatedrowheight)
+* [8. Quick Look Debugging 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#quick-look-debugging)
+* [9. TestFlight删除测试人员血泪史 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#testflight%E5%88%A0%E9%99%A4%E6%B5%8B%E8%AF%95%E4%BA%BA%E5%91%98%E8%A1%80%E6%B3%AA%E5%8F%B2)
 
 [[2018]查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2018/目录.md)
 
