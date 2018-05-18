@@ -4,7 +4,7 @@ iOS 自带九宫格拼音键盘与 Emoji 表情之间的坑
 
 最近产品提了一个需求：要求某个“输入框”禁止输入 Emoji 表情，我们能想到的方案是：在 `UITextField` 的 `textField:shouldChangeCharactersInRange:replacementString:` 代理方法中判断即将输入的字符串是否包含 Emoji 表情，如果包含，就在该方法中返回 `NO`，不允许输入。
 
-关于如何判断一字符串是否包含 Emoji 表情的方法，网上已经有很多代码片段，一般是通过 `Unicode` 编码范围来判断 ，详见这里：[https://gist.github.com/cihancimen/4146056](ttps://gist.github.com/cihancimen/4146056) ，方法名记为：
+关于如何判断一字符串是否包含 Emoji 表情的方法，网上已经有很多代码片段，一般是通过 `Unicode` 编码范围来判断 ，详见这里：[https://gist.github.com/cihancimen/4146056](https://gist.github.com/cihancimen/4146056) ，方法名记为：
 
 ```
 - (BOOL)stringContainsEmoji:(NSString *)string;
