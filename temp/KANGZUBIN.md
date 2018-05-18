@@ -1,35 +1,35 @@
-再谈 UITableView 的 estimatedRowHeight
+iOS 自带九宫格拼音键盘与 Emoji 表情之间的坑
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-今天发现之前写的一个基于 `UITableView` 的列表页面存在如下问题：
+最近产品提了一个需求：要求某个“输入框”禁止输入 Emoji 表情，我们能想到的方案是：在 `UITextField` 的 `textField:shouldChangeCharactersInRange:replacementString:` 代理方法中判断即将输入的字符串是否包含 Emoji 表情，如果包含，就在该方法中返回 `NO`，不允许输入。
 
-> 当列表在滑动过程中，特别是往下滑快接近底部时，右侧的滚动条一直在不断地抖动，并且滚动条的长度也在不断地微小变化；另外，当滑动到底部加载下一页数据并 `reloadData` 后，列表的内容会整体跳动往上偏移一段距离。这是什么原因呢？
+关于如何判断一字符串是否包含 Emoji 表情的方法，网上已经有很多代码片段，一般是通过 `Unicode` 编码范围来判断 ，详见这里：[https://gist.github.com/cihancimen/4146056](ttps://gist.github.com/cihancimen/4146056) ，方法名记为：
 
-我们知道，在 iOS 11 发布后，`UITableView` 发生了一些变化，其中对现有项目的界面布局（列表/滚动）影响最大应该是以下两点：
+```
+- (BOOL)stringContainsEmoji:(NSString *)string;
+```
 
-* (1) `UIViewController` 中用于标记是否自动调整 `UIScrollView Insets` 的 `automaticallyAdjustsScrollViewInsets` 属性被宣布弃用，代替的是 `UIScrollView` 自己新增的 `contentInsetAdjustmentBehavior` 属性；
+按照上述思路开发完后，Emoji 表情确实是被限制住无法输入了，但是当把键盘切换为 iOS 系统自带的九宫格拼音键盘准备输入汉字时，却发现拼音无法输入。这是怎么回事？
 
-* (2) `UITableView` 的预估 Cell 高度属性 `estimatedRowHeight` 的默认值被改为 `UITableViewAutomaticDimension`（即默认开启），而在 iOS 10 及以前，这个值默认为 0（即默认关闭行高估算）。
+首先通过观察系统自带拼音键盘的行为，可以发现，当通过拼音来输入汉字时，系统会先在输入框中“预输入”拼音字母作为占位，等用户在键盘上选中汉字时，输入框中的占位“拼音字母”就会被替换为所对应的汉字，如下图：
 
-对于 (1) 我们这里不再赘述；但是对于 (2) 来说既是福音也是噩耗，它确实解决了一些性能的问题，但也带来了一些令人头痛的问题。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/10-1.jpg)
 
-由于 `UITableView` 继承于 `UIScrollView`，而一个 scrollView 能滚动的前提是需要设置它的 `contentSize`。当 tableView 被加载时，会调用 `heightForRowAtIndexPath` 方法计算每个 Cell 的高度，然后相加得到其 `contentSize`，这显然是耗时又耗性能的，尤其是对于那种高度可变化的 Cells 更是如此。
+通过断点调试我们还发现，在输入拼音过程中，以“知识小集”（zhishixiaoji）为例，当我们通过点击第 9 个键来输入字母 `z` 时，在 UITextField 的代理方法中获取到的即将输入的字符不是 `z` ，而是一个符号 ➒ ，而输入结束后（`textFieldDidChange:`）该符号 ➒ 就会被替换为所对应的字母，然后当点击第 4 个键来输入字母 `h` 时，同样地得到即将输入的字符为 ➍ ，然后再被替换为 `h`，以此类推...
 
-所以为了优化这个问题，提高 `UITableView` 的加载速度（初始化和 `reloadData` 时），苹果引入了 `estimatedRowHeight`，文档描述如下：
+我们猜测，苹果之所以这么做是因为，对于九宫格拼音键盘，一个键代表着 3 或 4 个字母，当你点击一个键时，它并不知道你要输入那个字母，所以用一个带圆圈的数字符号作为临时占位，等输入结束时才替换为相应的字母。
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/7-1.png)
+在九宫格拼音键盘中，"ABC" 键 ~ "WXYZ" 键所对应的临时占位符号分别为 ➋➌ ... ➒ ，表情 "^-^" 键所对应的为符号 ☻ ，而这些符号在 `stringContainsEmoji:` 方法中刚好都被判为是 Emoji，所以当输入框禁止输入 Emoji 表情时，就会导致拼音也无法输入。
 
-当开启 `estimatedRowHeight` 时，一个 tableView 被加载后，它的 `contentSize` 的高度通过 `estimatedRowHeight`(默认为44) * Cells 的数量即可得，不需要遍历 `heightForRowAtIndexPath` 获取并相加来计算了，缩短其加载耗时。
- 
-但是每个 Cell 的真实高度以及 tableView 的真实 `contentSize` 是什么时候计算的呢？正如上述文档所说，**推迟到滑动的时候**，当每个 Cell 将要被显示出来时再计算获取，并实时更新 tableView 的 `contentSize`。
+解决方案就是在 Emoji 判定方法中，过滤掉上述符号（对应的 `Unicode` 编码为 `U+278b` ~ `U+2792` 和 `U+263b`），如下：
 
-这也解释了我们开头所遇到问题：当 tableView 加载时启用了预估行高，在往下滑动时，下面的 Cells 被不断地被显示出来并更新了 tableView 的 `contentSize`，同时导致右侧的滚动条的高度和位置也要相应更新，产生“抖动”现象。此外，当加载下一页数据并重新 `reloadData` 发生跳动偏移的原因也是类似的。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/10-2.png)
 
-在 iOS 11 中，`estimatedRowHeight` 默认是开启的，我们可以通过设置 `tableView.estimatedRowHeight = 0` 来禁用。
+但我们发现系统自带的“全键盘拼音输入”不会有上述问题，因为每个键都只代表一个字母：
 
-你在使用 `UITableView` 时遇到过类似的问题吗？你是如何解决的，欢迎留言讨论~ 
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/10-3.jpg)
 
-参考链接：
-* [关于 iOS 11 中 estimatedRowHeight](https://www.jianshu.com/p/3d9c0daddcdb)
-* [Apple Docs: estimatedRowHeight](https://developer.apple.com/documentation/uikit/uitableview/1614925-estimatedrowheight?language=objc)
+而且，国内常用的第三方输入法也不会有这个问题，因为它们不会在输入框中“预输入”拼音字符（而是把拼音显示在键盘上方），只有等用户选中汉字时，才把汉字填写到输入框中，如下（搜狗输入法）：
+
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/10-4.jpg)
