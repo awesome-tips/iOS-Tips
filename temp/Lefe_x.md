@@ -1,39 +1,25 @@
-Quick Look Debugging
+iOS 如何调试 WebView
 --------
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/5-1.png)
+目前 iOS 端几乎都会接入 Web 页面，与前端接触也越来越多，如果不了解点前端知识，当出现问题的时候双方沟通起来非常不顺畅，便开始接触前端。我们今天聊聊如何调试 Web 页。当运行 APP 的时候，iOS 端加载 WebView（WKWebView 或 UIWebView ）时可以通过 Mac 自带的 Safari 来调试所显示的页面，其实调试 JSPatch 的时候也是这么用的。
 
-上面这张图在开发中你应该经常看到，今天主要介绍快速调试的一个小技巧。有时候想知道某个 image 对象的具体对应的图片长什么样；某条贝塞尔曲线的形状；某个 View 长什么样，它上面有哪些子视图；某个 NSURL 对象是否可以访问等；想快速跳转到沙盒中的某个目录文件下。今天这个小技巧可以帮你解决这些问题。
-
-从第一张图直接点击小眼睛即可预览图片，查看视图，跳转到网页，进入沙盒目录等。
-
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/5-2.png)
-
-
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/5-3.png)
-
-
-系统默认支持下面这几种类型：
-
-- 图片： UIImage，UIImageView，和 NSBitmapImageRep 都可以快速查看。
-- 颜色： UIColor
-- 字符串： NSString 和 NSAttributedString。
-- 几何： UIBezierPath 和 NSBezierPath，以及 CGPoint，CGRect，和 CGSize。
-- 地区 CLLocation 将显示一个很大的，互动的映射位置，并显示高度和精度的细节。
-- URLs： NSURL 将显示 URL 所指的本地或远程的内容。
-- 数据： NSData 将漂亮的显示出偏移的十六进制和 ASCII 值。
-- 视图： 最后但并非最不重要的，任何 UIView 子类都将在快速查看弹出框中显示其内容，方便极了。
-
-
-如果想让自定义的类也支持这种快速调试可以重写方法
+我们来模拟加载 Web 页时的场景，首先需要开启本地的 WebServer，mac 自带 Apache 服务器，我们只需启动这个服务器，即可加载一个网页。
 
 ```
-- (id)debugQuickLookObject
-{
-    // 返回系统支持的类型
-    return self.avatarImage;
-}
+// 开启 Apache
+sudo apachectl start
 ```
 
-[参考](http://nshipster.cn/quick-look-debugging/)
+Apache 开启后，站点的目录在 `/Library/WebServer/Documents` 下，我们把写好的网页放到这个目录下，然后直接可以根据 URL 访问对应的页面，比如在浏览器中输入：`http://电脑ip地址/web/index.html` 即可访问 `index.html` 这个页面。
+
+使用 WKWebView 加载 `index.html` 这个页面，即可调试这个页面，调试前需要做以下两件事：
+
+- 手机端开启Web 检查器：设置 -> 通用 -> Safari -> 高级 -> Web 检查器
+- Mac端显示开发菜单：Safari 浏览器默认没有显示“开发”菜单，需要通过：Safari 浏览器  -> 偏好设置 -> 高级 -> 勾选在菜单中显示“开发”设置。
+
+设置完后，当启动 APP ，加载 WKWebView 后即可看到 `index.html` 这个页面。这时即可通过断点进行调试，当然可以查看当前的 HTML 代码，JS 代码，网络情况等。具体如下图所示：
+
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/12-1.jpg)
+
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/12-2.jpg)
