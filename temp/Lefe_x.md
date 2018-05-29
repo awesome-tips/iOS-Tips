@@ -19,4 +19,4 @@ iOS 如何调试 WebView （二）
 第二，黑盒下调试 WebView，无需连接电脑和 safari 即可调试 DOM，这个可以参考小程序的 [vConsole](https://github.com/Tencent/vConsole)
 
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/13-1.jpg)
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/14-1.jpg)
