@@ -1,25 +1,22 @@
-iOS 如何调试 WebView
+iOS 如何调试 WebView （二）
 --------
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
-目前 iOS 端几乎都会接入 Web 页面，与前端接触也越来越多，如果不了解点前端知识，当出现问题的时候双方沟通起来非常不顺畅，便开始接触前端。我们今天聊聊如何调试 Web 页。当运行 APP 的时候，iOS 端加载 WebView（WKWebView 或 UIWebView ）时可以通过 Mac 自带的 Safari 来调试所显示的页面，其实调试 JSPatch 的时候也是这么用的。
+上次的小集中，我主要讨论了如何调试 WebView ，小集发出后  @折腾范儿_味精 提供了另一种方法来调试 WebView。我觉得有必要再扩展一下，原话是这样的：
 
-我们来模拟加载 Web 页时的场景，首先需要开启本地的 WebServer，mac 自带 Apache 服务器，我们只需启动这个服务器，即可加载一个网页。
+> 真说方便还是植入一个 webview console 在 debug 环境，可以在黑盒下不连电脑不连 safari 调 dom，调js，另外在开发期间 Xcode 断点 run 的时候，js hook console.log console.alert，接管window.onerror 全都改 bridge NSLog 输出，也会方便点。
+
+短短几句话，信息量很大，私下向味精学习了下，这里总结一下。
+
+第一，把 WebView 用来调试的 log、alert、error 显示到 NA ，在调试时会方便不少。做 WebView 与端交互的时候，主要用 `window.webkit.messageHandlers.xxx.postMessage(params);` 来给端发消息，也就是说 WebView 想给端发消息的时候直接调用这个方法即可，端会通过 `WKScriptMessageHandler` 的代理方法来接收消息，而此时端根据和 WebView 约定的规则进行通信即可。
 
 ```
-// 开启 Apache
-sudo apachectl start
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
 ```
 
-Apache 开启后，站点的目录在 `/Library/WebServer/Documents` 下，我们把写好的网页放到这个目录下，然后直接可以根据 URL 访问对应的页面，比如在浏览器中输入：`http://电脑ip地址/web/index.html` 即可访问 `index.html` 这个页面。
+而添加调试信息，无非就是给 WebView 添加了 log、alert、error 这些消息的 bridge，这样当 WebView 给端发送消息后，端根据和 WebView 约定的规则解析 log、alert、error 为端对应的事件，比如 log 直接调用端的 `NSLog`，alert 调用端的 `UIAlertController`。
 
-使用 WKWebView 加载 `index.html` 这个页面，即可调试这个页面，调试前需要做以下两件事：
+第二，黑盒下调试 WebView，无需连接电脑和 safari 即可调试 DOM，这个可以参考小程序的 [vConsole](https://github.com/Tencent/vConsole)
 
-- 手机端开启Web 检查器：设置 -> 通用 -> Safari -> 高级 -> Web 检查器
-- Mac端显示开发菜单：Safari 浏览器默认没有显示“开发”菜单，需要通过：Safari 浏览器  -> 偏好设置 -> 高级 -> 勾选在菜单中显示“开发”设置。
 
-设置完后，当启动 APP ，加载 WKWebView 后即可看到 `index.html` 这个页面。这时即可通过断点进行调试，当然可以查看当前的 HTML 代码，JS 代码，网络情况等。具体如下图所示：
-
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/12-1.jpg)
-
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/12-2.jpg)
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/13-1.jpg)
