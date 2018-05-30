@@ -1,40 +1,31 @@
-RACObserve 常见用法及区别
+UIView 的事件透传
 --------
 **作者**: [Vong_HUST](https://weibo.com/VongLo)
 
-用过 [`ReactiveCocoa`](https://github.com/ReactiveCocoa/ReactiveCocoa/tree/v2.5) 的应该都比较熟悉这个 `RACObserve` 这个宏，但是不知道大家有没有对这个宏具体展开，进行分析。
-
-比较常见的用法就是 `RACObserve(someTarget, someProperty)`，但是大家了解 `RACObserve(target.someTarget, someProperty)` 和 `RACObserve(target, someTarget.someProperty)` 之间的区别么？具体可以看以下代码片段以及执行的结果
+通常我们会遇到这种需求，一个视图除了需要响应子视图的点击事件，其它空白地方希望能将点击事件透传到，比如自定义了一个“导航栏”，除了左右两边按钮，希望其它部分点击能够透传到底下的视图。这个时候我们可以通过复写 hitTest 方法，具体实现如下。
 
 ```objc
-self.label = [UILabel new];
-self.label.text = @"123";
+@implementation PassthroughView
 
-[RACObserve(self.label, text) subscribeNext:^(id x) {
-    NSLog(@"RACObserve(self.label, text) 的方式 %@", x);
-}];
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    if (self.hidden || self.alpha < FLT_EPSILON || self.userInteractionEnabled) {
+        return [super hitTest:point withEvent:event];
+    }
+    
+    UIView *targetView = nil;
+    for (UIView *subview in [[self subviews] reverseObjectEnumerator]) {
+        if ((targetView = [subview hitTest:[subview convertPoint:point fromView:self] withEvent:event])) {
+            break;
+        }
+    }
+    
+    return targetView;
+}
 
-[RACObserve(self, label.text) subscribeNext:^(id x) {
-    NSLog(@"RACObserve(self, label.text) 的方式 %@", x);
-}];
-
-self.label.text = @"1234";
-self.label = [UILabel new];
-self.label.text = @"12345";
-
-// output
-
-RACObserve(self.label, text) 的方式 123
-RACObserve(self, label.text) 的方式 123
-RACObserve(self, label.text) 的方式 1234
-RACObserve(self.label, text) 的方式 1234
-RACObserve(self, label.text) 的方式 (null)
-RACObserve(self, label.text) 的方式 12345
+@end
 ```
-
-以上面代码为例，`RACObserve(self.label, text)` 其实是监听 `self.label` 这个对象的 `text` 属性，所以当这个对象 `text` 发生变化时，第一个是 `block` 是能够收到回调的，但是当 `self.label` 被重新赋值后，原来的 `label` 无人持有相当于变成了 `nil`，所以第一个 `block` 将不再生效。而 `RACObserve(self, label.text)` 监听的是 self，然后 `keyPath` 是 `label.text`，所以当 `label` 或者其 `text` 发生变化都会触发这个回调。所以区别在于 `target` 以及 `keyPath` 的设置。
-
-如果上述表达有不恰当的地方，欢迎指出，一起探讨~
+以上代码即可实现，只响应子视图的事件，而非子视图区域部分的交互事件则透传到响应链中的下一个响应者。
+如果你有其它更好方式，也可以分享出来，一起交流下
 
 
 
