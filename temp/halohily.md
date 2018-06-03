@@ -1,31 +1,18 @@
-如何定制一个 UIView 类型控件的出入动画
+一个结构较为合理的下载模块该怎么设计
 --------
 **作者**: [halohily](https://weibo.com/halohily)
 
-在iOS开发中，自定义的弹层组件非常常见，比如分享框、自定义的  actionSheet 组件等。有的场景下，会选择使用 UIViewController 类型来实现，这时定制这个视图的出现、隐藏动画非常方便。然而，有时候需要选择轻量级的 UIView 类型来实现。这时该怎么定制它的出现、隐藏动画呢？这里提供一个思路：使用 UIView 的 `willMoveToSuperview:` 和 `didMoveToSuperview`这组方法，它们会在 `UIView` 作为subView 被添加到其他 UIView 中时调用。这里需要注意，自身调用 `removeFromSuperview ` 方法时，同样会触发这组方法，只不过这时的参数会是一个 nil。
+最近负责下载组件的开发，对于如何设计一个下载模块有一些粗浅体会，今天分享一下我采用的方案，希望能够抛砖引玉。另外，最近会出两篇主题为“下载组件的设计”和“与 Hybrid 相关的下载方案”的长文，欢迎关注#知识小集#。
 
-提供一个例子来说明：一个选择 UIView 类型实现的自定义 actionSheet 的出入动画，交互基本和微信一致。
+“下载”作为一个需要本地结构化、持久化存储的场景，使用数据库是比较自然的选择。所以，我们首先拆分出一个数据库模块，用来存储下载记录。主要字段为下载任务的信息，如 url、文件大小、时间戳等，以及最重要的文件本地存储路径。这一层可以在接口设计上认真思虑，比如仅涉及当前业务逻辑，而不涉及具体的数据库操作，相当于是较FMDB等数据库组件来说更高层的抽象。后期需要更换底层数据库引擎时，本层封装无需改动，是比较理想的实现。
 
-```objective-c
-#pragma mark - show & dismiss
-- (void)didMoveToSuperview {
-if (self.superview) {
-[UIView animateWithDuration:0.35 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:10 options:UIViewAnimationOptionCurveEaseIn animations:^{
-_backgroundControl.alpha = 1;
-self.actionSheetTable.frame = CGRectMake(0, SCREEN_HEIGHT - _sheetHeight, SCREEN_WIDTH, _sheetHeight);
-} completion:^(BOOL finished) {
-[super didMoveToSuperview];
-}];
-}
-}
+数据库是用来存储下载记录的，那么所下载的具体文件呢？自然就需要一个文件管理模块，在这个模块里，负责根据文件 url 生成本地的存储路径，以及进行文件校验、存储、移除等操作。
 
-- (void)hideSelf {
-[UIView animateWithDuration:0.35 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:10 options:UIViewAnimationOptionCurveEaseIn animations:^{
-_backgroundControl.alpha = 0;
-self.actionSheetTable.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, _sheetHeight);
-} completion:^(BOOL finished) {
-[self removeFromSuperview];
-}];
-}
-```
+所要下载的文件，我们可以按体积、类型等进行区分。对于网络请求的结果这类简短内容，我抽象出了一个缓存管理器，用来完成网络请求、图片等内容的缓存。网络请求的结果，可以选择 YYCache、EGOCache等缓存框架。而图片的缓存，则可以选择专注图片缓存的YYWebImage、SDWebImage等框架。
+
+对于体积较大的文件，自然需要一个专注大文件下载的模块。这个模块不关注具体的文件类型，不关注具体的业务场景，它只需要文件url、文件管理模块生成的本地目标路径，完成下载任务即可。
+
+在以上通用模块的基础上，有一个业务层的封装，它负责根据提交的下载任务，协调调用各基础组件。举个例子，一个下载任务包括一个视频文件、一个网络请求结果、三张图片。本模块在收到任务后，首先解析出以上的任务具体结构。使用文件管理模块，根据视频文件 url 生成本地存储目标路径，调用大文件下载器完成下载，此为一个子任务。对于网络请求结果，调用缓存模块，进行缓存，此为一个子任务。对于三张图片，使用图片缓存器完成缓存，此为一个子任务。三个子任务均完成，使用数据库模块，对下载记录、媒体文件记录等进行存储。除此之外，本模块还负责对外提供下载中任务、已下载任务等数据。
+
+因篇幅有限，具体的细节请关注后续长文。
 
