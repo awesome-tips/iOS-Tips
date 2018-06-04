@@ -12,13 +12,13 @@
 
 ## 公众号
 
-<img src='https://github.com/awesome-tips/flutter-resources/blob/master/images/weixin/zhishixiaoji.jpg?raw=true' height='140' width='140'/>
+<img src='https://github.com/awesome-tips/flutter-resources/blob/master/images/weixin/zhishixiaoji.jpg?raw=true' height='200' width='200'/>
 
 ## 知识小集微信群
 
 新增「 知识小集 · 3号群 」，以 iOS 开发为主，目前可以扫码加入，满 100 后会删除二维码：
 
-<img src='https://github.com/awesome-tips/iOS-Tips/blob/master/images/weixin-group.jpeg?raw=true' height='200' width='150'/>
+<img src='https://github.com/awesome-tips/iOS-Tips/blob/master/images/weixin-group.jpeg?raw=true' height='260' width='200'/>
 
 * 「 知识小集 · 3号群 」，**可以先加微信 `coldlight_hh` 或 `wsy9871`**，请注明 **`iOS 入群`**；
 * 「 知识小集 · Flutter 自习室 」人数到 200+，**可以先加微信 `coldlight_hh` 或者 `bob5201215`**，请注明 **Flutter 入群**；
