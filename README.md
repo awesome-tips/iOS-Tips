@@ -39,29 +39,13 @@
 ## 最新内容
 我们会定期整理微博上分享的内容，然后将最新的内容标题放在这里。更多内容可以查看每月的具体内容。
 
+[2018 年 06 月](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md)
+
+* [1. 再谈 iOS 输入框的字数统计/最大长度限制 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md)
+* [2. iOS 处理 navigationBar.titleTextAttributes 属性时机【无彦祖】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md)
+
 [2018 年 05 月](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md)
 
-* [1. 在 Cycript 和 LLDB 中使用私有的方法调试 iOS 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%E5%9C%A8-cycript-%E5%92%8C-lldb-%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%A7%81%E6%9C%89%E7%9A%84%E6%96%B9%E6%B3%95%E8%B0%83%E8%AF%95-ios)
-* [2. 替换系统音量提示【Vong_HUST】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%e6%9b%bf%e6%8d%a2%e7%b3%bb%e7%bb%9f%e9%9f%b3%e9%87%8f%e6%8f%90%e7%a4%ba)
-* [3. 你的遍历方法用对@autoreleasepool了么 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%E4%BD%A0%E7%9A%84%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95%E7%94%A8%E5%AF%B9%40autoreleasepool%E4%BA%86%E4%B9%88)
-* [4. 使用 YYFPSLabel 快速检测页面滑动的流畅度【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%e4%bd%bf%e7%94%a8+YYFPSLabel+%e5%bf%ab%e9%80%9f%e6%a3%80%e6%b5%8b%e9%a1%b5%e9%9d%a2%e6%bb%91%e5%8a%a8%e7%9a%84%e6%b5%81%e7%95%85%e5%ba%a6)
-
-
-
-
-
-
-* [5. 如何重写自定义对象的 hash 方法 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%E5%A6%82%E4%BD%95%E9%87%8D%E5%86%99%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AF%B9%E8%B1%A1%E7%9A%84-hash-%E6%96%B9%E6%B3%95)
-* [6. NSFetchedResultsController 的另一个坑 【Vong】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#nsfetchedresultscontroller-%E7%9A%84%E5%8F%A6%E4%B8%80%E4%B8%AA%E5%9D%91)
-* [7. 再谈 UITableView 的 estimatedRowHeight 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%E5%86%8D%E8%B0%88-uitableview-%E7%9A%84-estimatedrowheight)
-* [8. Quick Look Debugging 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#quick-look-debugging)
-* [9. TestFlight删除测试人员血泪史 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#testflight%E5%88%A0%E9%99%A4%E6%B5%8B%E8%AF%95%E4%BA%BA%E5%91%98%E8%A1%80%E6%B3%AA%E5%8F%B2)
-* [10. 如何对NSMutableArray进行KVO 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%E5%A6%82%E4%BD%95%E5%AF%B9nsmutablearray%E8%BF%9B%E8%A1%8Ckvo)
-* [11. Fix All issue 【南峰子】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#fix-all-issue)
-* [12. 对渐变视图的实现方案的探究 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%E5%AF%B9%E6%B8%90%E5%8F%98%E8%A7%86%E5%9B%BE%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88%E7%9A%84%E6%8E%A2%E7%A9%B6)
-* [13. iOS 自带九宫格拼音键盘与 Emoji 表情之间的坑 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#ios-%E8%87%AA%E5%B8%A6%E4%B9%9D%E5%AE%AB%E6%A0%BC%E6%8B%BC%E9%9F%B3%E9%94%AE%E7%9B%98%E4%B8%8E-emoji-%E8%A1%A8%E6%83%85%E4%B9%8B%E9%97%B4%E7%9A%84%E5%9D%91)
-* [14. RACObserve 常见用法及区别 【Vong】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#racobserve-%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95%E5%8F%8A%E5%8C%BA%E5%88%AB)
-* [15. 如何正确使用初始化方法的标记宏 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%E5%A6%82%E4%BD%95%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95%E7%9A%84%E6%A0%87%E8%AE%B0%E5%AE%8F)
 * [16. 被大家忽略的UIViewController两对API 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%E8%A2%AB%E5%A4%A7%E5%AE%B6%E5%BF%BD%E7%95%A5%E7%9A%84uiviewcontroller%E4%B8%A4%E5%AF%B9api)
 * [17. UIScrollView 拖拽滑动时收起键盘 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#uiscrollview-%E6%8B%96%E6%8B%BD%E6%BB%91%E5%8A%A8%E6%97%B6%E6%94%B6%E8%B5%B7%E9%94%AE%E7%9B%98)
 * [18. iOS 如何调试 WebView 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#ios-%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95-webview)
@@ -80,4 +64,5 @@
 
 [bestswifter](https://weibo.com/bestswifter)
 [iOS_OneByte](https://weibo.com/u/5549095051)
+[无彦主](https://weibo.com/u/2629799120)
 
