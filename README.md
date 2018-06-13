@@ -42,7 +42,7 @@
 [2018 年 06 月](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md)
 
 * [1. 再谈 iOS 输入框的字数统计/最大长度限制 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md)
-* [2. iOS 处理 navigationBar.titleTextAttributes 属性时机【无彦祖】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md)
+* [2. iOS 处理 navigationBar.titleTextAttributes 属性时机【无彦主】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md)
 
 [2018 年 05 月](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md)
 
