@@ -19,6 +19,6 @@
 
 ### Go2Shell
 
-有时候在 Finder 中的目录，想在终端中直接切换到 Finder 当前显示的目录。使用 Go2Shell 即可，一步到位，非常方便。在官网上下载 http://zipzapmac.com/Go2Shell，安装，打开 Finder，按住 command 键，拖动 Go2Shell 的图标到 Finder 菜单，在 Finder 的菜单栏中会显示 Go2Shell 图标。下次想在终端显示当前 Finder 的目录，直接点击图标即可。
+有时候在 Finder 中的目录，想在终端中直接切换到 Finder 当前显示的目录。使用 Go2Shell 即可，一步到位，非常方便。在官网上 [下载](http://zipzapmac.com/Go2Shell)，安装，打开 Finder，按住 command 键，拖动 Go2Shell 的图标到 Finder 菜单，在 Finder 的菜单栏中会显示 Go2Shell 图标。下次想在终端显示当前 Finder 的目录，直接点击图标即可。
 
 ![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/06/2-2.jpg)
