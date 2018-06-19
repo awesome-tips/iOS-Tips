@@ -1,34 +1,24 @@
-iOS 如何调试 WebView （二）
+提升终端体验的两把厉剑
 --------
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
-上次的小集中，我主要讨论了如何调试 WebView ，小集发出后  @折腾范儿_味精 提供了另一种方法来调试 WebView。我觉得有必要再扩展一下，原话是这样的：
+在以往的小集中已介绍过 iTerm2 和 oh-my-zsh 的使用，如果你还不了解这两个工具，不妨到以往的小集中看看他们的作用，包您满意。而今天介绍另外两个提升终端体验的工具。
 
-> 真说方便还是植入一个 webview console 在 debug 环境，可以在黑盒下不连电脑不连 safari 调 dom，调js，另外在开发期间 Xcode 断点 run 的时候，js hook console.log console.alert，接管window.onerror 全都改 bridge NSLog 输出，也会方便点。
+### tree
 
-短短几句话，信息量很大，私下向味精学习了下，这里总结一下。写完这个小集特意让味精看了下，觉得有必要再补充下第二种调试技巧，但中途踩了几个坑，一直到23:30左右才搞定。
+如果想在终端查看当前目录的层级结构，不妨了解下 tree，它可以以树状的形式显示当前的目录结构。
 
-第一，把 WebView 用来调试的 log、alert、error 显示到 NA ，在调试时会方便不少。做 WebView 与端交互的时候，主要用 `window.webkit.messageHandlers.xxx.postMessage(params);` 来给端发消息，也就是说 WebView 想给端发消息的时候直接调用这个方法即可，端会通过 `WKScriptMessageHandler` 的代理方法来接收消息，而此时端根据和 WebView 约定的规则进行通信即可。
+安装：
+在终端输入：`brew install tree` 。
 
-```
-- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
-```
+使用:
+在当前目录下，显示树状目录结构：`tree -L 2 -d` 。其中 -L 表示遍历的深度，这里为 2；-d 表示只显示目录。更多参数可以使用 `man tree` 查看。
 
-而添加调试信息，无非就是给 WebView 添加了 log、alert、error 这些消息的 bridge，这样当 WebView 给端发送消息后，端根据和 WebView 约定的规则解析 log、alert、error 为端对应的事件，比如 log 直接调用端的 `NSLog`，alert 调用端的 `UIAlertController`。
-
-第二，黑盒下调试 WebView，无需连接电脑和 safari 即可调试 DOM，这个可以参考小程序的 [vConsole](https://github.com/Tencent/vConsole) 或者 [eruda
-](https://github.com/liriliri/eruda) 。可以直接在 WebView 中接入，或者在端中接入。这里以在端中接入 eruda 为例，这里踩到几个坑：
-
-1.有些页面显示不出来，估计是故意屏蔽掉的，味精特意使用 JSBox 试了下其它页面，发现百度等都不可以显示调试按钮，而掘金是可以的；
-
-2.使用本地的页面也显示不出来，这是 webview 跨域安全方面的考虑，file 协议下会禁止 js css html 以部分 file，部分网络的方式加载。
-
-下面这段代码直接在 webview 加载完成后执行即可。
-
-```
-NSString *js = @"(function() {var script = document.createElement('script');script.type = 'text/javascript';script.src = 'https://xteko.blob.core.windows.net/neo/eruda-loader.js';document.body.appendChild(script);})();";
-[self.webView evaluateJavaScript:js completionHandler: nil];
-```
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/06/2-1.jpg)
 
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/05/14-1.jpg)
+### Go2Shell
+
+有时候在 Finder 中的目录，想在终端中直接切换到 Finder 当前显示的目录。使用 Go2Shell 即可，一步到位，非常方便。在官网上下载 http://zipzapmac.com/Go2Shell，安装，打开 Finder，按住 command 键，拖动 Go2Shell 的图标到 Finder 菜单，在 Finder 的菜单栏中会显示 Go2Shell 图标。下次想在终端显示当前 Finder 的目录，直接点击图标即可。
+
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/06/2-2.jpg)
