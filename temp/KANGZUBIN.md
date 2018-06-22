@@ -1,46 +1,23 @@
-再谈 iOS 输入框的字数统计/最大长度限制
+Xcode 设置代码只在 Debug 下起效的几种方式
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-前两周我们发了一个小集[「iOS 自带九宫格拼音键盘与 Emoji 表情之间的坑」](https://github.com/awesome-tips/iOS-Tips/blob/master/2018/05.md#ios-%E8%87%AA%E5%B8%A6%E4%B9%9D%E5%AE%AB%E6%A0%BC%E6%8B%BC%E9%9F%B3%E9%94%AE%E7%9B%98%E4%B8%8E-emoji-%E8%A1%A8%E6%83%85%E4%B9%8B%E9%97%B4%E7%9A%84%E5%9D%91)，介绍了如何解决由于输入框限制 Emoji 表情的输入导致中文拼音也无法输入的问题。
+在日常开发中，我们通常会在 Debug 开发模式下写很多测试代码，或者引入一些测试专用的 `.a` 静态库或 `.framework` 动态库，也会通过 CocoaPods 引入一些第三方测试调试工具等；但我们往往不希望这些测试代码和测试用的库（Library/Framework）在 Release 正式包中被引用或导入，如何做到呢？
 
-后面我们又有了新需求：**对输入框已输入的文本字数进行实时统计，并在界面上显示剩余字数，且不能让所输入的文本超过最大限制长度**。但这个简单的功能仍然有不少小坑。
+* `.h/.m` 文件中的测试代码
 
-在上一个小集中，我们讲到，对于 iOS 系统自带的键盘，有时候它在输入框中填入的是占位字符（已被高亮选中起来），等用户选中键盘上的候选词时，再替换为真正输入的字符，如下：
+Xcode 在 Debug 模式下已经自动帮我们定义了宏 `DEBUG=1`，所以我们可以在代码文件中把相关测试代码写在编译预处理命令 `#ifdef DEBUG ... #endif` 中间即可，如下图所示，这也是我们最常见的一种用法。
 
-![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/06/1-1.jpg)
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/06/3-1.png)
 
-这会带来一个问题：比如输入框限定最多只能输入 10 位，当已经输入 9 个汉字的时候，使用系统拼音键盘则第 10 个字的拼音就打不了（因为剩余的 1 位无法输入完整的拼音）。
+* 测试用的 `.a` 静态库或 `.framework` 动态库
 
-怎么办呢？上面提到，输入框中的拼音会被高亮选中起来，所以我们可以根据 `UITextField` 的 `markedTextRange` 属性判断是否存在高亮字符，如果有则不进行字数统计和字符串截断操作。我们通过监听 `UIControlEventEditingChanged` 事件来对输入框内容的变化进行相应处理，如下：
+对于通过拖拽的方式直接在工程中添加一些用于测试 `.a` 或者 `.framework` ，我们可以在 Targets - Build Settings - Search Paths 中分别设置 `Library Search Paths` 和 `Framework Search Paths` 这两个选项，如下图所示（其中 libWeChatSDK.a 放在 WeChatSDK 目录中，而 TencentOpenAPI.framework 放在 QQSDK 目录中，假设它们只在测试时会用到），我们可以移除 Release 模式下测试用的 `.a` 或 `.framework` 所在的目录，只在 Debug 下保留，这样在打 Release 包时就不会包含这些库了。
 
-```objc
-[self.textField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
-```
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/06/3-2.png)
 
-```objc
-- (void)textFieldDidChange:(UITextField *)textField {
-    // 判断是否存在高亮字符，如果有，则不进行字数统计和字符串截断
-    UITextRange *selectedRange = textField.markedTextRange;
-    UITextPosition *position = [textField positionFromPosition:selectedRange.start offset:0];
-    if (position) {
-        return;
-    }
-    
-    // maxWowdLimit 为 0，不限制字数
-    if (self.maxWowdLimit == 0) {
-        return;
-    }
-    
-    // 判断是否超过最大字数限制，如果超过就截断
-    if (textField.text.length > self.maxWowdLimit) {
-        textField.text = [textField.text substringToIndex:self.maxWowdLimit];
-    }
-    
-    // 剩余字数显示 UI 更新
-}
-```
+* CocoaPods 引入的测试库
 
-对于 `UITextView` 的处理也是类似的。
+对于通过 CocoaPods 方式引入的第三方测试库，就很方便了，我们可以配置 `configurations` 选项它们只在 Debug 下生效，如下图：
 
-另外，对于“字数”的定义是很多种理解：在 Objective-C 中字符串 `NSString` 的长度 `length`，对于一个中文汉字和一个英文字母都是 1；但如果我们要按**字节**来统计和限制，同一字符在不同编码下所占的字节数也是不同的；另外有时我们要统计的是所输入文本的单词个数，而不是字符串的长度，所以我们需要根据不同的使用场景进行分析。
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/06/3-3.png)
