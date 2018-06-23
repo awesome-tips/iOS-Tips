@@ -12,12 +12,12 @@ Xcode 在 Debug 模式下已经自动帮我们定义了宏 `DEBUG=1`，所以我
 
 * 测试用的 `.a` 静态库或 `.framework` 动态库
 
-对于通过拖拽的方式直接在工程中添加一些用于测试 `.a` 或者 `.framework` ，我们可以在 Targets - Build Settings - Search Paths 中分别设置 `Library Search Paths` 和 `Framework Search Paths` 这两个选项，如下图所示（其中 libWeChatSDK.a 放在 WeChatSDK 目录中，而 TencentOpenAPI.framework 放在 QQSDK 目录中，假设它们只在测试时会用到），我们可以移除 Release 模式下测试用的 `.a` 或 `.framework` 所在的目录，只在 Debug 下保留，这样在打 Release 包时就不会包含这些库了。
+对于通过拖拽的方式直接在工程中添加一些用于测试 `.a` 或者 `.framework` ，我们可以在 Targets - Build Settings - Search Paths 中分别设置 `Library Search Paths` 和 `Framework Search Paths` 这两个选项，如下图所示（其中 libWeChatSDK.a 放在 WeChatSDK 目录中，而 TencentOpenAPI.framework 放在 QQSDK 目录中，假设它们只在测试时会用到），我们可以移除 Release 模式下测试用的 `.a` 或 `.framework` 所在的目录，只在 Debug 下保留，这样在打 Release 包时就不会包含这些库了。（当然在代码中使用到这些测试库的地方也要像上述一样写在 DEBUG 中间）
 
 ![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/06/3-2.png)
 
 * CocoaPods 引入的测试库
 
-对于通过 CocoaPods 方式引入的第三方测试库，就很方便了，我们可以配置 `configurations` 选项它们只在 Debug 下生效，如下图：
+对于通过 CocoaPods 方式引入的第三方测试库，就很方便了，我们可以配置 `configurations` 选项让它们只在 Debug 下生效，如下图：
 
 ![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/06/3-3.png)
