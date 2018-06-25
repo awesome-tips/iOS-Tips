@@ -1,11 +1,26 @@
-推荐几个高频使用的 Xcode 小技巧
+WWDC 2018 苹果推荐的大图加载方式
 --------
 **作者**: [halohily](https://weibo.com/halohily)
 
-今天是节后上班第一天，也是 WWDC 期间知识小集微博话题暂停之后回归的第一天。欢迎关注本次 WWDC 期间 知识小集 和 老司机、SwiftGG 联合完成的掘金免费专题。
+在 iOS 开发中，图片载入到内存中占用的空间和它的二进制文件大小无关，而是基于图片的尺寸。在 WWDC 2018 中，苹果为我们建议了一种大家平时使用较少的大图加载方式，它的实际占用内存与理论值最为接近。下面是示例代码：
 
-今天小集给大家推荐几个实用的 Xcode 小技巧。
-1. 快速打开: `Command + Shift + O`。这个命令可以开启一个小窗格用来快速搜索浏览文件、类、算法以及函数等，且支持模糊搜索。这个命令可以说是我日常开发中最高频使用的一个了。
-2. 显示项目导航器: `Command + Shift + J`。使用快速打开命令跳转到对应文件后，如果需要在左侧显示出该文件在项目中的目录结构，只需要键入这个命令，非常方便。
-3. 显示编辑历史。如果发现一行需要膜拜或者需要吐槽的代码，不需要跑到专门的 diff 工具查看代码历史。在该代码行处右键，选择  `Show Blame for Line`，即可弹出一个小标签，显示该处代码的修改作者、commit 记录等信息。
+```
+func downsample(imageAt imageURL: URL, to pointSize: CGSize, scale: CGFloat) -> UIImage
+{
+let sourceOpt = [kCGImageSourceShouldCache : false] as CFDictionary
+// 其他场景可以用createwithdata (data并未decode,所占内存没那么大),
+let source = CGImageSourceCreateWithURL(imageURL as CFURL, sourceOpt)!
+
+let maxDimension = max(pointSize.width, pointSize.height) * scale
+let downsampleOpt = [kCGImageSourceCreateThumbnailFromImageAlways : true,
+kCGImageSourceShouldCacheImmediately : true ,
+kCGImageSourceCreateThumbnailWithTransform : true,
+kCGImageSourceThumbnailMaxPixelSize : maxDimension] as CFDictionary
+let downsampleImage = CGImageSourceCreateThumbnailAtIndex(source, 0, downsampleOpt)!
+return UIImage(cgImage: downsampleImage)
+}
+```
+
+参考资料：https://juejin.im/post/5b2ddfa7e51d4553156be305
+
 
