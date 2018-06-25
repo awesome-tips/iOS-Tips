@@ -42,17 +42,13 @@
 [2018 年 06 月](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md)
 
 * [1. 再谈 iOS 输入框的字数统计/最大长度限制 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md)
-* [2. iOS 处理 navigationBar.titleTextAttributes 属性时机【无彦主】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md)
+* [2. iOS 处理 navigationBar.titleTextAttributes 属性时机【无彦祖】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md)
 
-[2018 年 05 月](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md)
 
-* [16. 被大家忽略的UIViewController两对API 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#%E8%A2%AB%E5%A4%A7%E5%AE%B6%E5%BF%BD%E7%95%A5%E7%9A%84uiviewcontroller%E4%B8%A4%E5%AF%B9api)
-* [17. UIScrollView 拖拽滑动时收起键盘 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#uiscrollview-%E6%8B%96%E6%8B%BD%E6%BB%91%E5%8A%A8%E6%97%B6%E6%94%B6%E8%B5%B7%E9%94%AE%E7%9B%98)
-* [18. iOS 如何调试 WebView 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md#ios-%E5%A6%82%E4%BD%95%E8%B0%83%E8%AF%95-webview)
-* [19. 如何定制一个 UIView 类型控件的出入动画 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md)
-* [20. iOS 如何调试 WebView （二） 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md)
-* [21. UIView 的事件透传 【Vong】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md)
-* [22. 一个结构较为合理的下载模块该怎么设计 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/05.md)
+* [3. 推荐几个高频使用的 Xcode 小技巧 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md#%E6%8E%A8%E8%8D%90%E5%87%A0%E4%B8%AA%E9%AB%98%E9%A2%91%E4%BD%BF%E7%94%A8%E7%9A%84-xcode-%E5%B0%8F%E6%8A%80%E5%B7%A7)
+* [4. Xcode 设置代码只在 Debug 下起效的几种方式 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md#xcode-%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%A0%81%E5%8F%AA%E5%9C%A8-debug-%E4%B8%8B%E8%B5%B7%E6%95%88%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F)
+* [5. 提升终端体验的两把厉剑 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md#%E6%8F%90%E5%8D%87%E7%BB%88%E7%AB%AF%E4%BD%93%E9%AA%8C%E7%9A%84%E4%B8%A4%E6%8A%8A%E5%8E%89%E5%89%91)
+* [6. 延时动画的两种方式对比 【Vong】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md#%E5%BB%B6%E6%97%B6%E5%8A%A8%E7%94%BB%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F%E5%AF%B9%E6%AF%94)
 
 [[2018]查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2018/目录.md)
 
