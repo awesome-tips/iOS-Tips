@@ -15,6 +15,12 @@ iOS 如何获取 ipa 包
 
 ### 方式二：pp助手
 
-电脑安装一个 pp助手客户端，直接下载越狱应用，下载完成后，即可在“本地应用”中找打 APP 的 ipa 包。
+电脑安装一个 pp助手客户端，直接下载越狱应用，下载完成后，即可在“本地应用”中找打 APP 的 ipa 包。下载地址是在 p52-buy.itunes 这个域名下。
 
 ![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/06/4-2.jpg)
+
+### 方式三：抓包
+
+通过 Charles 抓包获取到 ipa 包的下载地址，直接在浏览器中下载。
+
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/06/4-3.jpg)
