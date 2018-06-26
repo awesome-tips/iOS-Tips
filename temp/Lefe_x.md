@@ -1,24 +1,20 @@
-提升终端体验的两把厉剑
+iOS 如何获取 ipa 包
 --------
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
-在以往的小集中已介绍过 iTerm2 和 oh-my-zsh 的使用，如果你还不了解这两个工具，不妨到以往的小集中看看他们的作用，包您满意。而今天介绍另外两个提升终端体验的工具。
+以前获取一个应用的 ipa 包轻而易举，然而今天想获取一个 ipa 包，如果没有适当的方法，非常费劲。以前 Itunes 和 iTools 都可以获取到 ipa 包，然而升级后都不能获取了。今天我们就聊聊如何获取 ipa 包？如果你有更好的方式，不妨分享出来。
 
-### tree
+### 方式一：iTunes
 
-如果想在终端查看当前目录的层级结构，不妨了解下 tree，它可以以树状的形式显示当前的目录结构。
+苹果既然在高版本的 iTunes 取消了获取 ipa 包的入口，那我们就想办法降级处理。需要下载低版本的 iTunes。 [下载](http://secure-appldnld.apple.com/itunes12/091-33628-20170922-EF8F0FE4-9FEF-11E7-B113-91CF9A97A551/iTunes12.6.3.dmg)。
 
-安装：
-在终端输入：`brew install tree` 。
+下载完后，安装，启动的时候按住 option 键，这样才不会报错，安装完成后，即可找到下载应用的 ipa 包。下载完成后，在应用的图标上按右键，show in finder 即可找到 ipa 包。
 
-使用:
-在当前目录下，显示树状目录结构：`tree -L 2 -d` 。其中 -L 表示遍历的深度，这里为 2；-d 表示只显示目录。更多参数可以使用 `man tree` 查看。
-
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/06/2-1.jpg)
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/06/4-1.jpg)
 
 
-### Go2Shell
+### 方式二：pp助手
 
-有时候在 Finder 中的目录，想在终端中直接切换到 Finder 当前显示的目录。使用 Go2Shell 即可，一步到位，非常方便。在官网上 [下载](http://zipzapmac.com/Go2Shell)，安装，打开 Finder，按住 command 键，拖动 Go2Shell 的图标到 Finder 菜单，在 Finder 的菜单栏中会显示 Go2Shell 图标。下次想在终端显示当前 Finder 的目录，直接点击图标即可。
+电脑安装一个 pp助手客户端，直接下载越狱应用，下载完成后，即可在“本地应用”中找打 APP 的 ipa 包。
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/06/2-2.jpg)
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/06/4-2.jpg)
