@@ -32,9 +32,11 @@ $ git stash apply your-commit-sha
 > 5. git show shows information about that particular commit. So if we filter and print those containing the bug number… voilà!
 
 
-参考[How to recover a deleted git stash](https://mobilejazz.com/blog/how-to-recover-a-deleted-git-stash/)
+**参考** 
 
+[How to recover a deleted git stash](https://mobilejazz.com/blog/how-to-recover-a-deleted-git-stash/)
 
+[Can we recover deleted commits? ](https://stackoverflow.com/a/34751863)
 
 
 
