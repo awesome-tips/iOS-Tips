@@ -1,53 +1,41 @@
-延时动画的两种方式对比
+git 恢复误删的 stash
 --------
 **作者**: [Vong_HUST](https://weibo.com/VongLo)
 
-一般情况下，做延时动画有下面常见的两种方式，方式1采用 `UIView` 提供的带延迟参数的类方法，方式2则是使用 `NSObject` 的实例方法来延迟执行某个方法。如下图所示，二者都能在3秒之后做一个时长为0.3秒的渐隐动画，那区别在哪呢？
+日常开发过程中，相信大家都使用 git，团队协作使用 git-flow。也经常会遇到需求做到一半，产品或者测试反馈一个线上问题，不得不 stash 当前已经写了一半的代码，然后切回到 master 查看问题，然后又恢复会原来的 stash。但是这样操作有时候可能会把之前 stash 的代码误删，辛辛苦苦写的代码说没就没了。那么问题来了，stash 能否像 commit 那样可以随时恢复？
 
-区别就在于：方式1在执行 `[self dismissWithDelay:3];` 后，`self` 的 `alpha` 会马上变成0（但还是可见的），导致点击事件不响应，方式2则可以正常响应。
+答案当然是肯定的。我们知道只要有提交记录，git 肯定能恢复。其实 stash 某种程度上也可以看做一种 commit，如果还记得当时 stash 的名称，就更加容易恢复了。可以使用如下命令行来恢复，其中 'your stash name' 处填入 stash 操作时留的名称
 
-原因在于 `UIView` 的动画类方法，只是对 `CoreAnimation` 的封装，在调用了该方法后，相当于给 `self.layer` 加了一个 `opacity` 的 `CABasicAnimation`。`self` 的 `modelLayer` 的透明度（`opacity`）已经被设置成了动画结束时的值（0）（`modelLayer` 的属性和 `view` 的对应属性是一致的，比如这里的 `modelLayer` 的 `opacity` 和 `view` 的 `alpha`），进而导致无法响应点击事件。`presentationLayer` 则是动画过程中近似我们实时看到的内容。
-
-所以一般情况下，如果延时动画操作的是 `alpha` 或者 `hidden` 属性，建议采用 `performSelector:withObject:afterDelay:` 的方式，这样可以在延迟时间未到之前还是能够响应对应的交互。
-
-PS：如果想在延时还未到的时候取消，方式1可以采用 `[self.layer removeAllAnimations]`，方式2可以采用 `[NSObject cancelPreviousPerformRequestsWithTarget:self]` 的方式。
-
-更多关于 `CoreAnimation` 的内容可以查看 [动画解释](https://objccn.io/issue-12-1/) 以及 [iOS-Core-Animation-Advanced-Techniques](https://github.com/AttackOnDobby/iOS-Core-Animation-Advanced-Techniques)。
-
-```objc
-// 方式1
-- (void)dismissWithDelay:(NSTimeInterval)delay {
-    [UIView animateWithDuration:0.3
-                          delay:delay
-                        options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionAllowUserInteraction
-                     animations:^{
-                         self.alpha = 0.f;
-                     }
-                     completion:^(BOOL finished) {
-                         
-                     }];
-}
-
-[self dismissWithDelay:3];
-
-NSLog(@"%f, %f, %f", self.alpha, self.layer.presentationLayer.opacity, self.layer.modelLayer.opacity);      // ---> 0.000000, 1.000000, 0.000000
-
-// 方式2
-- (void)dismiss {
-    [UIView animateWithDuration:0.3
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionAllowUserInteraction
-                     animations:^{
-                         self.alpha = 0.f;
-                     }
-                     completion:^(BOOL finished) {
-                         
-                     }];
-}
-
-[self performSelector:@selector(dismiss) withObject:nil afterDelay:3 inModes:@[NSRunLoopCommonModes]];
-NSLog(@"%f, %f, %f", self.alpha, self.layer.presentationLayer.opacity, self.layer.modelLayer.opacity);      // ---> 1.000000, 1.000000, 1.000000
 ```
+$ git fsck 2> /dev/null | awk '/commit/{print $3}' | git show --stdin --grep 'your stash name'
+```
+
+最终可以在终端中看到一些 commit 信息和日期，找到对应想恢复的 SHA，然后执行
+
+```
+$ git stash apply your-commit-sha
+```
+
+关于第一处代码的解释：
+
+> 1. The funny 2> /dev/null part ignores all error messages (they are thrown to /dev/null a dark hole in every UNIX system).
+
+> 2. git fsck checks your repo for orphaned commits.
+
+> 3. This prints a list of information, containing the id of the commit and it’s type, for example:
+
+dangling commit 6108663eaaac4b7e850f6d492cf83e7b65db2c97
+dangling commit b526a825c7730075eb5938917c8b8b7a98f63cdf
+dangling commit 04479ae959fc7470d04e1743f1c7149414c366fa
+dangling blob c6609e5099056da80ea1cdf5bea302225bd6b7ed
+dangling commit 9d65fa867f23d28ce618fcb5d7988180efb67f9c
+
+> 4. We’re after commit ids, which is the third part of each line, so we run: awk '/commit/{print $3}’ to obtain the third part of each line.
+
+> 5. git show shows information about that particular commit. So if we filter and print those containing the bug number… voilà!
+
+
+参考[How to recover a deleted git stash](https://mobilejazz.com/blog/how-to-recover-a-deleted-git-stash/)
 
 
 
