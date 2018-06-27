@@ -19,19 +19,16 @@ $ git stash apply your-commit-sha
 关于第一处代码的解释：
 
 > 1. The funny 2> /dev/null part ignores all error messages (they are thrown to /dev/null a dark hole in every UNIX system).
-
 > 2. git fsck checks your repo for orphaned commits.
-
 > 3. This prints a list of information, containing the id of the commit and it’s type, for example:
 
-dangling commit 6108663eaaac4b7e850f6d492cf83e7b65db2c97
-dangling commit b526a825c7730075eb5938917c8b8b7a98f63cdf
-dangling commit 04479ae959fc7470d04e1743f1c7149414c366fa
-dangling blob c6609e5099056da80ea1cdf5bea302225bd6b7ed
-dangling commit 9d65fa867f23d28ce618fcb5d7988180efb67f9c
-
+       dangling commit 6108663eaaac4b7e850f6d492cf83e7b65db2c97
+       dangling commit b526a825c7730075eb5938917c8b8b7a98f63cdf
+       dangling commit 04479ae959fc7470d04e1743f1c7149414c366fa
+       dangling blob c6609e5099056da80ea1cdf5bea302225bd6b7ed
+       dangling commit 9d65fa867f23d28ce618fcb5d7988180efb67f9c
+    
 > 4. We’re after commit ids, which is the third part of each line, so we run: awk '/commit/{print $3}’ to obtain the third part of each line.
-
 > 5. git show shows information about that particular commit. So if we filter and print those containing the bug number… voilà!
 
 
