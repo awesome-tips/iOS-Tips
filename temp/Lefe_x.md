@@ -1,26 +1,27 @@
-获取 ipa 包三种姿势
+你的项目中还用热修复吗？
 --------
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
-以前获取一个应用的 ipa 包轻而易举，然而今天想获取一个 ipa 包，如果没有适当的方法，非常费劲。今天我们就聊聊如何获取 ipa 包，下面这三种方式都经过亲自验证，可能由于不同环境会出现异常，若遇到问题可以到【知识小集】gong-Zhong-Hao 留言。如果你有更好的方式，不妨分享出来。
+前两天知识小集群里有人讨论关于热修复的问题，对此我非常感兴趣，今天作为一个小集和大家探讨一下。虽然目前苹果不让带有热修复功能的 APP 上线，一旦发现，将增加审核时间（大约是一周的时间）。苹果主要考虑到了安全问题，避免给自己找事，所以干脆禁用了 JSPatch。但是 JSPatch 使用的 API 并没有违反苹果的规定，它也就没有一个十足的理由拒绝你的 APP 上线。这样就导致还有很多公司在偷悄悄地用 JSPatch。不过原理基本都是对 JSPatch 进行混淆后使用，当然如果你有能力自己实现一个 JSPatch 也可以。
 
-### 方式一：iTunes
+被拒苹果的拒绝理由大概是这样的：
 
-苹果既然在高版本的 iTunes 取消了获取 ipa 包的入口，那我们就想办法降级处理。需要下载低版本的 iTunes。 [下载](http://secure-appldnld.apple.com/itunes12/091-33628-20170922-EF8F0FE4-9FEF-11E7-B113-91CF9A97A551/iTunes12.6.3.dmg)。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/07/1-1.jpeg)
 
-下载完后，安装，第一次启动的时候按住 option 键，这样才不会报错，安装完成后，即可下载应用的 ipa 包。下载完成后，在应用的图标上按右键，show in finder 即可找到 ipa 包。
+目前我了解到市面上主要通过以下几种方式进行混淆：
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/06/4-1.jpg)
+### 方式一：使用官方提供的混淆方式
+
+目前使用官方提供的 JSPatch 服务任然可以过审。
+
+### 方式二：Bugly
+
+Bugly 也提供了热修复功能，它也是基于 JSPatch 进行混淆。有兴趣的同学可以看看具体的混淆方式。
+
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/07/1-2.jpeg)
+
+### 方式三：自己混淆
+
+自己混淆当然是最保守的，苹果很难察觉。某天网上爆出一个 ZipArchive 一个安全漏洞，而这个漏洞的一个条件就是使用了类似 JSPatch 这种可以动态执行脚本的功能，而被爆出的 APP 经查确实使用混淆后 JSPatch。所以自己混淆 JSPatch 这条路是通的。
 
 
-### 方式二：pp助手
-
-电脑安装一个 pp助手客户端，直接下载越狱应用，下载完成后，即可在“本地应用”中找打 APP 的 ipa 包。需要强调一点，这种方式下载的应用是解密后的 ipa。
-
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/06/4-2.jpg)
-
-### 方式三：抓包
-
-在 Mac 中的 iTunes 中下载应用，通过 Charles 抓包获取到 ipa 包的下载地址，直接在浏览器中下载，下载地址是在 p52-buy.itunes 这个域名下。
-
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/06/4-3.jpg)
