@@ -1,26 +1,14 @@
-WWDC 2018 苹果推荐的大图加载方式
+一些 UI 性能优化的 tips
 --------
 **作者**: [halohily](https://weibo.com/halohily)
 
-在 iOS 开发中，图片载入到内存中占用的空间和它的二进制文件大小无关，而是基于图片的尺寸。在 WWDC 2018 中，苹果为我们建议了一种大家平时使用较少的大图加载方式，它的实际占用内存与理论值最为接近。下面是示例代码：
+- 圆角效果：圆角效果的优化老生常谈，产生性能问题的根源在于原生圆角效果带来的离屏渲染开销。通常我们推荐直接使用圆角的素材，或者提前在子线程将图片进行圆角裁剪，这两者原理相同。除此之外，还有一种思路是在需要圆角的视图最上层添加一个中空的圆角遮罩层，以此来做出圆角效果。这个遮罩层和被盖在下面的视图在显示时会由 GPU 进行图层混合，而图层混合的开销远小于离屏渲染。值得一提的是，由于圆角效果通常在一屏中频繁出现，所以这个遮罩的图片素材可以只加载一次，并且应用于每一个圆角视图，避免重复加载。
+- 阴影效果：值得注意的是系统原生的阴影实现要求 layer 的 masksToBounds 值为 YES，所以原生的阴影效果和圆角是不兼容的。高效的阴影实现是为阴影指定 shadowPath，如果你还没用的话，不妨试一下。
+- 适时替换轻量控件：@ibireme 在他的性能优化文章中提出在合适的时候用 CALayer 替换 UIView，这确实有效，不过盲目替换往往会造成代码维护的困难。这里举两个适合的场景：绘制线条时，完全可以替换。以及静态展示图片时，将图片对象赋值给 layer 的 content 属性，也完全可以达到效果。
+- 图片解码：图片解码的知识不再赘述，值得一提的是，对于不同的图片格式，不同的解码算法，或者使用系统解码方法时的不同参数设置，都会影响解码性能，如果有这方面瓶颈的，不妨做多种尝试。
 
-```
-func downsample(imageAt imageURL: URL, to pointSize: CGSize, scale: CGFloat) -> UIImage
-{
-let sourceOpt = [kCGImageSourceShouldCache : false] as CFDictionary
-// 其他场景可以用createwithdata (data并未decode,所占内存没那么大),
-let source = CGImageSourceCreateWithURL(imageURL as CFURL, sourceOpt)!
+再说一个经典的例子：为了实现一个简单的画板需求，有人会在 UIView 上频繁调用 drawRect 方法进行新笔划的绘制，殊不知有一个天生的专用图层对象 CAShapeLayer 是很适合做这件事的。CAShapeLayer 不需要像普通 CALayer 一样创建寄宿图，不会造成巨量内存的使用，并且它使用了硬件加速。
 
-let maxDimension = max(pointSize.width, pointSize.height) * scale
-let downsampleOpt = [kCGImageSourceCreateThumbnailFromImageAlways : true,
-kCGImageSourceShouldCacheImmediately : true ,
-kCGImageSourceCreateThumbnailWithTransform : true,
-kCGImageSourceThumbnailMaxPixelSize : maxDimension] as CFDictionary
-let downsampleImage = CGImageSourceCreateThumbnailAtIndex(source, 0, downsampleOpt)!
-return UIImage(cgImage: downsampleImage)
-}
-```
-
-参考资料：https://juejin.im/post/5b2ddfa7e51d4553156be305
+UI 性能优化时，我们常常需要实时监测帧率。这里讲一下 @ibireme 的帧率监测工具 YYFPSLabel 的实现原理：使用 CADisplayLink，在每帧的回调事件中，计数器 c 加一，并且累计时间间隔 t 也进行更新。当时间间隔够 1 秒后，使用 c/t 计算出过去 1 秒的帧率，而后计数器清零，时间戳更新为当前时间戳，再重复之前步骤。因此 YYFPSLabel 的帧率更新周期在 1 秒左右。
 
 
