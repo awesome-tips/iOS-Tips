@@ -1,49 +1,39 @@
-Objective-C import 第三方库头文件总结
+两种 App 启动连续闪退检测策略
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-当我们的 iOS 工程要引用其它第三方开源库时，一般有以下几种方式：
+当我们要做 App 日志上报时，需要考虑到一种行为：App 在启动时就崩溃闪退了，而且当遇到连续启动闪退（也就是每次打开 App 必崩）时，那几乎是灾难，但更可怕是，如果没有有效的监测手段，我们可能对已发生的这种线上严重问题毫不知情。
 
-（1）下载源代码直接拖拽到工程中；
+WeRead 团队博客的[《iOS 启动连续闪退保护方案》](http://wereadteam.github.io/2016/05/23/GYBootingProtection/)和 MrPeak 老师的[《iOS App 连续闪退时如何上报 crash 日志》](http://mrpeak.cn/blog/ios-instacrash-reporting/)分别介绍了两种简易的如何检测连续闪退的策略，在这里跟大家分享一下。
 
-（2）使用 CocoaPods 管理，当开启 `use_frameworks!` 标记时，第三方库会被编译成 `.framework` 引入工程，否则就会编译成 `.a` 静态库；
+* 计时器方法
 
-（3）使用 Carthage 管理，第三方库会被编译成 `.framework` 然后导入工程；
+1）App 本地缓存维护一个计数变量，用于表示连续闪退的次数；
+2）在启动入口方法 `application:didFinishLaunchingWithOptions:` 里判断 App 之前是否发生过连续闪退，如果有，则启动保护流程，自我修复，日志上报等，否则正常启动。判断的逻辑如下：
+3）先取出缓存中的启动闪退计数 crashCount，然后把 crashCount 加 1 并保存；
+4）接着使用 `dispatch_after` 方法在 5s 后清零计数，如果 App 活不过 5 秒计数就不会被清零，下次启动就可以读取到；
+5）如果发现计数变量 > maxCount，表明 App 连续 maxCount 次连续闪退，启动保护流程，重置计数。
 
-（4）直接下载作者编译好的 `.framework` 导入工程。
+具体的代码如下图所示：
 
-但当我们在代码中要 import 第三方库的头文件时，对于这几种情况，写法都不太一样，以 `AFNetworking` 为例，总结如下：
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/3-1.png)
 
-* 对于（1）拖拽源码，只能以 `""` 引号的方式 import，
+这种计数器方法逻辑简单，与原有的代码耦合小。但存在误报可能（用户在启动 App 后又立即 kill 掉，会被误认为是 crash），不过可以通过设置时间阈值或者在 `applicationWillTerminate:` 里标记 App 是被手动 kill 来减少误报。
 
-```objc
-#import "AFNetworking.h"
-```
+* 时间数组比对
 
-* 对于（2）CocoaPods，如果开启 `use_frameworks!`，则将编译成 `.framework` 库，只能以 `<>` 尖括号的方式 import，**此外，对于（3）和（4）也是这样**，
+我们可以在本地保存一个 App 每次启动时间、闪退时间、手动关闭时间的时间数组，然后在 App 启动时根据分析各个时间戳判断是否存在连续闪退（当闪退时间减去启动时间小于阈值 5 秒时，则认为是启动闪退），具体如下：
 
-```objc
-#import <AFNetworking/AFNetworking.h>
-```
+1）App 每次启动时，记录当前时间 launchTs，写入时间数组；
+2）App 每次启动时，通过 crash 采集库，获取上次 crash report 的时间戳 crashTs，写入时间数组；
+3）App 在接收到 `UIApplicationWillTerminateNotification` 通知时，记录当前时间戳 terminateTs，写入时间数组。注意，之所以要记录 terminateTs，是为了排除一种特殊情况，即用户启动 App 之后立即手动 kill app。
 
-* 而对于 CocoaPods，如果不开启 `use_frameworks!`，则将编译成 `.a` 库，此时有如下 3 种方式 import，
+如果我们正确记录了上面三个时间戳，那么我们可以得到一个与 App crash 行为相关的时间线，如下图：
 
-```objc
-#import "AFNetworking.h"
-// 或者
-#import <AFNetworking.h>
-// 或者
-#import <AFNetworking/AFNetworking.h>
-```
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/3-2.png)
 
-那么问题来了，如果我们在写一个 SDK 或者私有的 Pods 库，需要宿主 App 工程引用某一个第三方库，如上所述，宿主工程有很多方式引用第三方库，这样我们就无法确定应该以哪种方式 import 头文件，怎么办呢？这时候我们就可以使用 `__has_include()` 宏来判断。
+根据各种时间线的行为特征，我们只需要加上时间间隔判断，就能得知是否为连续两次闪退了。注意，如果两个 crashTs 之间如果存在 terminateTs，则不能被认为是连续闪退。
 
-`__has_include()` 宏接收一个预引入的头文件名称（引号或者尖括号都可以）作为参数，如果该头文件能够被引入则返回 `1`，否则返回 `0`，使用起来如下：
+以上，介绍了两种检测 App 是否存在启动连续闪退的策略。
 
-```objc
-#if __has_include(<AFNetworking/AFNetworking.h>)
-#import <AFNetworking/AFNetworking.h>
-#else
-#import "AFNetworking.h"
-#endif
-```
+此外，对于连续闪退的保护方案以及连续闪退如何上报日志，请详细阅读开头提到的两篇博文。
