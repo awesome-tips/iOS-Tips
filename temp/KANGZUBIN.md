@@ -9,9 +9,13 @@ WeRead 团队博客的[《iOS 启动连续闪退保护方案》](http://wereadte
 * 计时器方法
 
 1）App 本地缓存维护一个计数变量，用于表示连续闪退的次数；
+
 2）在启动入口方法 `application:didFinishLaunchingWithOptions:` 里判断 App 之前是否发生过连续闪退，如果有，则启动保护流程，自我修复，日志上报等，否则正常启动。判断的逻辑如下：
+
 3）先取出缓存中的启动闪退计数 crashCount，然后把 crashCount 加 1 并保存；
+
 4）接着使用 `dispatch_after` 方法在 5s 后清零计数，如果 App 活不过 5 秒计数就不会被清零，下次启动就可以读取到；
+
 5）如果发现计数变量 > maxCount，表明 App 连续 maxCount 次连续闪退，启动保护流程，重置计数。
 
 具体的代码如下图所示：
@@ -25,7 +29,9 @@ WeRead 团队博客的[《iOS 启动连续闪退保护方案》](http://wereadte
 我们可以在本地保存一个 App 每次启动时间、闪退时间、手动关闭时间的时间数组，然后在 App 启动时根据分析各个时间戳判断是否存在连续闪退（当闪退时间减去启动时间小于阈值 5 秒时，则认为是启动闪退），具体如下：
 
 1）App 每次启动时，记录当前时间 launchTs，写入时间数组；
+
 2）App 每次启动时，通过 crash 采集库，获取上次 crash report 的时间戳 crashTs，写入时间数组；
+
 3）App 在接收到 `UIApplicationWillTerminateNotification` 通知时，记录当前时间戳 terminateTs，写入时间数组。注意，之所以要记录 terminateTs，是为了排除一种特殊情况，即用户启动 App 之后立即手动 kill app。
 
 如果我们正确记录了上面三个时间戳，那么我们可以得到一个与 App crash 行为相关的时间线，如下图：
