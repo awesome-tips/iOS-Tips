@@ -47,17 +47,10 @@
 * [4. 获取 ipa 包三种姿势 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E8%8E%B7%E5%8F%96-ipa-%E5%8C%85%E4%B8%89%E7%A7%8D%E5%A7%BF%E5%8A%BF)
 * [5. git 恢复误删的 stash 【Vong】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#git-%E6%81%A2%E5%A4%8D%E8%AF%AF%E5%88%A0%E7%9A%84-stash)
 
-[2018 年 06 月](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md)
-
-* [1. 再谈 iOS 输入框的字数统计/最大长度限制 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md)
-* [2. iOS 处理 navigationBar.titleTextAttributes 属性时机【无彦祖】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md)
-
-
-* [3. 推荐几个高频使用的 Xcode 小技巧 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md#%E6%8E%A8%E8%8D%90%E5%87%A0%E4%B8%AA%E9%AB%98%E9%A2%91%E4%BD%BF%E7%94%A8%E7%9A%84-xcode-%E5%B0%8F%E6%8A%80%E5%B7%A7)
-* [4. Xcode 设置代码只在 Debug 下起效的几种方式 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md#xcode-%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%A0%81%E5%8F%AA%E5%9C%A8-debug-%E4%B8%8B%E8%B5%B7%E6%95%88%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F)
-* [5. 提升终端体验的两把厉剑 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md#%E6%8F%90%E5%8D%87%E7%BB%88%E7%AB%AF%E4%BD%93%E9%AA%8C%E7%9A%84%E4%B8%A4%E6%8A%8A%E5%8E%89%E5%89%91)
-* [6. 延时动画的两种方式对比 【Vong】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/06.md#%E5%BB%B6%E6%97%B6%E5%8A%A8%E7%94%BB%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F%E5%AF%B9%E6%AF%94)
-
+* [6. 一些 UI 性能优化的 tips 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E4%B8%80%E4%BA%9B-ui-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%9A%84-tips)
+* [7. 两种 App 启动连续闪退检测策略 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E4%B8%A4%E7%A7%8D-app-%E5%90%AF%E5%8A%A8%E8%BF%9E%E7%BB%AD%E9%97%AA%E9%80%80%E6%A3%80%E6%B5%8B%E7%AD%96%E7%95%A5)
+* [8. 你的项目中还用热修复吗？ 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E4%BD%A0%E7%9A%84%E9%A1%B9%E7%9B%AE%E4%B8%AD%E8%BF%98%E7%94%A8%E7%83%AD%E4%BF%AE%E5%A4%8D%E5%90%97%EF%BC%9F)
+* [9. Assets的几个方便用法 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#assets%E7%9A%84%E5%87%A0%E4%B8%AA%E6%96%B9%E4%BE%BF%E7%94%A8%E6%B3%95)
 
 [[2018]查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2018/目录.md)
 
