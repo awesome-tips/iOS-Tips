@@ -1,27 +1,37 @@
-你的项目中还用热修复吗？
+一次内存泄漏后的思考
 --------
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
-前两天知识小集群里有人讨论关于热修复的问题，对此我非常感兴趣，今天作为一个小集和大家探讨一下。虽然目前苹果严禁带有热修复功能的 APP 上线，一旦发现，将增加审核时间（大约是一周的时间）。苹果主要考虑到了安全问题，避免给自己找事，所以干脆禁用了 JSPatch。但是 JSPatch 使用的 API 并没有违反苹果的规定，他也就没有一个十足的理由拒绝你的 APP 上线。这样就导致还有很多公司在悄悄地用 JSPatch。不过原理基本都是对 JSPatch 进行混淆后使用，当然如果你有能力自己实现一个 JSPatch 也可以。
+最近项目中遇到一个内存泄漏，SecondViewController 这个类在 pop 后并没有执行 dealloc 方法，也就没有被正常被释放。使用内存泄漏工具排查，并没有发现有循环引用的地方，手动查了一下也没发现异常。正在迷茫的时候，突然看到了一个注册监听的地方。实现方式类似下面这样：
 
-被拒苹果的拒绝理由大概是这样的：
+```
+- (void)dealloc {
+    [[Manager sharedInstance] removeObserver:self];
+}
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/07/1-1.jpeg)
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
+    [[Manager sharedInstance] addObserver:self];
+}
+```
 
-目前我了解到市面上主要通过以下几种方式进行混淆（如果对这个话题感兴趣，后续我们会在【知识小集】gong-zhong-hao 进一步探讨）：
+看到这里你应该已经猜到 SecondViewController 为什么没被释放，它被 Manager 持有了，而 Manager 是一个单例，自然 SecondViewController 也不会被释放，dealloc 方法也不会执行。
 
-### 方式一：使用官方提供的混淆方式
+这种设计很常见，往往给某个服务注册监听，达到类似通知的效果。如果使用数组保存监听者，监听者将会被数组持有。有同学可能说，可以在 viewDidAppear 注册，在 viewWillDisappear 移除，这样 SecondViewController 就会被释放。但是，这样设计很糟糕，我们尽量不去约束调用者如何调用某个 API。
 
-目前使用官方提供的 JSPatch 服务任然可以过审，据说也是通过静态混淆-宏定义 这中方式。
+其实正确的做法是使用一个弱引用容器，我们可以使用 NSHashTable 来保存监听者，这样当监听者释放后，将自动从 NSHashTable 中移除，也不需要主动调用移除监听者的方法（也可以调用，视情况而定）。下面是一个简单的实现，你也可以参考 YYTextKeyboardManager 的实现：
 
-### 方式二：Bugly（静态混淆-宏定义）
+```
+_listenerTable = [NSHashTable weakObjectsHashTable];
 
-Bugly 提供了热修复功能，它提供了一种对 JSPatch 混淆的方式。在 `BuglyHotfixConfuse_pch.h` 文件中把需要混淆的类名方法名替换掉。有兴趣的读者可以 [下载](https://bugly.qq.com/v2/downloads) 查看详细代码。
+- (void)addObserver:(NSObject *)obj {
+    [self.listenerTable addObject:obj];
+}
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/07/1-2.jpeg)
-
-### 方式三：自己混淆
-
-自己混淆当然是最保守的，苹果很难察觉。某天网上爆出一个 ZipArchive 安全漏洞，而这个漏洞的一个条件就是使用了类似 JSPatch 这种可以动态执行脚本的功能，而被爆出的 APP 经查确实使用混淆后 JSPatch，而他们采用的混淆方式也就是自己混淆。所以自己混淆 JSPatch 这条路是通的。自己混淆主要是理解 JSPatch 的原理，换一种方式来实现。
+- (void)removeObserver:(NSObject *)obj {
+    [self.listenerTable removeObject:obj];
+}
+```
 
 
