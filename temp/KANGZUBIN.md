@@ -1,45 +1,26 @@
-两种 App 启动连续闪退检测策略
+Xcode 断点调试时打印变量值报错的问题（编译优化相关）
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-当我们要做 App 日志上报时，需要考虑到一种行为：App 在启动时就崩溃闪退了，而且当遇到连续启动闪退（也就是每次打开 App 必崩）时，那几乎是灾难，但更可怕是，如果没有有效的监测手段，我们可能对已发生的这种线上严重问题毫不知情。
+在日常开发中，我们经常会在 Debug 模式下打断点进行调试，并通过 LLDB 的 `po` 命令在控制台打印一些变量的值，以方便排查问题。
 
-WeRead 团队博客的[《iOS 启动连续闪退保护方案》](http://wereadteam.github.io/2016/05/23/GYBootingProtection/)和 MrPeak 老师的[《iOS App 连续闪退时如何上报 crash 日志》](http://mrpeak.cn/blog/ios-instacrash-reporting/)分别介绍了两种简易的如何检测连续闪退的策略，在这里跟大家分享一下。
+今天在 Release 模式下编译运行项目，发现要打印某一变量的值时（`po xxx`），报如下错误：
 
-* 计时器方法
+```
+error: Couldn't materialize: couldn't get the value of variable xxx: no location, value may have been optimized out
+error: errored out in DoExecute, couldn't PrepareToExecuteJITExpression
+```
 
-1）App 本地缓存维护一个计数变量，用于表示连续闪退的次数；
+大致意思是说，`xxx` 的值不存在，可能已经被编译优化了。而且在断点模式下当我们把鼠标的箭头移到某一变量上要进行快速浏览时，发现它们的值都是 `nil`。
 
-2）在启动入口方法 `application:didFinishLaunchingWithOptions:` 里判断 App 之前是否发生过连续闪退，如果有，则启动保护流程，自我修复，日志上报等，否则正常启动。判断的逻辑如下：
+查了一下才发现，原来这与 Xcode 工程的编译选项 `Optimization Level` 设置有关，它是指编译器的优化级别，优化后的代码效率比较高，但是可读性比较差，且编译时间更长，它有 6 个选项值如下图：
 
-3）先取出缓存中的启动闪退计数 crashCount，然后把 crashCount 加 1 并保存；
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/5-1.png)
 
-4）接着使用 `dispatch_after` 方法在 5s 后清零计数，如果 App 活不过 5 秒计数就不会被清零，下次启动就可以读取到；
+上述每选项值的详细说明可以参考[《Xcode 中 Optimization Level 的设置》](https://www.jianshu.com/p/b38052ee56af)和[《如何加快编译速度》](https://www.zybuluo.com/qidiandasheng/note/587124)两篇文章，我们这里不再赘述。
 
-5）如果发现计数变量 > maxCount，表明 App 连续 maxCount 次连续闪退，启动保护流程，重置计数。
+Xcode 工程的 `Optimization Level` 值在 Debug 模式下默认为 `None [-O0]`，表示编译器不会尝试优化代码，保证调试时输出期望的结果；而在 Release 模式下默认为 `Fastest, Smallest[-Os]`，表示编译器将执行所有优化，且不会增加代码的长度，它是可执行文件占用更少内存的首选方案。
 
-具体的代码如下图所示：
+这也是为什么我们在 Release 模式下断点打印变量会报错，因为编译器已经给代码做了优化，它将不在调试时记录变量的值了。
 
-![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/3-1.png)
-
-这种计数器方法逻辑简单，与原有的代码耦合小。但存在误报可能（用户在启动 App 后又立即 kill 掉，会被误认为是 crash），不过可以通过设置时间阈值或者在 `applicationWillTerminate:` 里标记 App 是被手动 kill 来减少误报。
-
-* 时间数组比对
-
-我们可以在本地保存一个 App 每次启动时间、闪退时间、手动关闭时间的时间数组，然后在 App 启动时根据分析各个时间戳判断是否存在连续闪退（当闪退时间减去启动时间小于阈值 5 秒时，则认为是启动闪退），具体如下：
-
-1）App 每次启动时，记录当前时间 launchTs，写入时间数组；
-
-2）App 每次启动时，通过 crash 采集库，获取上次 crash report 的时间戳 crashTs，写入时间数组；
-
-3）App 在接收到 `UIApplicationWillTerminateNotification` 通知时，记录当前时间戳 terminateTs，写入时间数组。注意，之所以要记录 terminateTs，是为了排除一种特殊情况，即用户启动 App 之后立即手动 kill app。
-
-如果我们正确记录了上面三个时间戳，那么我们可以得到一个与 App crash 行为相关的时间线，如下图：
-
-![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/3-2.png)
-
-根据各种时间线的行为特征，我们只需要加上时间间隔判断，就能得知是否为连续两次闪退了。注意，如果两个 crashTs 之间如果存在 terminateTs，则不能被认为是连续闪退。
-
-以上，介绍了两种检测 App 是否存在启动连续闪退的策略。
-
-此外，对于连续闪退的保护方案以及连续闪退如何上报日志，请详细阅读开头提到的两篇博文。
+此外，有时候遇到一些线上 Bug 但是在 Debug 调试时却无法复现，我猜有可能会跟编译优化有关，你觉得呢？欢迎留言讨论。
