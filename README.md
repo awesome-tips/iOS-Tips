@@ -51,6 +51,11 @@
 * [7. 两种 App 启动连续闪退检测策略 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E4%B8%A4%E7%A7%8D-app-%E5%90%AF%E5%8A%A8%E8%BF%9E%E7%BB%AD%E9%97%AA%E9%80%80%E6%A3%80%E6%B5%8B%E7%AD%96%E7%95%A5)
 * [8. 你的项目中还用热修复吗？ 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E4%BD%A0%E7%9A%84%E9%A1%B9%E7%9B%AE%E4%B8%AD%E8%BF%98%E7%94%A8%E7%83%AD%E4%BF%AE%E5%A4%8D%E5%90%97%EF%BC%9F)
 * [9. Assets的几个方便用法 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#assets%E7%9A%84%E5%87%A0%E4%B8%AA%E6%96%B9%E4%BE%BF%E7%94%A8%E6%B3%95)
+* [10. 一个关于 GCD group 使用的小 tip 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E4%B8%80%E4%B8%AA%E5%85%B3%E4%BA%8E-gcd-group-%E4%BD%BF%E7%94%A8%E7%9A%84%E5%B0%8F-tip)
+* [11. UIAlertView 与输入框结合使用时的一个坑 【Vong】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#uialertview-%E4%B8%8E%E8%BE%93%E5%85%A5%E6%A1%86%E7%BB%93%E5%90%88%E4%BD%BF%E7%94%A8%E6%97%B6%E7%9A%84%E4%B8%80%E4%B8%AA%E5%9D%91)
+* [12. Xcode 断点调试时打印变量值报错的问题（编译优化相关） 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#xcode-%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95%E6%97%B6%E6%89%93%E5%8D%B0%E5%8F%98%E9%87%8F%E5%80%BC%E6%8A%A5%E9%94%99%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%88%E7%BC%96%E8%AF%91%E4%BC%98%E5%8C%96%E7%9B%B8%E5%85%B3%EF%BC%89)
+* [13. 一次内存泄漏后的思考 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E4%B8%80%E6%AC%A1%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E5%90%8E%E7%9A%84%E6%80%9D%E8%80%83)
+* [14. 提高Shortcuts调试效率的小技巧 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E6%8F%90%E9%AB%98shortcuts%E8%B0%83%E8%AF%95%E6%95%88%E7%8E%87%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7)
 
 [[2018]查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2018/目录.md)
 
