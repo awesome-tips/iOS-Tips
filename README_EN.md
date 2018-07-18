@@ -29,7 +29,8 @@ Current members:
 ------------- | ------------- | ------------- | -------------
 <a href="https://weibo.com/VongLo"><img style="border-radius: 30px" src="https://tvax3.sinaimg.cn/crop.0.0.667.667.180/ba81ca29ly8fhu4meonedj20ij0ijgmh.jpg" title="Vong_HUST" width="60"/></a> | [Vong_HUST](https://weibo.com/VongLo) | <a href="https://weibo.com/soapyigu"><img style="border-radius: 30px" src="https://tva4.sinaimg.cn/crop.14.0.721.721.180/6cf34ee4jw8f8rdmtzzgmj20ku0k10t5.jpg" title="故胤道长" width="60"/></a> | [故胤道长](https://weibo.com/soapyigu)
 <a href="https://weibo.com/517082456"><img style="border-radius: 30px" src="https://tva4.sinaimg.cn/crop.0.0.1242.1242.180/5fe18d75jw8evft9qcjh5j20yi0yigo5.jpg" title="高老师很忙" width="60"/></a> | [高老师很忙](https://weibo.com/517082456) | <a href="https://weibo.com/u/2293476232"><img style="border-radius: 30px" src="https://tvax1.sinaimg.cn/crop.6.0.737.737.180/88b3ab88ly8fnassmyvedj20ku0khgma.jpg" title="halohily" width="60"/></a> | [_拿破仑的_风火轮_](https://weibo.com/u/2293476232) 
-<a href="http://weibo.com/halohily "><img style="border-radius: 30px" src="http://ww4.sinaimg.cn/mw690/d9ec7ffcjw8f8a753z961j20e80dp0t3.jpg" title="halohily" width="60"/></a> | [halohily](http://weibo.com/halohily)
+<a href="http://weibo.com/halohily "><img style="border-radius: 30px" src="http://ww4.sinaimg.cn/mw690/d9ec7ffcjw8f8a753z961j20e80dp0t3.jpg" title="halohily" width="60"/></a> | [halohily](http://weibo.com/halohily) | <a href="https://weibo.com/kangzubin"><img style="border-radius: 30px" src="https://tva3.sinaimg.cn/crop.0.0.440.440.180/621b53aejw8ekybg28hxzj20c80c83z0.jpg" title="KANGZUBIN" width="60"/></a> | [KANGZUBIN](https://weibo.com/kangzubin) 
+<a href="https://weibo.com/cimer"><img style="border-radius: 30px" src="https://tvax3.sinaimg.cn/crop.0.0.240.240.180/63fbed7aly8fgwp4qd9e4j206o06omx4.jpg" title="蒋匿" width="60"/></a> | [蒋匿](https://weibo.com/cimer) 
 
 ## Latest Content
 
