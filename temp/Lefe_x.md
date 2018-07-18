@@ -36,3 +36,7 @@ NSSet *retainCycles = [detector findRetainCycles];
 
 Instrument 中的 Leak 工具主要用来“突袭”，开发者定期地使用它来检测内存泄漏。而上面介绍的工具主要在开发过程中即可发现内存问题，提前暴露给开发者。
 
+- [Xcode 中的 Debug Memory Graph]
+
+这个工具主要以图表的形式显示了当前内存的使用情况，可以查看循环引用，如果有内存问题会显示一个叹号。
+
