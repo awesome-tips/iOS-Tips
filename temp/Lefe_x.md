@@ -1,42 +1,41 @@
-iOS 内存泄露工具
+如何更容易看懂宏
 --------
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
-在日常开发中总会遇到内存泄漏的的问题，而排除内存泄漏一般会依靠以下这些工具：
-
-- [MLeaksFinder](http://wereadteam.github.io/2016/02/22/MLeaksFinder/)
-
-这个 WeRead 团队开发的一个内存泄漏检测工具，主要用来检测 UIViewController 和 UIView 中存在的内存泄漏。如果检查到内存泄漏，会弹出 Alert 提示存在内存泄漏。当然，如果某个 UIViewController 是单例，将会误检。
-
-如果检查出内存泄漏，点击 Alert 上的 `Retain Cycle` 将使用 FBRetainCycleDetector 检查存在循环引用的对象。比如：
+相信你和我一样，也遇到过特别难理解的宏定义，比如宏与宏之间嵌套、带参数的宏。我们看个例子(这个宏并不是特别难，但也很绕)：
 
 ```
--> DownloadAudioListViewController ,
--> _callblock -> __NSMallocBlock__ 
+#define JPBOXING_GEN(_name, _prop, _type) \
++ (instancetype)_name:(_type)obj  \
+{   \
+    JPBoxing *boxing = [[JPBoxing alloc] init]; \
+    boxing._prop = obj;   \
+    return boxing;  \
+}
+
+JPBOXING_GEN(boxObj, obj, id)
 ```
 
-- [FBRetainCycleDetector](https://github.com/facebook/FBRetainCycleDetector)
-
-这是 facebook 开源的一个内存泄漏检测工具，它可以检测出循环引用：
+这个例子看着总是怪怪的，如果把上面的宏转换成实际代码，相信你会很容易看懂。
 
 ```
-FBRetainCycleDetector *detector = [FBRetainCycleDetector new];
-[detector addCandidate:myObject];
-NSSet *retainCycles = [detector findRetainCycles];
++ (instancetype)boxObj:(id)obj
+{
+    JPBoxing *boxing = [[JPBoxing alloc] init];
+    boxing.obj = obj;
+    return boxing;
+}
 ```
 
-检查出的内存泄漏将打印出来：
+其实就是各种参数的替换导致阅读起来比较困难。我们都知道程序经过预处理后就会把宏转换为实际的代码，而 Xcode 为我们提供了对单个文件进行预处理（Produce -> Perform Action -> Preprocess 'xxxx.m'），这样处理后，上面的宏就变成了：
 
 ```
--> DownloadAudioListViewController ,
--> _callblock -> __NSMallocBlock__ 
++ (instancetype)boxObj:(id)obj { 
+   JPBoxing *boxing = [[JPBoxing alloc] init]; 
+   boxing.obj = obj; 
+   return boxing; 
+}
 ```
 
-- [Instrument 的 Leak 工具](https://juejin.im/entry/58b105b48ac24728d53e28cf)
-
-Instrument 中的 Leak 工具主要用来“突袭”，开发者定期地使用它来检测内存泄漏。而上面介绍的工具主要在开发过程中即可发现内存问题，提前暴露给开发者。
-
-- [Xcode 中的 Debug Memory Graph]
-
-这个工具主要以图表的形式显示了当前内存的使用情况，可以查看循环引用，如果有内存问题会显示一个叹号。
+经过预处理后和我们手动翻译的结果一样。
 
