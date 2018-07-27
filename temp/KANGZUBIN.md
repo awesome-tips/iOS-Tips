@@ -8,7 +8,7 @@ UIViewController 设置导航栏和标签栏不同 title 的问题
 
 ![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/13-1.jpg)
 
-但是，当我们在 `UITabBarController` 中初始化好上述页面结构后，且设置首页 VC 的 `tabBarItem.title` 为 “首页”，然后在首页 VC 的 `viewDidLoad` 方法中设置 `self.title` 为 “知识小集”，编译运行后我们发现首页底部的标签栏的标题也变成“知识小集”了，而不是刚设置的“首页”。
+但是，当我们在 `UITabBarController` 中初始化好上述页面结构后，且设置首页 VC 的 `tabBarItem.title` 为 “首页”，然后在首页 VC 的 `viewDidLoad` 方法中设置 `self.title` 为 “知识小集”，编译运行后我们发现首页底部标签栏的标题也变成“知识小集”了，而不是刚设置的“首页”。
 
 查了苹果文档中关于 `UIViewController` 中 `title` 属性的定义，有如下一段描述：
 
@@ -23,7 +23,5 @@ UIViewController 设置导航栏和标签栏不同 title 的问题
 * **self.tabBarItem.title:** 设置 VC 底部标签栏的标题
 
 * **self.title:** 同时修改上述两处的标题
-
-这个看似简单的问题，你是否也遇到过呢？欢迎留言讨论。
 
 参考文档：[UIViewController.title](https://developer.apple.com/documentation/uikit/uiviewcontroller/1621364-title?language=objc)
