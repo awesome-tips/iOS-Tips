@@ -1,35 +1,29 @@
-配置 xcodebuild 命令打包支持 Bitcode
+UIViewController 设置导航栏和标签栏不同 title 的问题
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-我们通常会把一些公用的模块抽离出来打成一个 .a 静态库或者 .framework 动态库，然后再嵌入到宿主工程中。
+我们通常会在一个 `UIViewController` 的 `viewDidLoad` 方法中通过 `self.title = xxx` 的方式给一个页面设置其导航栏标题，相信大家对这再熟悉不过了。
 
-最近我们的 App 工程开启 Bitcode 编译选项后（Enable Bitcode = YES），发现在进行 Archive 归档打 Release 包时，报如下错误，提示说工程使用的 libTestStaticSDK.a 静态库不支持 Bitcode：
+如果一个 VC 页面中同时具有 `NavigationBar`（导航栏）和 `TabBar`（标签栏），而且我们又想让这两个地方的标题显示不一致，如下图所示，在首页顶部导航栏标题中显示“知识小集”，而在底部标签栏标题中显示“首页”：
 
-```sh
-ld: bitcode bundle could not be generated because '/.../TestApp/TestStaticSDKLib/libTestStaticSDK.a(TestStaticSDK.o)' was built without full bitcode. All object files and libraries for bitcode must be generated from Xcode Archive or Install build for architecture armv7
-```
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/3-1.jpg)
 
-但是我们的 libTestStaticSDK 静态库工程的 Build Settings 中同样是有配置开启 Bitcode 的，为什么打出来的 .a 包却不支持 Bitcode 呢？
+但是，当我们在 `UITabBarController` 中初始化好上述页面结构后，且设置首页 VC 的 `tabBarItem.title` 为 “首页”，然后在首页 VC 的 `viewDidLoad` 方法中设置 `self.title` 为 “知识小集”，编译运行后我们发现首页底部的标签栏的标题也变成“知识小集”了，而不是刚设置的“首页”。
 
-通过查阅 StackOverflow 我们发现，原来开启 Bitcode 后，在 Xcode 中进行 "Build" 或 "Archive" 时，Xcode 会自动在编译命令后面添加 `-fembed-bitcode` 标识，而如果使用 `xcodebuild` 命令进行打包，则需要手动添加一个 `OTHER_CFLAGS`，如下：
+查了苹果文档中关于 `UIViewController` 中 `title` 属性的定义，有如下一段描述：
 
-```sh
-xcodebuild build OTHER_CFLAGS="-fembed-bitcode" -target libTestStaticSDK ...
-```
+>If the view controller has a valid navigation item or tab-bar item, assigning a value to this property updates the title text of those objects.
 
-另外一种解决方案是，在静态库 Xcode 工程的 Build Settings 中，添加一个 "User-Define Setting"，内容为：`'BITCODE_GENERATION_MODE' => 'bitcode'`，如下图所示：
+也就是说，如果一个 VC 同时有导航栏和标签栏，那么当给 `title` 赋值时，会同时修改这两个地方的标题。所以如果我们只想设置导航栏的标题，可以通过 `self.navigationItem.title = xxx` 的方式来实现。
 
-![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/9-1.png)
+因此，在一个 VC 中设置相关标题简单总结如下：
 
-这样在使用 `xcodebuild` 命令时就不用添加 `OTHER_CFLAGS="-fembed-bitcode"` 了。
+* **self.navigationItem.title:** 设置 VC 顶部导航栏的标题
 
-综上，为了通用，我们可以在 `xcodebuild` 命令后同时添加上述两种标识，因此一个完整的静态库打包脚本大致如下（同样适用于 Framework 的打包）：
+* **self.tabBarItem.title:** 设置 VC 底部标签栏的标题
 
-![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/9-2.png)
+* **self.title:** 同时修改上述两处的标题
 
-**参考链接**
+这个看似简单的问题，你是否也遇到过呢？欢迎留言讨论。
 
-* [How do I xcodebuild a static library with Bitcode enabled?](https://stackoverflow.com/questions/31486232/how-do-i-xcodebuild-a-static-library-with-bitcode-enabled)
-
-* [iOS 中动/静态库支持 Bitcode 的问题](https://juejin.im/post/5ab311c76fb9a028c42e18a9)
+参考文档：[UIViewController.title](https://developer.apple.com/documentation/uikit/uiviewcontroller/1621364-title?language=objc)
