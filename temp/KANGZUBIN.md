@@ -6,7 +6,7 @@ UIViewController 设置导航栏和标签栏不同 title 的问题
 
 如果一个 VC 页面中同时具有 `NavigationBar`（导航栏）和 `TabBar`（标签栏），而且我们又想让这两个地方的标题显示不一致，如下图所示，在首页顶部导航栏标题中显示“知识小集”，而在底部标签栏标题中显示“首页”：
 
-![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/3-1.jpg)
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/13-1.jpg)
 
 但是，当我们在 `UITabBarController` 中初始化好上述页面结构后，且设置首页 VC 的 `tabBarItem.title` 为 “首页”，然后在首页 VC 的 `viewDidLoad` 方法中设置 `self.title` 为 “知识小集”，编译运行后我们发现首页底部的标签栏的标题也变成“知识小集”了，而不是刚设置的“首页”。
 
