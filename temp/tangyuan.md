@@ -1,16 +1,18 @@
-Swift 版本建私有库时需要注意的地方
+vc多层push后回到指定页面的几种方法
 -------
 **作者**: [这个汤圆没有馅](https://weibo.com/u/6603469503)
 
-利用 `cocoapods` 建 `swift` 版本私有库步骤和 `OC` 版本一样，只要把语言 `Objc` 切换成 Swift 即可。一般情况下，`pod lib lint`验证会报警告，如下图，加 `--allow-warnings` 直接忽略即可。
+场景如下：
+RootVC -- > A -- > B -- > C，然后现在要求C直接pop回到A。
 
-![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/11-1.jpg)
+方法一：C返回到B的时候写个回调，B接收到回调再自己pop到A，但是这个方法B的页面会闪现一下，用户体验不好，不推荐。
 
-但是如果私有库里依赖了其他三方库，且该三方库的 swift 版本不一致，则 pod lib lint 会报一堆 error，如下图。
+方法二：在B push 到C的时候，直接把B从导航控制器的堆栈中移除，如图一。
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/15-1.jpg)
 
-![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/11-2.jpg)
+方法三：写一个UIViewController的catrgory，方法实现如图二。在C的backAct方法中使用，如图三。有的同学可能会怀疑B会不会内存泄露，可以在B中打印dealloc。
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/15-2.jpg)
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/15-3.jpg)
 
-这个时候就需要根据警告里的提示配置 `.swift-version`。该文件默认情况是不会有的，需要手动添加，如下图。这个时候再次执行 `pod lib lint --allow-warnings` 验证就能通过。
-
-![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/11-3.jpg)
+这里比较推荐方法三。不论有多少级的push，只要传入指定页面的类名，都能回到该页面。
 
