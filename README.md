@@ -68,6 +68,7 @@
 * [23. UIViewController 设置导航栏和标签栏不同 title 的问题 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#uiviewcontroller-%E8%AE%BE%E7%BD%AE%E5%AF%BC%E8%88%AA%E6%A0%8F%E5%92%8C%E6%A0%87%E7%AD%BE%E6%A0%8F%E4%B8%8D%E5%90%8C-title-%E7%9A%84%E9%97%AE%E9%A2%98)
 * [24. 如何更容易看懂宏 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E5%A6%82%E4%BD%95%E6%9B%B4%E5%AE%B9%E6%98%93%E7%9C%8B%E6%87%82%E5%AE%8F)
 * [25. 添加沙箱技术测试员报错的问题 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E6%B7%BB%E5%8A%A0%E6%B2%99%E7%AE%B1%E6%8A%80%E6%9C%AF%E6%B5%8B%E8%AF%95%E5%91%98%E6%8A%A5%E9%94%99%E7%9A%84%E9%97%AE%E9%A2%98)
+* [26. vc多层push后回到指定页面的几种方法 【这个汤圆没有馅】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#vc%E5%A4%9A%E5%B1%82push%E5%90%8E%E5%9B%9E%E5%88%B0%E6%8C%87%E5%AE%9A%E9%A1%B5%E9%9D%A2%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95)
 
 [[2018]查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2018/目录.md)
 
