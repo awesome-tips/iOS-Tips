@@ -1,41 +1,32 @@
-如何更容易看懂宏
+给 UIView 添加阴影
 --------
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
-相信你和我一样，也遇到过特别难理解的宏定义，比如宏与宏之间嵌套、带参数的宏。我们看个例子(这个宏并不是特别难，但也很绕)：
+给 UIView 添加阴影看似简单，如果操作不当也可能会浪费你一些时间。有时候明明添加了阴影可是在 UI 上却没显示出来，尤其涉及到 cell 复用的情况。这里总结几条阴影不显示的原因：
+
+- 是否设置了 masksToBounds 为 YES，设置为 masksToBounds=YES，阴影不显示；
+- 设置阴影时 view 的 frame 是否为 CGRectZero，如果是，即使设置阴影后修改 frame 不为 CGRectZero 时，也不会显示阴影；
+- 使用自动布局时往往会遇到 frame 为 CGRectZero 时设置阴影无效，这时可以使用 `layoutIfNeeded` 方法；
+
+**通过 layer 设置阴影**
 
 ```
-#define JPBOXING_GEN(_name, _prop, _type) \
-+ (instancetype)_name:(_type)obj  \
-{   \
-    JPBoxing *boxing = [[JPBoxing alloc] init]; \
-    boxing._prop = obj;   \
-    return boxing;  \
-}
-
-JPBOXING_GEN(boxObj, obj, id)
-```
-
-这个例子看着总是怪怪的，如果把上面的宏转换成实际代码，相信你会很容易看懂。
+// 阴影的颜色
+self.imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+self.imageView.layer.shadowOpacity = 0.8;
+// 阴影的圆角
+self.imageView.layer.shadowRadius = 1;
+// 阴影偏离的位置 (100, 50) x 方向偏离 100，y 偏离 50 正向，如果是负数正好为相反的方向
+self.imageView.layer.shadowOffset = CGSizeMake(3, 4);
 
 ```
-+ (instancetype)boxObj:(id)obj
-{
-    JPBoxing *boxing = [[JPBoxing alloc] init];
-    boxing.obj = obj;
-    return boxing;
-}
-```
 
-其实就是各种参数的替换导致阅读起来比较困难。我们都知道程序经过预处理后就会把宏转换为实际的代码，而 Xcode 为我们提供了对单个文件进行预处理（Produce -> Perform Action -> Preprocess 'xxxx.m'），这样处理后，上面的宏就变成了：
+**通过 shadowPath 设置阴影**
+
+通过这种方式设置的阴影可以自定义阴影的形状，它会使用在 layer 上设置的属性，比如 shadowRadius。
 
 ```
-+ (instancetype)boxObj:(id)obj { 
-   JPBoxing *boxing = [[JPBoxing alloc] init]; 
-   boxing.obj = obj; 
-   return boxing; 
-}
+UIEdgeInsets edges = UIEdgeInsetsMake(15, 10, 15, 10);
+UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(-edges.left, -edges.top, CGRectGetWidth(self.imageView.frame) + edges.left + edges.right, CGRectGetHeight(self.imageView.frame) + edges.top + edges.bottom)];
+self.imageView.layer.shadowPath = path.CGPath;
 ```
-
-经过预处理后和我们手动翻译的结果一样。
-
