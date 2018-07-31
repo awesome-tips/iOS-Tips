@@ -1,27 +1,23 @@
-UIViewController 设置导航栏和标签栏不同 title 的问题
+使用 Keychain 存储登录态需要注意的一个坑
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-我们通常会在一个 `UIViewController` 的 `viewDidLoad` 方法中通过 `self.title = xxx` 的方式给一个页面设置其导航栏标题，相信大家对这再熟悉不过了。
+今天要讨论的这个问题你可能永远都不会遇到，而且绝大部分情况下你很难在开发中事先预料到它未来可能会发生，但是一旦不幸发生了，可能就是一个很严重的线上问题，惨痛教训。
 
-如果一个 VC 页面中同时具有 `NavigationBar`（导航栏）和 `TabBar`（标签栏），而且我们又想让这两个地方的标题显示不一致，如下图所示，在首页顶部导航栏标题中显示“知识小集”，而在底部标签栏标题中显示“首页”：
+我们通常会在 Keychain（钥匙串）中存储一些密码、用户登录态等敏感数据，一是可以提高保存数据的安全性；二是当用户卸载 App 后重新安装，可以自动登录保留上次的登录态；三是同一开发者账号下的不同 App，如果是采用同一套账户体系，就可以通过 Keychain Groups 共享登录态。
 
-![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/07/13-1.jpg)
+我们的 App 之前都是只把用户的登录态保存在 Keychain 中，并在 App 启动时去读取它，这一直也都没什么问题。前一段时间我们的 App 由于业务合规的原因审核被拒，按照苹果的要求不得不把 App 从公司的 A 开发者账号转让到 B 开发者账号下（公司旗下有很多不同主体的开发者账号），转让过程很顺利，但发版后短时间内收到大面积的用户反馈说，更新新版本后提示“登录失效，需要重新登录”。
 
-但是，当我们在 `UITabBarController` 中初始化好上述页面结构后，且设置首页 VC 的 `tabBarItem.title` 为 “首页”，然后在首页 VC 的 `viewDidLoad` 方法中设置 `self.title` 为 “知识小集”，编译运行后我们发现首页底部标签栏的标题也变成“知识小集”了，而不是刚设置的“首页”。
+原因很容易就可以猜到，App 从 A 转让到 B，就无法读取保存在 A 账号下的 Keychain 数据了，用户更新版本覆盖安装后，打开 App 也就无法获取之前的登录态了。
 
-查了苹果文档中关于 `UIViewController` 中 `title` 属性的定义，有如下一段描述：
+而且对于这种已经发生的问题，我们似乎也没有什么有效的补救措施，临时加急再发一版似乎也解决不了问题，因为之前的 Keychain 数据就是读取不到了，总不能再把 App 转让回去吧，😂
 
->If the view controller has a valid navigation item or tab-bar item, assigning a value to this property updates the title text of those objects.
+那么如何未雨绸缪预防以后再发生这种因为转让 App 导致存储在 Keychain 中的登录态丢失读取不到呢？（虽然出现转让 App 的概率非常低）
 
-也就是说，如果一个 VC 同时有导航栏和标签栏，那么当给 `title` 赋值时，会同时修改这两个地方的标题。所以如果我们只想设置导航栏的标题，可以通过 `self.navigationItem.title = xxx` 的方式来实现。
+我们在新版本中采用了一种兼容的方法：把用户的登录态同时加密存储在本地缓存（Sandbox）和 Keychain 中，在 App 启动时，优先从 Keychain 中读取，如果 Keychain 中取不到，就从本地缓存中取（然后再把本地缓存的同步到 Keychain 中，因为即使 App 转让了，用户更新版本覆盖安装后 Sandbox 中的数据是不会变的），如果两处都取不到，就认为未登录。
 
-因此，在一个 VC 中设置相关标题简单总结如下：
+你有没有更好的解决方案？欢迎留言讨论。
 
-* **self.navigationItem.title:** 设置 VC 顶部导航栏的标题
+另外，有很多人通过 Keychain 来存储设备唯一标示符，也需要注意这个问题。
 
-* **self.tabBarItem.title:** 设置 VC 底部标签栏的标题
-
-* **self.title:** 同时修改上述两处的标题
-
-参考文档：[UIViewController.title](https://developer.apple.com/documentation/uikit/uiviewcontroller/1621364-title?language=objc)
+关于 Keychain 如何使用，可以参考苹果官方文档：[GenericKeychain](https://developer.apple.com/library/archive/samplecode/GenericKeychain/Introduction/Intro.html)，而关于 Keychain 滥用问题的讨论，可以看 V2EX 的[这个帖子](https://www.v2ex.com/t/471254)。
