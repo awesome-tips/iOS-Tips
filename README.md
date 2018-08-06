@@ -40,6 +40,13 @@
 ## 最新内容
 我们会定期整理微博上分享的内容，然后将最新的内容标题放在这里。更多内容可以查看每月的具体内容。
 
+[2018 年 08 月](https://github.com/southpeak/iOS-tech-set/blob/master/2018/08.md)
+
+* [1. 给 UIView 添加阴影 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/08.md#%E7%BB%99-uiview-%E6%B7%BB%E5%8A%A0%E9%98%B4%E5%BD%B1)
+* [2. 使用 Keychain 存储登录态需要注意的一个坑 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/08.md#%E4%BD%BF%E7%94%A8-keychain-%E5%AD%98%E5%82%A8%E7%99%BB%E5%BD%95%E6%80%81%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E4%B8%80%E4%B8%AA%E5%9D%91)
+* [3. 再谈数组、集合、字典与 hash、isEqual 方法的关联 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/08.md#%E5%86%8D%E8%B0%88%E6%95%B0%E7%BB%84%E3%80%81%E9%9B%86%E5%90%88%E3%80%81%E5%AD%97%E5%85%B8%E4%B8%8E-hash%E3%80%81isequal-%E6%96%B9%E6%B3%95%E7%9A%84%E5%85%B3%E8%81%94)
+* [4. 关于IAP丢单的处理 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/08.md#%E5%85%B3%E4%BA%8Eiap%E4%B8%A2%E5%8D%95%E7%9A%84%E5%A4%84%E7%90%86)
+
 [2018 年 07 月](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md)
 
 * [1. WWDC 2018 苹果推荐的大图加载方式 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#wwdc-2018-%E8%8B%B9%E6%9E%9C%E6%8E%A8%E8%8D%90%E7%9A%84%E5%A4%A7%E5%9B%BE%E5%8A%A0%E8%BD%BD%E6%96%B9%E5%BC%8F)
@@ -57,7 +64,7 @@
 * [12. Xcode 断点调试时打印变量值报错的问题（编译优化相关） 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#xcode-%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95%E6%97%B6%E6%89%93%E5%8D%B0%E5%8F%98%E9%87%8F%E5%80%BC%E6%8A%A5%E9%94%99%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%88%E7%BC%96%E8%AF%91%E4%BC%98%E5%8C%96%E7%9B%B8%E5%85%B3%EF%BC%89)
 * [13. 一次内存泄漏后的思考 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E4%B8%80%E6%AC%A1%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E5%90%8E%E7%9A%84%E6%80%9D%E8%80%83)
 * [14. 提高Shortcuts调试效率的小技巧 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E6%8F%90%E9%AB%98shortcuts%E8%B0%83%E8%AF%95%E6%95%88%E7%8E%87%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7)
-* [15. 怎么解决网络请求的依赖关系 【陈满iOS】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%9A%84%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB)
+* [15. 怎么解决网络请求的依赖关系 【蒋匿】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%E7%BD%91%E7%BB%9C%E8%AF%B7%E6%B1%82%E7%9A%84%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB)
 * [16. 对AppStore在蜂窝网150MB的下载限制的理解 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E5%AF%B9appstore%E5%9C%A8%E8%9C%82%E7%AA%9D%E7%BD%91150mb%E7%9A%84%E4%B8%8B%E8%BD%BD%E9%99%90%E5%88%B6%E7%9A%84%E7%90%86%E8%A7%A3)
 * [17. 配置 xcodebuild 命令打包支持 Bitcode 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#%E9%85%8D%E7%BD%AE-xcodebuild-%E5%91%BD%E4%BB%A4%E6%89%93%E5%8C%85%E6%94%AF%E6%8C%81-bitcode)
 * [18. iOS 内存泄露工具 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md#ios-%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E5%B7%A5%E5%85%B7)
