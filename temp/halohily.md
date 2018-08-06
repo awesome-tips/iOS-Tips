@@ -1,15 +1,16 @@
-用 NSDecimalNumber 处理 iOS 中的货币金额
+再谈数组、集合、字典与 hash、isEqual 方法的关联
 --------
 **作者**: [halohily](https://weibo.com/halohily)
 
-在iOS开发中，经常遇到货币金额的表示与计算，你可能会使用 double 或 float 这样的浮点数，也可能使用 NSString 。无论用哪个，都需要再编写繁琐的精度控制、小数位数控制等代码。其实，苹果为我们提供了一个标准类 NSDecimalNumber 来处理这样的需求。
+我们或多或少了解，Objective-C 中的 NSArray、NSSet、NSDictionary 与 NSObject 及其子类对象的 hash、isEqual 方法有许多联系，这篇小集讲一下其中的一些细节。
 
-NSDecimalNumber 是 NSNumber 的子类，它提供了完善的初始化方法。对于令人头疼的金额计算，它还提供了贴心的加、减、乘、除运算方法。在进行这些运算的时候，你还可以通过 NSDecimalNumberHandler 对象来对运算的处理策略进行设置，比如舍入模式的选择，数据溢出、除零等异常情况的处理等。
+NSArray 允许添加重复元素，添加元素时不查重，所以不调用上述两个方法。在移除元素时，会对当前数组内的元素进行遍历，每个元素的 isEqual 方法都会被调用（使用 remove 方法传入的元素作为参数），**所有返回真值的元素都被移除**。在字典中，不涉及 hash 方法。
 
-下次遇到货币金额的需求，不妨了解一下 NSDecimalNumber。
+NSSet 不允许添加重复元素，所以添加新元素时，该元素的 hash 方法会被调用。若集合中不存在与此元素 hash 值相同的元素，则它直接被加入集合，不调用 isEqual 方法；若存在，则调用集合内的对应元素的 isEqual 方法，返回真值则判等，不加入，处理结束。若返回 false，则判定集合内不存在该元素，将其加入。
 
-参考资料：
+从集合中移除元素时，首先调用它的 hash 方法。若集合中存在与其 hash 值相等的元素，则调用该元素的 isEqual 方法，若真值则判等，进行移除；若不存在，则会依次调用集合中每个元素的 isEqual 方法，**只要找到一个返回真值的元素，就进行移除，并结束整个过程。**（所以这样会有其他满足 isEqual 方法但却被漏掉未被移除的元素）。调用 contains 方法时，过程类似。
 
-- https://www.jianshu.com/p/ea4da259a062
-- https://www.jianshu.com/p/25d24a184016
+因此，**若某自定义对象会被加入到集合或作为字典的 key 时，需要同时重写 isEqual 方法和 hash 方法。**这样，若集合中某元素存在，则调用它的 contains 和 remove 方法时，可以在 O(1) 完成查询。否则，查询它的时间复杂度提升为 O(n)。
+
+值得注意的是，NSDictionary 的键和值都是对象类型即可。但是**被设为键的对象需要遵守 NSCopying 协议**。
 
