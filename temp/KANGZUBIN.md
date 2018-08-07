@@ -6,13 +6,13 @@ iOS App 的反调试（Anti-Debug）
 
 在越狱后的 iPhone 上运行 App，然后通过 GDB 进行动态调试，是大多数攻击者的首选，我们今天就来聊一聊如何防止 App 被别人调试。
 
-在类 Unix 系统中，提供了一个系统调用 `ptrace` 用于实现断点调试和对进程进行跟踪和控制，而`PT_DENY_ATTACH` 是苹果增加的一个 `ptrace` 选项，用于阻止 GDB 等调试器依附到某进程，用法如下：
+在类 Unix 系统中，提供了一个系统调用 `ptrace` 用于实现断点调试和对进程进行跟踪和控制，而 `PT_DENY_ATTACH` 是苹果增加的一个 `ptrace` 选项，用于阻止 GDB 等调试器依附到某进程，用法如下：
 
 ```
 ptrace(PT_DENY_ATTACH, 0, 0, 0);
 ```
 
-根据念茜的博客[《iOS 安全攻防：阻止 GDB 依附》](https://blog.csdn.net/yiyaaixuexi/article/details/18222339)，我们可以在 `main.m` 中添加如下阻止调试代码：
+根据念茜的博客[《iOS 安全攻防：阻止 GDB 依附》](https://blog.csdn.net/yiyaaixuexi/article/details/18222339)，我们可以在 `main.m` 中添加如下阻止调试的代码：
 
 ```objc
 // 阻止 gdb/lldb 调试
