@@ -46,6 +46,8 @@
 * [2. 使用 Keychain 存储登录态需要注意的一个坑 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/08.md#%E4%BD%BF%E7%94%A8-keychain-%E5%AD%98%E5%82%A8%E7%99%BB%E5%BD%95%E6%80%81%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E4%B8%80%E4%B8%AA%E5%9D%91)
 * [3. 再谈数组、集合、字典与 hash、isEqual 方法的关联 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/08.md#%E5%86%8D%E8%B0%88%E6%95%B0%E7%BB%84%E3%80%81%E9%9B%86%E5%90%88%E3%80%81%E5%AD%97%E5%85%B8%E4%B8%8E-hash%E3%80%81isequal-%E6%96%B9%E6%B3%95%E7%9A%84%E5%85%B3%E8%81%94)
 * [4. 关于IAP丢单的处理 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2018/08.md#%E5%85%B3%E4%BA%8Eiap%E4%B8%A2%E5%8D%95%E7%9A%84%E5%A4%84%E7%90%86)
+* [5. 比较三种网络框架上传图片过程中的不同【陈满iOS】](https://github.com/awesome-tips/iOS-Tips/blob/master/2018/08.md#%E6%AF%94%E8%BE%83%E4%B8%89%E7%A7%8D%E7%BD%91%E7%BB%9C%E6%A1%86%E6%9E%B6%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E4%B8%8D%E5%90%8C%E7%82%B9)
+
 
 [2018 年 07 月](https://github.com/southpeak/iOS-tech-set/blob/master/2018/07.md)
 
