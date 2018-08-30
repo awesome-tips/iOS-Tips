@@ -1,46 +1,14 @@
-你还在使用占位 View 吗？
+CGDataProviderCreateWithData 的内存管理
 --------
 **作者**: [Vong_HUST](https://weibo.com/VongLo)
 
-一种常见的布局场景就是空页面上竖直方向要展示文案和按钮，同时两者要在屏幕中整体居中，这种情况相信大家在日常开发中肯定都会碰到。相信大部分都是使用一个占位视图，然后用 `ImageView` 和 `Label` 把 `View` 撑开，确定其 `size`，然后再让 `View` 放在 `SuperView` 的中心，这样也就满足了上面说的需求。在 iOS9 之前也确实只能这样实现。但是在 iOS9 之后，有了另一种新的方式，那就是使用 `UILayoutGuide`。
+前段时间在做自定义图片格式解码的时候遇到一个问题，在读取到自定义图片的数据后，需要使用 `CGDataProviderCreateWithData` 将其中的数据读取到 `provider` 中，然后再用这个 `provider` 去创建一个 `CGImageRef`。按照以往经验在拿到 `provider` 之后，需要 `free` 掉之前读取的那一份数据。嗯，写起来大概像图1这样子，看起来没毛病，但是跑起来之后，会发现显示出来的图片会花屏。然后查看这个函数的 API 说明，如图2，也就是说在调用这个函数的时候，需要传一个函数指针进去，这个函数指针会在 `provider` 被释放的时候调用。从侧面可以看出，`CoreGraphics` 在使用 `provider` 去绘制图片时，对图片原始数据应该只是做了一个简单的引用，如果调用完之后就立即 `free` 原始数据，会导致渲染时发生无法预知的错误（比如花屏）。所以需要塞一个回调给创建方法，等到图片真正渲染完之后再释放原始数据，所以只需要写一个简单的回调函数，然后塞给 `create` 函数的最后一个参数即可，如图3所示，然后跑起来一切正常。
 
-区别于 `UIView`，`UILayoutGuide` 继承自 `NSObject`，所以它不会触发渲染，也不会有事件响应和传递机制。它仅仅代表的是一个矩形区域，完全符合我们的要求。它使用起来也非常简单，以上面需求为例，代码如下所示，是不是会简单一些呢？
+由于是在 feed 页，所以滑动过多封面的时候内存高涨不下，而且刚刚说到的释放函数回调的次数比加载的图片张数要少非常多。这个时候想起来会不会是因为用这种方式创建的图片是只有在显示的时候才会解码，这样就可能导致内存无法及时释放，那么自己先强行解码（使用 `CGContextDrawImage` 方法）是不是可以的呢？答案确实是可以的，最终代码如图4所示。这样之后，图片的原始数据也会及时的释放，内存压力骤降。
 
-```objc
-self.button = [UIButton new];
-self.button.translatesAutoresizingMaskIntoConstraints = NO;
-self.button.backgroundColor = [UIColor cyanColor];
-[self.button setTitle:@"确定" forState:UIControlStateNormal];
-self.label = [UILabel new];
-self.label.translatesAutoresizingMaskIntoConstraints = NO;
-self.label.text = @"这是一个测试文案";
-self.containerGuide = [UILayoutGuide new];
-self.containerGuide.identifier = @"占位区域";
-    
-[self.view addSubview:self.button];
-[self.view addSubview:self.label];
-[self.view addLayoutGuide:self.containerGuide];
-    
-[self.containerGuide.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
-[self.containerGuide.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor].active = YES;
-[self.button.centerXAnchor constraintEqualToAnchor:self.containerGuide.centerXAnchor].active = YES;
-[self.label.topAnchor constraintEqualToAnchor:self.containerGuide.topAnchor].active = YES;
-[self.label.leftAnchor constraintEqualToAnchor:self.containerGuide.leftAnchor].active = YES;
-[self.label.rightAnchor constraintEqualToAnchor:self.containerGuide.rightAnchor].active = YES;
-[self.button.topAnchor constraintEqualToAnchor:self.label.bottomAnchor constant:10].active = YES;
-[self.button.centerXAnchor constraintEqualToAnchor:self.containerGuide.centerXAnchor].active = YES;
-[self.button.bottomAnchor constraintEqualToAnchor:self.containerGuide.bottomAnchor].active = YES;
-```
+如有有不当之处或者你有更好的方案，欢迎一起交流探讨~
 
-PS 有几个小点可以稍微注意一下：
-- UILayoutGuide 无法用 Xib/Storyboard 创建，所以只能代码创建。
-- Masonry 目前不支持 UILayoutGuide，但是 SnapKit 是支持的。
-- 可以设置 identifier 来方便调试
-- 再布局完成后，可以通过 layoutFrame 来获取占位区域的大小
-- 不能显式地设置其 owningView，而是要通过 view 的 addLayoutGuide:/removeLayoutGuide: 来间接的设置其 owningView
-
-> 参考链接
->
-> [UILayoutGuide](https://medium.com/the-traveled-ios-developers-guide/uilayoutguide-6b3b552b1890)
->
-> [Goodbye Spacer Views Hello Layout Guides](https://useyourloaf.com/blog/goodbye-spacer-views-hello-layout-guides/)
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/08/3-1.jpg)
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/08/3-2.jpg)
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/08/3-3.jpg)
+![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/08/3-4.jpg)
