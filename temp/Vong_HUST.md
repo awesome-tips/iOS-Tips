@@ -6,7 +6,7 @@ CGDataProviderCreateWithData 的内存管理
 
 由于是在 feed 页，所以滑动过多封面的时候内存高涨不下，而且刚刚说到的释放函数回调的次数比加载的图片张数要少非常多。这个时候想起来会不会是因为用这种方式创建的图片是只有在显示的时候才会解码，这样就可能导致内存无法及时释放，那么自己先强行解码（使用 `CGContextDrawImage` 方法）是不是可以的呢？答案确实是可以的，最终代码如图4所示。这样之后，图片的原始数据也会及时的释放，内存压力骤降。
 
-如有有不当之处或者你有更好的方案，欢迎一起交流探讨~
+如有不当之处或者你有更好的方案，欢迎一起交流探讨~
 
 ![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/08/3-1.jpg)
 ![](https://github.com/iOS-Tips/iOS-tech-set/blob/master/images/2018/08/3-2.jpg)
