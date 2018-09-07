@@ -1,45 +1,24 @@
-c++ 库不兼容问题处理
+NSLog 遇到的问题
 --------
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
+- 问题一：
 
-最近遇使用 WCDB 的时候遇到个 Error，当 `pod install` 的时候，会抛出异常信息：
+有时候 Xcode 控制台突然打印不出信息了，按照下面的步骤操作一下即可解决：
 
-```
-[!] Can't merge user_target_xcconfig for pod targets: ["WCDB", 
-"XXEngine"]. Singular build setting CLANG_CXX_LANGUAGE_STANDARD has 
-different values.
+View -> Debug Area -> Activate Console
 
-[!] Can't merge user_target_xcconfig for pod targets: ["WCDB", 
-"XXEngine"]. Singular build setting CLANG_CXX_LIBRARY has different 
-values.
+- 问题二：
 
-[!] Can't merge user_target_xcconfig for pod targets: ["WCDB", 
-"XXEngine"]. Singular build setting CLANG_CXX_LANGUAGE_STANDARD has 
-different values.
-
-[!] Can't merge user_target_xcconfig for pod targets: ["WCDB", 
-"XXEngine"]. Singular build setting CLANG_CXX_LIBRARY has different 
-values.
-```
-
-在项目中查了下 `CLANG_CXX_LANGUAGE_STANDARD` 发现 WCDB 使用的 c++ 配置是：
+有时候打印网络请求的时候，发现打印的信息只显示了部分信息，这时候可以使用 `printf` 来打印。
 
 ```
-CLANG_CXX_LANGUAGE_STANDARD = gnu++0x
-CLANG_CXX_LIBRARY = libc++
+#define LLog( s, ... ) printf("[ %s:(%d) ] %s :%s\n", [[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, __PRETTY_FUNCTION__, [[NSString stringWithFormat:(s), ##__VA_ARGS__] UTF8String])
 ```
 
-而我们自己的项目本身也使用了 c++，但我们使用的库是：
+使用时直接用 LLog 即可：
 
 ```
-'CLANG_CXX_LANGUAGE_STANDARD' => 'gnu++98',
-'CLANG_CXX_LIBRARY' => 'libstdc++',
+LLog(@"Hello world");
+[ ViewController.m:(22) ] -[ViewController viewDidLoad] :Hello world
 ```
-
-这就导致有你没我，有我没你的尴尬局面。更重要的是在 Xcode10 中已经去掉了 `libstdc++6.0.9` 这个库，这就导致使用这个库的应用在 Xcode10 上会报错。
-
-`clang: warning: libstdc++ is deprecated; move to libc++ [-Wdeprecated]"`
-
-遇到这种问题最好的做法是把不支持 `libc++` 的库使其支持。
-	

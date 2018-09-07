@@ -1,34 +1,99 @@
-iOS App 启动时间测量
+iOS 金额字符串格式化显示的方法
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-当我们的 App 大到一定规模时，就需要开始关注应用的启动时间了，因为这关系到用户体验问题。
+在一些金融类的 App 中，对于表示金额类的字符串，通常需要进行格式化后再显示出来。例如：
 
-我们通常说的启动时间为：用户点击应用图标，显示闪屏页，到该应用首页界面被加载出来的总时间（冷启动），对于 iOS App 来说，启动时间包括两部分：Launch Time = Pre-main Time + Loading Time，如下图所示，其中：
+* `0` --> `0.00`
+* `123` --> `123.00`
+* `123.456` --> `123.46`
+* `102000` --> `102,000.00`
+* `10204500` --> `10,204,500.00`
 
-* `Pre-main Time` 指 main 函数执行之前的加载时间，包括 dylib 动态库加载，Mach-O 文件加载，Rebase/Binding，Objective-C Runtime 加载等；
+它的规则如下：
 
-* `Loading Time` 指 main 函数开始执行到 `AppDelegate` 的 `applicationDidBecomeActive:` 回调方法执行（App 被激活）的时间间隔，这个时间包含了的 App 启动时各初始化项的执行时间（一般写在 `application:didFinishLaunchingWithOptions:` 方法里），同时包含首页 UI 被渲染并显示出来的耗时。
+**个位数起每隔三位数字添加一个逗号，同时保留两位小数**，也称为“千分位格式”。
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/08/2-1.png)
+我们一开始采取了一种比较笨拙的处理方式如下：
 
-对于第二个时间 Loading Time，比较好测量，我们可以在 main 函数开始执行和 `applicationDidBecomeActive:` 方法执行末尾时分别记录一个时间点，然后计算两者时间差即可，大致如下：
+首先根据小数点 `.` 将传入的字符串分割为两部分，整数部分和小数部分（如果没有小数点，则补 `.00`，如果有多个小数点则报金额格式错误）。对于小数部分，只取前两位；然后对整数部分字符串进行遍历，从右到左，每三位数前插入一个逗号 `,`，最后再把两部分拼接起来，代码大致如下：
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/08/2-2.png)
+```objc
+- (NSString *)moneyFormat:(NSString *)money {
+    if (!money || money.length == 0) {
+        return money;
+    }
 
-而对于第一个时间 Pre-main Time，目前没有比较好的人工测量手段，好在 Xcode 自身提供了一个在控制台打印这些时间的方法：在 Xcode 中 Edit Scheme -> Run -> Auguments 添加环境变量 `DYLD_PRINT_STATISTICS` 并把其值设为 `1`，如下图：
+    BOOL hasPoint = NO;
+    if ([money rangeOfString:@"."].length > 0) {
+        hasPoint = YES;
+    }
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/08/2-3.png)
+    NSMutableString *pointMoney = [NSMutableString stringWithString:money];
+    if (hasPoint == NO) {
+        [pointMoney appendString:@".00"];
+    }
 
-这样我们就可以在编译运行工程时，在控制台看到 Total pre-main time 总耗时了，如下图所示，包含 main 函数执行之前各项的加载时间，我们可以多次运行取一下平均值，苹果推荐这个时间应在 400ms 以内。
+    NSArray *moneys = [pointMoney componentsSeparatedByString:@"."];
+    if (moneys.count > 2) {
+        return pointMoney;
+    } else if (moneys.count == 1) {
+        return [NSString stringWithFormat:@"%@.00", moneys[0]];
+    } else {
+        // 整数部分每隔 3 位插入一个逗号
+        NSString *frontMoney = [self stringFormatToThreeBit:moneys[0]];
+        if ([frontMoney isEqualToString:@""]) {
+            frontMoney = @"0";
+        }
+        // 拼接整数和小数两部分
+        NSString *backMoney = moneys[1];
+        if ([backMoney length] == 1) {
+            return [NSString stringWithFormat:@"%@.%@0", frontMoney, backMoney];
+        } else if ([backMoney length] > 2) {
+            return [NSString stringWithFormat:@"%@.%@", frontMoney, [backMoney substringToIndex:2]];
+        } else {
+            return [NSString stringWithFormat:@"%@.%@", frontMoney, backMoney];
+        }
+    }
+}
+```
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/08/2-4.png)
+其中，`stringFormatToThreeBit:` 方法的实现如下：
 
-综上两步，我们就可计算出一个 iOS App 的启动耗时，并针对性进行优化。
+```objc
+- (NSString *)stringFormatToThreeBit:(NSString *)string {
+    NSString *tempString = [string stringByReplacingOccurrencesOfString:@"," withString:@""];
+    NSMutableString *mutableString = [NSMutableString stringWithString:tempString];
+    NSInteger n = 2;
+    for (NSInteger i = tempString.length - 3; i > 0; i--) {
+        n++;
+        if (n == 3) {
+            [mutableString insertString:@"," atIndex:i];
+            n = 0;
+        }
+    }
+    return mutableString;
+}
+```
 
-不过，有一个比较滑稽的问题是：目前很多 App 都会在启动后加载一个 3~5 秒的广告页面，给用户的主观感受是这个 App 的启动时间包括了这个广告页的显示时间，于是我们在代码维度做的 App 启动时间优化显得似乎好无意义，sad...
+上述实现看起来非常繁琐。
 
-**参考链接**
+其实，苹果提供了 `NSNumberFormatter` 用来处理 `NSString` 和 `NSNumber` 之间的转化，可以满足基本的数字形式的格式化。我们通过设置 `NSNumberFormatter` 的 `numberStyle` 和 `positiveFormat` 属性，即可实现上述功能，非常简洁，代码如下：
 
-* [优化 App 的启动时间](http://yulingtianxia.com/blog/2016/10/30/Optimizing-App-Startup-Time/)
-* [iOS App 启动性能优化](https://chars.tech/blog/ios-app-launch-time-optimize/)
+```objc
+- (NSString *)formatDecimalNumber:(NSString *)string {
+    if (!string || string.length == 0) {
+        return string;
+    }
+    
+    NSNumber *number = @([string doubleValue]);
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    formatter.numberStyle = kCFNumberFormatterDecimalStyle;
+    formatter.positiveFormat = @"###,##0.00";
+    
+    NSString *amountString = [formatter stringFromNumber:number];
+    return amountString;
+}
+```
+
+关于 `NSNumberFormatter` 更详细的用法，可以参考这篇文章的介绍：[NSNumberFormatter 介绍和用法](https://www.jianshu.com/p/95952b145a8e)
