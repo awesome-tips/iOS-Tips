@@ -1,40 +1,104 @@
-区分SDWebImage的三种缓存
+几个第三方框架关于线程锁的封装小技巧
 --------
 **作者**: [陈满iOS](https://weibo.com/cimer)
 
-SDWebImage的三种缓存分为：内存图片缓存，磁盘图片缓存，内存操作缓存，步骤如下
+#### 启示
 
-*   先查看内存图片缓存，内存图片缓存没有，后生成操作，查看磁盘图片缓存
-*   磁盘图片缓存有，就加载到内存缓存，没有就下载图片
-*   在建立下载操作之前，判断下载操作是否存在
-*   默认情况下，下载的图片数据会同时缓存到内存和磁盘中
+第三方库中经常用到的这个小技巧，例如YYCache，SDWebImage等等，虽然各自封装的具体形式不太一样。
 
-流程如下图1所示。
+- YYCache
 
-![图1](https://upload-images.jianshu.io/upload_images/1283539-a475c67e295bc39e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![YYCache](https://upload-images.jianshu.io/upload_images/1283539-c0ff7ce9820b0669.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+- SDWebImage
+
+![SDWebImage](https://upload-images.jianshu.io/upload_images/1283539-6e4ac3f974765d15.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+- YYWebImage
+
+![YYWebImage](https://upload-images.jianshu.io/upload_images/1283539-21876a916c88227f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
-> 关于缓存位置
+我们可以借鉴到自己的项目中，在适当的位置通过宏来加锁解锁操作。
 
-*   内存缓存是通过 NSCache的子类AutoPurgeCache来实现的；
-*   磁盘缓存是通过 NSFileManager 来实现文件的存储(默认路径为/Library/Caches/default/com.hackemist.SDWebImageCache.default)，是异步实现的。
+#### 使用
 
-> 关于图片下载操作
+- 1.YYCache版本的宏封装
+```
+#define Lock() dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER)
+#define Unlock() dispatch_semaphore_signal(self->_lock)
+```
+- 操作数据之前，先外面进行加锁解锁
+```
+- (NSInteger)totalCount {
+Lock();
+int count = [_kv getItemsCount];
+Unlock();
+return count;
+}
+```
+- 锁里面再进行真正的数据操作
+```
+- (int)getItemsCount {
+return [self _dbGetTotalItemCount];
+}
+```
 
-SDWebImage的大部分工作是由缓存对象SDImageCache和异步下载器管理对象SDWebImageManager来完成的。
+#### 2.SDWebImage版本的宏封装
 
-SDWebImage的图片下载是由SDWebImageDownloader这个类来实现的，它是一个异步下载管理器，下载过程中增加了对图片加载做了优化的处理。而真正实现图片下载的是自定义的一个Operation操作，将该操作加入到下载管理器的操作队列downloadQueue中，Operation操作依赖系统提供的NSURLConnection类实现图片的下载。
+- 定义
+```
+#define LOCK(lock) dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
+#define UNLOCK(lock) dispatch_semaphore_signal(lock);
+```
+- 调用示例
+```
+- (void)setValue:(nullable NSString *)value forHTTPHeaderField:(nullable NSString *)field {
+LOCK(self.headersLock);
+if (value) {
+self.HTTPHeaders[field] = value;
+} else {
+[self.HTTPHeaders removeObjectForKey:field];
+}
+UNLOCK(self.headersLock);
+}
+```
+其中，`self.headersLock` 的定义为：
+```
+@property (strong, nonatomic, nonnull) dispatch_semaphore_t headersLock; 
+```
+#### 3. YYWebImage版本的宏封装
 
-> 关于SDWebImageManager与SDWebImageDownloader的分工
-- SDWebImageManager提供的关键API是loadImageWithURL开头的，负责加载的，加载load这个词跟下载download不同，比它更广，加载负责管理下载之前的操作：
+相对于上面，还有更方便的宏封装，把解锁操作跟加锁封装在一块。
 
-管理下载操作的开始和取消
-下载之前查询图片的内存缓存和磁盘缓存
-下载之后保存图片到内存缓存和磁盘缓存
-返回一个操作对象给上级对象UIImageView+WebCache作为操作缓存数组属性中去
+- 宏定义
+```
+#define LOCK(...) dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER); \
+__VA_ARGS__; \
+dispatch_semaphore_signal(self->_lock);
 
-- SDWebImageDownloader提供的关键API是downloadImageWithURL开头的，可见它仅仅管理下载的操作，没有缓存的管理功能。
-
+#define LOCK_VIEW(...) dispatch_semaphore_wait(view->_lock, DISPATCH_TIME_FOREVER); \
+__VA_ARGS__; \
+dispatch_semaphore_signal(view->_lock);
+```
+- 使用示例
+```
+- (void)didReceiveMemoryWarning:(NSNotification *)notification {
+[_requestQueue cancelAllOperations];
+[_requestQueue addOperationWithBlock: ^{
+_incrBufferCount = -60 - (int)(arc4random() % 120); // about 1~3 seconds to grow back..
+NSNumber *next = @((_curIndex + 1) % _totalFrameCount);
+LOCK(
+NSArray * keys = _buffer.allKeys;
+for (NSNumber * key in keys) {
+if (![key isEqualToNumber:next]) { // keep the next frame for smoothly animation
+[_buffer removeObjectForKey:key];
+}
+}
+)//LOCK
+}];
+}
+```
 
 
 
