@@ -14,7 +14,7 @@ iPhone 屏幕分辨率终极指南
 
 原文链接：[The Ultimate Guide To iPhone Resolutions](https://www.paintcodeapp.com/news/ultimate-guide-to-iphone-resolutions)
 
-从图中数据我们可以总结一下几点：
+从图中数据我们可以总结以下几点：
 
 * 5.8 英寸的 iPhone X/XS 与 6.1 英寸的 iPhone XR 和 6.5 英寸的 iPhone XS Max 的**屏幕宽高比**是一致的，约为 `0.462`；
 
