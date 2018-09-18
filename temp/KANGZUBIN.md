@@ -1,99 +1,39 @@
-iOS 金额字符串格式化显示的方法
+iPhone 屏幕分辨率终极指南
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-在一些金融类的 App 中，对于表示金额类的字符串，通常需要进行格式化后再显示出来。例如：
+上周，苹果发布了三款新的 iPhone 设备，它们的屏幕数据分别如下：
 
-* `0` --> `0.00`
-* `123` --> `123.00`
-* `123.456` --> `123.46`
-* `102000` --> `102,000.00`
-* `10204500` --> `10,204,500.00`
+* iPhone XS: 5.8 英寸，375pt * 812pt (@3x)；
+* iPhone XR: 6.1 英寸，414pt * 896pt (@2x)；
+* iPhone XS Max: 6.5 英寸，414pt * 896pt (@3x)；
 
-它的规则如下：
+在国外的 PaintCode 网站上，整理了包括从第一代 iPhone 到最新发布的 iPhone XS Max 等所有 iPhone 设备的屏幕数据，包括：开发尺寸（points）、物理尺寸（pixels）以及实际渲染像素、1倍/2倍/3倍模式等，如图 1 所示（建议大图查看更加清晰）。
 
-**个位数起每隔三位数字添加一个逗号，同时保留两位小数**，也称为“千分位格式”。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/09/1-1.png)
 
-我们一开始采取了一种比较笨拙的处理方式如下：
+原文链接：[The Ultimate Guide To iPhone Resolutions](https://www.paintcodeapp.com/news/ultimate-guide-to-iphone-resolutions)
 
-首先根据小数点 `.` 将传入的字符串分割为两部分，整数部分和小数部分（如果没有小数点，则补 `.00`，如果有多个小数点则报金额格式错误）。对于小数部分，只取前两位；然后对整数部分字符串进行遍历，从右到左，每三位数前插入一个逗号 `,`，最后再把两部分拼接起来，代码大致如下：
+从图中数据我们可以总结一下几点：
 
-```objc
-- (NSString *)moneyFormat:(NSString *)money {
-    if (!money || money.length == 0) {
-        return money;
-    }
+* 5.8 英寸的 iPhone X/XS 与 6.1 英寸的 iPhone XR 和 6.5 英寸的 iPhone XS Max 的**屏幕宽高比**是一致的，约为 `0.462`；
 
-    BOOL hasPoint = NO;
-    if ([money rangeOfString:@"."].length > 0) {
-        hasPoint = YES;
-    }
+* iPhone X/XS 的屏幕宽度（开发尺寸）与 4.7 英寸的 iPhone 8 相同，都为 375pt，只是在高度上增加了 145pt；
 
-    NSMutableString *pointMoney = [NSMutableString stringWithString:money];
-    if (hasPoint == NO) {
-        [pointMoney appendString:@".00"];
-    }
+* iPhone XR 和 iPhone XS Max 的屏幕宽度（开发尺寸）与 5.5 英寸 iPhone 8 Plus 相同，都为 414pt，只是在高度上增加了 160pt；
 
-    NSArray *moneys = [pointMoney componentsSeparatedByString:@"."];
-    if (moneys.count > 2) {
-        return pointMoney;
-    } else if (moneys.count == 1) {
-        return [NSString stringWithFormat:@"%@.00", moneys[0]];
-    } else {
-        // 整数部分每隔 3 位插入一个逗号
-        NSString *frontMoney = [self stringFormatToThreeBit:moneys[0]];
-        if ([frontMoney isEqualToString:@""]) {
-            frontMoney = @"0";
-        }
-        // 拼接整数和小数两部分
-        NSString *backMoney = moneys[1];
-        if ([backMoney length] == 1) {
-            return [NSString stringWithFormat:@"%@.%@0", frontMoney, backMoney];
-        } else if ([backMoney length] > 2) {
-            return [NSString stringWithFormat:@"%@.%@", frontMoney, [backMoney substringToIndex:2]];
-        } else {
-            return [NSString stringWithFormat:@"%@.%@", frontMoney, backMoney];
-        }
-    }
-}
-```
+因此，设计师在出图时，仍然可以以 iPhone 8 和 iPhone 8 Plus 的屏幕宽度为基准分别进行 UI 布局，而对于不同高度的屏幕只要在纵向上进行内容延伸即可。
 
-其中，`stringFormatToThreeBit:` 方法的实现如下：
+此外，我们发现，对于未进行新屏幕尺寸适配的工程，直接编译，在新设备 iPhone XR 和 iPhone XS Max 上运行，它们是以**放大模式**自动适配的（以 5.8 寸的 iPhone X 屏幕为基准等比例放大），此时在代码中获取到的屏幕宽高都为 375pt * 812pt。
 
-```objc
-- (NSString *)stringFormatToThreeBit:(NSString *)string {
-    NSString *tempString = [string stringByReplacingOccurrencesOfString:@"," withString:@""];
-    NSMutableString *mutableString = [NSMutableString stringWithString:tempString];
-    NSInteger n = 2;
-    for (NSInteger i = tempString.length - 3; i > 0; i--) {
-        n++;
-        if (n == 3) {
-            [mutableString insertString:@"," atIndex:i];
-            n = 0;
-        }
-    }
-    return mutableString;
-}
-```
+那么如何正确适配新的屏幕尺寸呢？
 
-上述实现看起来非常繁琐。
+* 如果你的工程是以 `LaunchScreen.storyboard` 作为启动页，则只需要在 Xcode 10 下重新编译工程即可；
 
-其实，苹果提供了 `NSNumberFormatter` 用来处理 `NSString` 和 `NSNumber` 之间的转化，可以满足基本的数字形式的格式化。我们通过设置 `NSNumberFormatter` 的 `numberStyle` 和 `positiveFormat` 属性，即可实现上述功能，非常简洁，代码如下：
+* 如果你的工程是通过配置 `Assets.xcassets` 里的 `LaunchImage` 不同尺寸的启动图片作为启动页，则你需要新增两张 828px * 1792px 和 1242px * 2688px 分辨率的图片，如图 2 所示。
 
-```objc
-- (NSString *)formatDecimalNumber:(NSString *)string {
-    if (!string || string.length == 0) {
-        return string;
-    }
-    
-    NSNumber *number = @([string doubleValue]);
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    formatter.numberStyle = kCFNumberFormatterDecimalStyle;
-    formatter.positiveFormat = @"###,##0.00";
-    
-    NSString *amountString = [formatter stringFromNumber:number];
-    return amountString;
-}
-```
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/09/1-2.png)
 
-关于 `NSNumberFormatter` 更详细的用法，可以参考这篇文章的介绍：[NSNumberFormatter 介绍和用法](https://www.jianshu.com/p/95952b145a8e)
+最后，我们如何在代码中判断当前设备是否为 iPhone X 呢？（这里的 iPhone X 泛指上述介绍的 5.8/6.1/6.5 英寸三种尺寸的带顶部刘海和底部操作条的设备）有一种比较简便的方法就是获取屏幕的高度，判断是否等于 812 或 896，代码如图 3 所示。 
+
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/09/1-3.png)
