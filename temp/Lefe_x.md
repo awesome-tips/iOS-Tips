@@ -2,21 +2,12 @@ WKWebView给scrollView添加delegate crash
 --------
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
-想监听 WKWebView 的滚动，我的做法是设置 WKWebView.scrollView.delegate，然而这种方法会导致在 iOS9 上 crash。使用全局断点并不能定位到 crash 的具体位置，当 crash 后，在打印控制台处输入 `bt`，发现有输出异常信息，大体意思是 WKWebView 已经释放，但在其它地方还在使用它的属性 scrollView。
+最近在探索可以提高开发效率的方法，目前先从 UI 方面入手，旨在能够快速的创建 UI，避免做不断重复的工作，现初步找到几种方法并开始实践，希望对你能够有启发，如果你有更好的想法，欢迎分享给我：
 
-关于这个 crash 的描述：
+- **使用文件模板**：对于某些重复性比较大的 ViewController，可以通过定义模板，这样创建 ViewController 的时候直接使用模板创建，会节省一部分时间；如果有一套自己创建 UI 的命名规则，还会节省一部分时间，模板代码越多，就越少写多余的代码；
+- **使用代码片段**：对于一些小功能，比如创建某个 Label，某个属性；如果定义成代码片段，也会节约一部分时间；有了代码片段，那么写代码就是成段成段的写，这里需要注意定义代码片段时命名规则，避免由于忘记代码片段的名字浪费查找的时间；
+- **积累自己的UI库**：其实很多 UI 在其它项目中已经写过了，如果平时注重积累，那么很多 UI 直接搬过来既可以使用，这里写 UI 时要记得解耦，UI 部分尽量不要与项目耦合，这样复用性更强；
+- **统一管理 UIColor**：一个 APP 中常用的颜色就那么几种，这些颜色使用 Color set 统一管理，优点就是你不需要不断地看某个字体的颜色是什么，某个 view 的背景颜色是什么，直接调用已经创建的颜色即可，比如：`+ (UIColor *)lef_blackColor;`
+- **使用Sketch**：你往往会抱怨 UI 切的图，标记的位置并不是你想要的，反复的和 UI 要切图，要颜色，如果使用好 Sketch 这个工具，很多图你自己都可以搞定，不过有的 UI 使用的是 PS 那就尴尬了；
+- **系统学习 UI 知识**：当你花了好大力气实现某个 UI 效果后，发现系统提供了一个 API，一句话就实现了，心里一万个草泥马，你所谓遇到的坑，往往就是没有系统地学习 UI 的原理，导致遇到莫名其妙的问题不知如何下手。
 
-```
-Possible crash when setting the WKWebViews's scroll view delegate, if the scroll view outlives the web view
-
-Null out the internal delegate on the WKScrollView when the WKWebView goes away, since it's possible for a client to set its own scroll view delegate, forcing the creation of a WKScrollViewDelegateForwarder, and then retain the UIScrollView past the lifetime of the WKWebView. In this situation, the WKScrollViewDelegateForwarder's internalDelegate would point to a deleted WKWebView.
-```
-
-想解决这个问题需要在，dealloc 的位置把 delegate 设置为 nil：
-
-```
-self.webView.scrollView.delegate = nil;
-```
-
-参考：
-[Webkit](https://trac.webkit.org/changeset/177329/webkit)
