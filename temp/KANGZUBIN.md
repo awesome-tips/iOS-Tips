@@ -1,39 +1,41 @@
-iPhone 屏幕分辨率终极指南
+iOS App “去评分” 功能的几种实现总结
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-上周，苹果发布了三款新的 iPhone 设备，它们的屏幕数据分别如下：
+通常 App 都会在它的设置页面或者关于页面添加一个“去评分”选项，或者在用户使用 App 过程中适当时机弹窗，引导用户跳转到 App Store 对当前 App 进行评分或者撰写评论。
 
-* iPhone XS: 5.8 英寸，375pt * 812pt (@3x)；
-* iPhone XR: 6.1 英寸，414pt * 896pt (@2x)；
-* iPhone XS Max: 6.5 英寸，414pt * 896pt (@3x)；
+绝大部分 App 实现这个功能的方式为：调用 `UIApplication` 的 `openURL:` 方法，打开当前的 App 的 App Store URL，如下：
 
-在国外的 PaintCode 网站上，整理了包括从第一代 iPhone 到最新发布的 iPhone XS Max 等所有 iPhone 设备的屏幕数据，包括：开发尺寸（points）、物理尺寸（pixels）以及实际渲染像素、1倍/2倍/3倍模式等，如图 1 所示（建议大图查看更加清晰）。
+```objc
+[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/id1406237249"]];
+```
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/09/1-1.png)
+备注：上述 URL 中 id 字符串后续的数字为当前 App 对应的 `Apple ID`，可以在 App Store Connect 后台查到；另外 `openURL:` 方法在 iOS 10 以后已被弃用，替换为 `openURL:options:completionHandler:`。
 
-原文链接：[The Ultimate Guide To iPhone Resolutions](https://www.paintcodeapp.com/news/ultimate-guide-to-iphone-resolutions)
+但是，这种方式只是打开 App 的 App Store 详情页面，用户如果想进行评分或评论，需要在该页面往下滑，找到“评分及评论”部分，才能“轻点评分”或“撰写评论”。以微信为例，操作流程如下图：
 
-从图中数据我们可以总结以下几点：
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/1-1.jpg)
 
-* 5.8 英寸的 iPhone X/XS 与 6.1 英寸的 iPhone XR 和 6.5 英寸的 iPhone XS Max 的**屏幕宽高比**是一致的，约为 `0.462`；
+我们如果想让用户跳转到 App Store 后，直接弹出“撰写评论”页面，则可以在上述 App 的链接地址后面加上 `action=write-review`，如下：
 
-* iPhone X/XS 的屏幕宽度（开发尺寸）与 4.7 英寸的 iPhone 8 相同，都为 375pt，只是在高度上增加了 145pt；
+```text
+itms-apps://itunes.apple.com/app/id1406237249?action=write-review
+```
 
-* iPhone XR 和 iPhone XS Max 的屏幕宽度（开发尺寸）与 5.5 英寸 iPhone 8 Plus 相同，都为 414pt，只是在高度上增加了 160pt；
+也可以写成如下 URL，此时打开的是“评分及评论”页面：
 
-因此，设计师在出图时，仍然可以以 iPhone 8 和 iPhone 8 Plus 的屏幕宽度为基准分别进行 UI 布局，而对于不同高度的屏幕只要在纵向上进行内容延伸即可。
+```text
+itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=1406237249
+```
 
-此外，我们发现，对于未进行新屏幕尺寸适配的工程，直接编译，在新设备 iPhone XR 和 iPhone XS Max 上运行，它们是以**放大模式**自动适配的（以 5.8 寸的 iPhone X 屏幕为基准等比例放大），此时在代码中获取到的屏幕宽高都为 375pt * 812pt。
+此外，从 iOS 10.3 开始，Apple 在 `StoreKit` 框架中增加了一个类 `SKStoreReviewController`，它只有一个类方法 `requestReview`，定义如下图，通过弹窗让用户直接在 App 内进行评分，然后撰写评论。
 
-那么如何正确适配新的屏幕尺寸呢？
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/1-2.jpg)
 
-* 如果你的工程是以 `LaunchScreen.storyboard` 作为启动页，则只需要在 Xcode 10 下重新编译工程即可；
+因此，我们可以适当的时候调用上述方法 `[SKStoreReviewController requestReview];` 在应用内弹出评分框，表现如下图：
 
-* 如果你的工程是通过配置 `Assets.xcassets` 里的 `LaunchImage` 不同尺寸的启动图片作为启动页，则你需要新增两张 828px * 1792px 和 1242px * 2688px 分辨率的图片，如图 2 所示。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/1-3.jpg)
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/09/1-2.png)
+不过这种方式有限制，是否弹出评分框由系统决定，详见[这篇文章](https://www.jianshu.com/p/cfa3036bf428)的讨论。
 
-最后，我们如何在代码中判断当前设备是否为 iPhone X 呢？（这里的 iPhone X 泛指上述介绍的 5.8/6.1/6.5 英寸三种尺寸的带顶部刘海和底部操作条的设备）有一种比较简便的方法就是获取屏幕的高度，判断是否等于 812 或 896，代码如图 3 所示。 
-
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/09/1-3.png)
+以上，希望对大家有所帮助。
