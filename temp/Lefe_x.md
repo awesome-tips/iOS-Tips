@@ -15,5 +15,5 @@ TabBar 设置图片可拉伸
 
 
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/2-1.jpg)
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/2-1.png)
 
