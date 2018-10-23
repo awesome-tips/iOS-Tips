@@ -1,4 +1,4 @@
-TabBar 设置图片可拉伸
+UITabController tabBarItem 的图片显示异常
 --------
 
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
