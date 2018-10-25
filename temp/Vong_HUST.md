@@ -1,75 +1,60 @@
-开源库使用的 Clang \_\_attributes\_\_
+一个命名引发的崩溃
 --------
 **作者**: [Vong_HUST](https://weibo.com/VongLo)
 
-今天和大家分享一下第三方开源库使用到的一些实用的 `Clang attributes`。
+作为开发工程师，相信大家最头疼的有时候不是需求的实现，而是一个优雅的命名，恰当的命名让人阅读起来非常顺畅。
 
-图1出自 `PSPDFUIKitMainThreadGuard`————一个用于检测是否在非主线程调用 UI 相关的工具，使用的是 \_\_attribute\_\_((constructor))，被该修饰符修饰的函数（仅对 C 函数生效），会在 main 函数之前执行，但是稍微比 +load 晚一点，因为 dyld 调用完 image 中所有类的 load 方法之后才会调用 image 中的 constructor。这个修饰符支持优先级的设置，如 \_\_attribute\_\_((constructor(1024)))，其中 1~100 为系统保留。
-
-
-
-下面代码出自 YYModel，修饰符 \_\_inline\_\_ \_\_attribute\_\_((always_inline)) 意味着强制内联，什么意思呢？就是它看起来是一个函数，但是编译的时候，会被编译器优化，相当于把函数体内代码直接插入到被调用的地方，这样就避免掉了一些压栈、返回等操作，加快调用。
+前段时间因为命名的问题引发了一个崩溃。事情是这样的，服务端某个字段有了新的含义，为了不影响老版本，索性在原来的字段上加了个前缀。比如之前是 `name`，修改之后改成了 `new_name`，然后 `mapping` 的时候，本地 `Model` 直接将服务端蛇形命名规则替换为驼峰命名规则，即 `newName`，嗯，一切看起来似乎很完美。然后跑起来之后，这个请求完成后，就一顿乱崩，然后比对代码也没发现什么大问题。后面发现这个属性的名字有个 `new`，之前有一点印象是说 `ARC` 之后命名中不能带 `new`，后来查阅苹果文档，才发现确实有说到这一点，如下所示，意思就是属性名不能以 `new` 开头，除非提供自定义的 `getter` 方法（前提是 `getter` 也不能以 `new` 开头）。
 
 ```objc
-#define force_inline __inline__ __attribute__((always_inline))
+// You cannot give an accessor a name that begins with new. This in turn means that you can’t, for example, declare a property whose name begins with new unless you specify a different getter:
 
-/// Get the Foundation class type from property info.
-static force_inline YYEncodingNSType YYClassGetNSType(Class cls) {
-    if (!cls) return YYEncodingTypeNSUnknown;
-    if ([cls isSubclassOfClass:[NSMutableString class]]) return YYEncodingTypeNSMutableString;
-    if ([cls isSubclassOfClass:[NSString class]]) return YYEncodingTypeNSString;
-    if ([cls isSubclassOfClass:[NSDecimalNumber class]]) return YYEncodingTypeNSDecimalNumber;
-    if ([cls isSubclassOfClass:[NSNumber class]]) return YYEncodingTypeNSNumber;
-    if ([cls isSubclassOfClass:[NSValue class]]) return YYEncodingTypeNSValue;
-    if ([cls isSubclassOfClass:[NSMutableData class]]) return YYEncodingTypeNSMutableData;
-    if ([cls isSubclassOfClass:[NSData class]]) return YYEncodingTypeNSData;
-    if ([cls isSubclassOfClass:[NSDate class]]) return YYEncodingTypeNSDate;
-    if ([cls isSubclassOfClass:[NSURL class]]) return YYEncodingTypeNSURL;
-    if ([cls isSubclassOfClass:[NSMutableArray class]]) return YYEncodingTypeNSMutableArray;
-    if ([cls isSubclassOfClass:[NSArray class]]) return YYEncodingTypeNSArray;
-    if ([cls isSubclassOfClass:[NSMutableDictionary class]]) return YYEncodingTypeNSMutableDictionary;
-    if ([cls isSubclassOfClass:[NSDictionary class]]) return YYEncodingTypeNSDictionary;
-    if ([cls isSubclassOfClass:[NSMutableSet class]]) return YYEncodingTypeNSMutableSet;
-    if ([cls isSubclassOfClass:[NSSet class]]) return YYEncodingTypeNSSet;
-    return YYEncodingTypeNSUnknown;
+// Won't work:
+@property NSString *newTitle;
+ 
+// Works:
+@property (getter=theNewTitle) NSString *newTitle;
+```
+
+这个时候验证欲强的老哥已经打开 Xcode 来验证了，然后写了一下代码
+
+```objc
+@interface Object : NSObject
+
+// compile error: Property follows Cocoa naming convention for returning 'owned' objects
+@property (nonatomic, copy) NSString *newName;  
+
+@end
+
+@implementation Object
+
+@end
+```
+
+根本就编译不过，这不是骗人吗？其实没有，因为我的 `Model` 是继承自 `NSManagedObject`，然后根据 `.xcdatamodeld` 文件由系统自动生成的类，相信熟悉 CoreData 的同学都知道这个操作，代码如下（猜测由于 `NSManagedObject` 子类的属性是 `@dynamic` 的，所以 Xcode 不会去检测，如果自己写一个继承 `NSObject` 的类，即使属性是 `@dynamic` 也会报错，可自行测试。如果你知道具体原因，可以分享给大家，一起学习下~）
+
+```objc
+@interface ManagedObject (CoreDataProperties)
+
++ (NSFetchRequest<ManagedObject *> *)fetchRequest;
+
+@property (nullable, nonatomic, copy) NSString *newName;
+
+@end
+
+@implementation ManagedObject (CoreDataProperties)
+
++ (NSFetchRequest<ManagedObject *> *)fetchRequest {
+	return [NSFetchRequest fetchRequestWithEntityName:@"ManagedObject"];
 }
+
+@dynamic newName;
+
+@end
 ```
 
-当然系统也有很多宏是对 Clang attributes 的封装，一些系统封装宏代码如下，更多例子可以自行查看系统头文件。
+最后，希望大家都不会被命名所困扰~
 
-```objc
-#ifndef NS_REQUIRES_SUPER
-#if __has_attribute(objc_requires_super)
-#define NS_REQUIRES_SUPER __attribute__((objc_requires_super))
-#else
-#define NS_REQUIRES_SUPER
-#endif
-#endif
-
-#ifndef NS_DESIGNATED_INITIALIZER
-#if __has_attribute(objc_designated_initializer)
-#define NS_DESIGNATED_INITIALIZER __attribute__((objc_designated_initializer))
-#else
-#define NS_DESIGNATED_INITIALIZER
-#endif
-#endif
-
-#if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
-    #define UNAVAILABLE_ATTRIBUTE __attribute__((unavailable))
-#else
-    #define UNAVAILABLE_ATTRIBUTE
-#endif
-
-#if !defined(NS_UNAVAILABLE)
-#define NS_UNAVAILABLE UNAVAILABLE_ATTRIBUTE
-#endif
-```
-
-参考链接：
-http://blog.sunnyxx.com/2016/05/14/clang-attributes/
-https://vongloo.me/2017/04/21/Modern-Objective-C/
-https://gcc.gnu.org/onlinedocs/gcc/Inline.html
-https://blog.twitter.com/engineering/en_us/a/2014/attribute-directives-in-objective-c.html
-https://nshipster.com/__attribute__/
+参考链接: [Transitioning to ARC Release Notes](https://developer.apple.com/library/archive/releasenotes/ObjectiveC/RN-TransitioningToARC/Introduction/Introduction.html)
 
 
