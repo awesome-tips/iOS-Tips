@@ -1,41 +1,29 @@
-iOS App “去评分” 功能的几种实现总结
+iOS 获取设备型号最新总结
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-通常 App 都会在它的设置页面或者关于页面添加一个“去评分”选项，或者在用户使用 App 过程中适当时机弹窗，引导用户跳转到 App Store 对当前 App 进行评分或者撰写评论。
+在开发中，我们经常需要获取设备的型号（如 `iPhone X`，`iPhone 8 Plus` 等）以进行数据统计，或者做不同的适配。但苹果并没有提供相应的系统 API 让我们直接取得当前设备的型号。
 
-绝大部分 App 实现这个功能的方式为：调用 `UIApplication` 的 `openURL:` 方法，打开当前的 App 的 App Store URL，如下：
+其中，`UIDevice` 有一个属性 `model` 只是用于获取 iOS 设备的类型，如 `iPhone`，`iPod touch`，`iPad` 等；而其另一个属性 `name` 表示当前设备的名称，由用户在设置》通用》关于》名称中设定，如 `My iPhone`，`xxx 的 iPhone` 等。然而，我们无法根据这两个值获得具体的型号。
 
-```objc
-[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/app/id1406237249"]];
-```
+不过，每一种 iOS 设备型号都有对应的一个或多个硬件编码/标识符，称为 `device model` 或者叫 `machine name`，之前的小集介绍过，我们可以通过如图 1 中的代码来获取：
 
-备注：上述 URL 中 id 字符串后续的数字为当前 App 对应的 `Apple ID`，可以在 App Store Connect 后台查到；另外 `openURL:` 方法在 iOS 10 以后已被弃用，替换为 `openURL:options:completionHandler:`。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/4-1.png)
 
-但是，这种方式只是打开 App 的 App Store 详情页面，用户如果想进行评分或评论，需要在该页面往下滑，找到“评分及评论”部分，才能“轻点评分”或“撰写评论”。以微信为例，操作流程如下图：
+所以，通常的做法是，先获取设备的 `device model` 值，再手动映射为具体的设备型号（或者直接把`device model` 值传给后端，让后端去做映射，这样的好处是可以随时兼容新设备）。
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/1-1.jpg)
+例如：去年发布的第一代 iPhone X 对应的 `device mode` 为 `iPhone10,3` 和 `iPhone10,6`，而今年最新发布 iPhone XS 对应 `iPhone11,2`，iPhone XS Max 对应 `iPhone11,4` 和 `iPhone11,6`，iPhone XR 对应 `iPhone11,8`，完整的 device mode 数据参考 Wiki：
 
-我们如果想让用户跳转到 App Store 后，直接弹出“撰写评论”页面，则可以在上述 App 的链接地址后面加上 `action=write-review`，如下：
+* [https://www.theiphonewiki.com/wiki/Models](https://www.theiphonewiki.com/wiki/Models)
 
-```text
-itms-apps://itunes.apple.com/app/id1406237249?action=write-review
-```
+综上，我们可以先获取 `device model` 值，记为 `platform`，然后进行对比判断，转换成具体的设备类型。实现代码如图 2、3 所示：
 
-也可以写成如下 URL，此时打开的是“评分及评论”页面：
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/4-2.png)
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/4-3.png)
 
-```text
-itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=1406237249
-```
+备注：图中代码只给了对 iPhone 设备型号的判断，而完整的包括 iPad 和 iPod touch 型号我已经放在 GitHub Gist 上，大家可以参考，[详见这里](https://gist.github.com/kangzubin/5b4f989d6b1113bfbe43c5772f3ba1fd)。
 
-此外，从 iOS 10.3 开始，Apple 在 `StoreKit` 框架中增加了一个类 `SKStoreReviewController`，它只有一个类方法 `requestReview`，定义如下图，通过弹窗让用户直接在 App 内进行评分，然后撰写评论。
+参考链接：
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/1-2.jpg)
-
-因此，我们可以适当的时候调用上述方法 `[SKStoreReviewController requestReview];` 在应用内弹出评分框，表现如下图：
-
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/1-3.jpg)
-
-不过这种方式有限制，是否弹出评分框由系统决定，详见[这篇文章](https://www.jianshu.com/p/cfa3036bf428)的讨论。
-
-以上，希望对大家有所帮助。
+* [The iPhone Wiki](https://www.theiphonewiki.com/wiki/Models)
+* [fahrulazmi/UIDeviceHardware](https://github.com/fahrulazmi/UIDeviceHardware)
