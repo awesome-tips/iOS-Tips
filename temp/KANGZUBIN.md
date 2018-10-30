@@ -16,7 +16,7 @@ iOS 获取设备型号最新总结
 
 * [https://www.theiphonewiki.com/wiki/Models](https://www.theiphonewiki.com/wiki/Models)
 
-综上，我们可以先获取 `device model` 值，记为 `platform`，然后进行对比判断，转换成具体的设备类型。实现代码如图 2、3 所示：
+综上，我们可以先获取 `device model` 值，记为 `platform`，然后进行对比判断，转换成具体的设备型号。实现代码如图 2、3 所示：
 
 ![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/4-2.png)
 ![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/4-3.png)
