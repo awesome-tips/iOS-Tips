@@ -47,7 +47,7 @@ JSValue *renderJsonResultValue = [self.context[@"renderJson"] callWithArguments:
 NSString *renderJson = [renderJsonResultValue toString];
 ```
 
-有时候在 iOS 中实现不了的需要，可以想着用 JS 来实现，我觉得这是 iOS 与 JS 交互的奥妙之处。
+有时候在 iOS 中实现不了的需求，可以想着用 JS 来实现，我觉得这是 iOS 与 JS 交互的奥妙之处。
 
 
 
