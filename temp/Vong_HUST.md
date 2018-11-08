@@ -1,60 +1,11 @@
-一个命名引发的崩溃
+Xcode 10 文件无法关联的 bug
 --------
 **作者**: [Vong_HUST](https://weibo.com/VongLo)
 
-作为开发工程师，相信大家最头疼的有时候不是需求的实现，而是一个优雅的命名，恰当的命名让人阅读起来非常顺畅。
+今天分享一个最近使用 Xcode 遇到的一个坑。相信大家在写（或者看开源库）一些类，都会有一个匹配的 XXX+Private.h、XXX+Subclass.h 这种头文件，里面专门用来放主类的 Extension，主要用途是为了让某些属性和方法模块内“仅模块内（或子类）可见”，这里之所以加双引号是因为在 Objective-C 中所有的公共头文件在任何类中都能被 import 到，所以这里的头文件仅从命名上做一个隔离。Class Extension 的创建也很简单，新建文件，然后选择 Objective-C File 即可，如图所示，type 选 Extension 即可。确认后 Xcode 会自动生成一个 YourClass+XXX.h 的文件（XXX 为你新建文件时输入的内容）。但是此时如果使用快捷键（command+ctrl+↑/↓），发现无法和主类关联，即无法跳转到主类的 .h/.m。
 
-前段时间因为命名的问题引发了一个崩溃。事情是这样的，服务端某个字段有了新的含义，为了不影响老版本，索性在原来的字段上加了个前缀。比如之前是 `name`，修改之后改成了 `new_name`，然后 `mapping` 的时候，本地 `Model` 直接将服务端蛇形命名规则替换为驼峰命名规则，即 `newName`，嗯，一切看起来似乎很完美。然后跑起来之后，这个请求完成后，就一顿乱崩，然后比对代码也没发现什么大问题。后面发现这个属性的名字有个 `new`，之前有一点印象是说 `ARC` 之后命名中不能带 `new`，后来查阅苹果文档，才发现确实有说到这一点，如下所示，意思就是属性名不能以 `new` 开头，除非提供自定义的 `getter` 方法（前提是 `getter` 也不能以 `new` 开头）。
+这就很难受了，之前版本 Xcode 都是可以的，具体从哪个版本开始不能关联没有去关心，只关心如何解决。恰好最近有看 IGListKit 的相关代码，发现里面也大量使用了这种方式，但是它的 Extension 头文件名都是类似 XXXInternal.h（比如 IGListAdapterInternal.h）这种，而且它是能够使用快捷键在主类和 Extension 之间跳转的，难道是文件名的原因导致的？后面手动把 YourClass+XXX.h 改名为 YourClassXXX.h，然后发现还是不行。但是 build 一下之后，又能像从前那样使用快捷键愉快地在文件间切换了。不过值得一提的是，能用快捷键跳转的仅 XXXX+Private.h 可行（同事的实践），其余的目前试过的都不行。这锅不知道该不该 Xcode 背。
 
-```objc
-// You cannot give an accessor a name that begins with new. This in turn means that you can’t, for example, declare a property whose name begins with new unless you specify a different getter:
-
-// Won't work:
-@property NSString *newTitle;
- 
-// Works:
-@property (getter=theNewTitle) NSString *newTitle;
-```
-
-这个时候验证欲强的老哥已经打开 Xcode 来验证了，然后写了一下代码
-
-```objc
-@interface Object : NSObject
-
-// compile error: Property follows Cocoa naming convention for returning 'owned' objects
-@property (nonatomic, copy) NSString *newName;  
-
-@end
-
-@implementation Object
-
-@end
-```
-
-根本就编译不过，这不是骗人吗？其实没有，因为我的 `Model` 是继承自 `NSManagedObject`，然后根据 `.xcdatamodeld` 文件由系统自动生成的类，相信熟悉 CoreData 的同学都知道这个操作，代码如下（猜测由于 `NSManagedObject` 子类的属性是 `@dynamic` 的，所以 Xcode 不会去检测，如果自己写一个继承 `NSObject` 的类，即使属性是 `@dynamic` 也会报错，可自行测试。如果你知道具体原因，可以分享给大家，一起学习下~）
-
-```objc
-@interface ManagedObject (CoreDataProperties)
-
-+ (NSFetchRequest<ManagedObject *> *)fetchRequest;
-
-@property (nullable, nonatomic, copy) NSString *newName;
-
-@end
-
-@implementation ManagedObject (CoreDataProperties)
-
-+ (NSFetchRequest<ManagedObject *> *)fetchRequest {
-	return [NSFetchRequest fetchRequestWithEntityName:@"ManagedObject"];
-}
-
-@dynamic newName;
-
-@end
-```
-
-最后，希望大家都不会被命名所困扰~
-
-参考链接: [Transitioning to ARC Release Notes](https://developer.apple.com/library/archive/releasenotes/ObjectiveC/RN-TransitioningToARC/Introduction/Introduction.html)
+最后如果你也和我有一样的困扰，可以尝试去除文件名中的+号，虽然麻烦了一点，但至少能用了😂。如果你有其他更优雅的解决方案，欢迎分享~
 
 
