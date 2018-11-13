@@ -1,29 +1,31 @@
-iOS 获取设备型号最新总结
+Xcode 的 Build Settings 选中 Levels 时不同列的含义
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-在开发中，我们经常需要获取设备的型号（如 `iPhone X`，`iPhone 8 Plus` 等）以进行数据统计，或者做不同的适配。但苹果并没有提供相应的系统 API 让我们直接取得当前设备的型号。
+Build Settings 顾明思议，用于表示 Xcode 工程的编译配置项。我们在 Xcode 工程中，打开一个 Project 或者 Target 的 Build Settings 时，会得到如下图所示，此时在顶部分栏中一般默认选中 `All` 和 `Combined`。
 
-其中，`UIDevice` 有一个属性 `model` 只是用于获取 iOS 设备的类型，如 `iPhone`，`iPod touch`，`iPad` 等；而其另一个属性 `name` 表示当前设备的名称，由用户在设置》通用》关于》名称中设定，如 `My iPhone`，`xxx 的 iPhone` 等。然而，我们无法根据这两个值获得具体的型号。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/11/2-1.jpg)
 
-不过，每一种 iOS 设备型号都有对应的一个或多个硬件编码/标识符，称为 `device model` 或者叫 `machine name`，之前的小集介绍过，我们可以通过如图 1 中的代码来获取：
+其中，图中左侧红框内的 `Basic`，`Customized`，`All` 分别表示 `基础配置项`，`已经自定义修改过的配置项` 和 `全部配置项`。
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/4-1.png)
+而图中右侧的红框内，有 `Combined` 和 `Levels` 两项，我们最熟悉的是在 `Combined` 模式下，直接修改下方各配置项的值。
 
-所以，通常的做法是，先获取设备的 `device model` 值，再手动映射为具体的设备型号（或者直接把`device model` 值传给后端，让后端去做映射，这样的好处是可以随时兼容新设备）。
+当我们选中 `Levels` 模式时，会得到如下图所示：
 
-例如：去年发布的第一代 iPhone X 对应的 `device mode` 为 `iPhone10,3` 和 `iPhone10,6`，而今年最新发布 iPhone XS 对应 `iPhone11,2`，iPhone XS Max 对应 `iPhone11,4` 和 `iPhone11,6`，iPhone XR 对应 `iPhone11,8`，完整的 device mode 数据参考 Wiki：
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/11/2-2.jpg)
 
-* [https://www.theiphonewiki.com/wiki/Models](https://www.theiphonewiki.com/wiki/Models)
+我们发现，此时每一个配置项都对应了 4 列值（左侧选中 Project 时只有 3 列；选中 Target 时有 4 列），分别为 `Resolved`，`TargetName`，`ProjectName`，`iOS Default`。它们的含义如下：
 
-综上，我们可以先获取 `device model` 值，记为 `platform`，然后进行对比判断，转换成具体的设备型号。实现代码如图 2、3 所示：
+* `iOS Default` 列：Xcode 工程各编译配置项的默认值，**无法修改**；
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/4-2.png)
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/10/4-3.png)
+* `ProjectName` 列：用于配置 Project 的编译配置项，它会影响其下的所有 Targets 的 Build Settings，优先级高于`iOS Default` 列，**可以手动修改**；
 
-备注：图中代码只给了对 iPhone 设备型号的判断，而完整的包括 iPad 和 iPod touch 型号我已经放在 GitHub Gist 上，大家可以参考，[详见这里](https://gist.github.com/kangzubin/5b4f989d6b1113bfbe43c5772f3ba1fd)。
+* `TargetName` 列：用于配置某一 Target 的编译配置项，优先级高于 `ProjectName` 列，**可以手动修改**；
 
-参考链接：
+* `Resolved` 列：根据前面 3 列的优先级关系，得到最终的值。**它不可手动修改**，优先取 `TargetName` 列的值，如果该列没设置，则取 `ProjectName` 列的值，最后才取 `iOS Default` 列的默认值（`Resolved` 列的各项最终取的那一列的值，会被浅绿色框选高亮显示）。
 
-* [The iPhone Wiki](https://www.theiphonewiki.com/wiki/Models)
-* [fahrulazmi/UIDeviceHardware](https://github.com/fahrulazmi/UIDeviceHardware)
+通过对比这几列数据，你可以很清晰地看出我们都改了哪些默认配置，都是在哪改动的。其实我们可以发现，`Resolved` 列各项的值，就是选中 `Combined` 模式下，各配置项的值。
+
+PS：在 Pods 工程中各 Targets 的 Build Settings 可能会有 5 列值，多了一项 `Config.File`，它的优先级位于 Target 和 Project 之间。
+
+以上，希望对大家在 Xcode 中设置 Build Settings 时有所帮助。
