@@ -2,7 +2,7 @@ Xcode 的 Build Settings 选中 Levels 时不同列的含义
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-Build Settings 顾明思议，用于表示 Xcode 工程的编译配置项。我们在 Xcode 工程中，打开一个 Project 或者 Target 的 Build Settings 时，会得到如下图所示，此时在顶部分栏中一般默认选中 `All` 和 `Combined`。
+Build Settings 顾名思议，用于表示 Xcode 工程的编译配置项。我们在 Xcode 工程中，打开一个 Project 或者 Target 的 Build Settings 时，会得到如下图所示，此时在顶部分栏中一般默认选中 `All` 和 `Combined`。
 
 ![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/11/2-1.jpg)
 
