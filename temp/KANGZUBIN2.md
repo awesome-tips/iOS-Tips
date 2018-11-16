@@ -24,7 +24,7 @@ Xcode 10.1 并没有修复由于 Assets 引起的在 iOS 9 上的崩溃问题
 
 我们 App 前几天发新版，打包人员疏忽忘记了这个问题，直接用 Xcode 10.1 发包上线，结果这两天果然在 iOS 9 上的崩溃率又上来了，惨痛教训！！！
 
-另外，让人遗憾的是：苹果已经偷偷在 Xcode 10.1 的 [Release Notes](https://developer.apple.com/documentation/xcode_release_notes/xcode_10_1_release_notes?language=objc) 中，把这个问题从 Resolved Issues（已解决的问题）该为 Known Issues（已知问题）了，如下：
+另外，让人遗憾的是：苹果已经偷偷在 Xcode 10.1 的 [Release Notes](https://developer.apple.com/documentation/xcode_release_notes/xcode_10_1_release_notes?language=objc) 中，把这个问题从 Resolved Issues（已解决的问题）改为 Known Issues（已知问题）了，如下：
 
 ![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/11/3-3.jpg)
 
