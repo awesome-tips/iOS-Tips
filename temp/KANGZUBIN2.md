@@ -1,43 +1,39 @@
-检测设备是否为 iPhone X/XS/XR 的几种方式
+Xcode 10.1 并没有修复由于 Assets 引起的在 iOS 9 上的崩溃问题
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-在上一条小集[《iPhone 屏幕分辨率终极指南》](https://weibo.com/1645958062/GA26Ux6TR)中，我们整理介绍了目前已发布的所有 iPhone 设备的屏幕数据，包括了最新上市的 iPhone XS、iPhone XS Max 和 iPhone XR。
+关于 Xcode 10.0 打的线上 Release 包会在 iOS 9.0 ~ 9.2.1 系统上出现随机的崩溃，相信大家已经不陌生了，网上已有不少关于[这个问题的讨论](https://blog.csdn.net/Hello_Hwc/article/details/82891405)。
 
-最后我们介绍了一种在代码中通过获取屏幕的高度判断是否等于 812.0 或 896.0 来检测设备是否为 iPhone X 的方法，但该方法存在小瑕疵，需要考虑一下两点：
+之前 `@高老师很忙` 也写了一个小集[《解决 Xcode 10 打包 iOS 9.0 - iOS 9.2.1 Crash 的问题》](https://weibo.com/1608617333/GE8Glfzvi)，分析了这个问题产生的原因，以及如何解决这个问题。
 
-* 当 App 支持横竖屏切换时，在横屏模式下也能够正确判断；
+我们的 App 上个月一开始用 Xcode 10.0 发了一个包，因为这个导致线上崩溃率直线上升（主要集中在 iOS 9），无奈之下，**只能用 Xcode 9.4.1 重新编译发了一版本**。
 
-* 在模拟器中调试时，能够正确判断当前所选则的模拟器类型是不是 iPhone X；
+苹果号称在 Xcode 10.1 Beta 2 中解决了这个问题，然后在 2018 年 10 月 31 日，苹果发布了 Xcode 10.1 正式版，并在 Release Notes 中声称已经解决了这个问题，有如下截图为证：
 
-因此，本条小集重新整理一下我们目前所了解到的几种检测设备是否为 iPhone X 的方式，供大家参考，不足之处欢迎补充。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/11/3-1.jpg)
 
-备注：这里所说的 iPhone X 泛指屏幕大小为 5.8、6.1、6.5 英寸三种尺寸，且带有顶部刘海和底部操作条的 iPhone 设备。
+然而，当天立刻有人在苹果的开发者论坛（Apple Developer Forums）上发了帖子说这个问题仍然存在，
 
-方式一：通过获取设备的 device model 来判断
+* [Xcode 10.1 did not fix the iOS 9 asset catalogs crash problem](https://forums.developer.apple.com/thread/110393)
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/09/2-1.png)
+如下图所示：
 
-方式二：通过获取屏幕的宽高来判断
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/11/3-2.jpg)
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/09/2-2.png)
+国内也有很多开发者通过自身 App 的实践纷纷证实了这个问题。
 
-方式三：通过底部安全区域的高度来判断
+我们 App 前几天发新版，打包人员疏忽忘记了这个问题，直接用 Xcode 10.1 发包上线，结果这两天果然在 iOS 9 上的崩溃率又上来了，惨痛教训！！！
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/09/2-3.png)
+另外，让人遗憾的是：苹果已经偷偷在 Xcode 10.1 的 [Release Notes](https://developer.apple.com/documentation/xcode_release_notes/xcode_10_1_release_notes?language=objc) 中，把这个问题从 Resolved Issues（已解决的问题）该为 Known Issues（已知问题）了，如下：
 
-方式四：通过是否支持 FaceID 判断
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/11/3-3.jpg)
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/09/2-4.png)
+临时解决方法：
 
-方式五：通过 UIStatusBar 的高度判断
+* 参考之前高老师的小集介绍的几种方式
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/09/2-5.png)
+* 切回到 Xcode 9.4.1 打包
 
-由于小集篇幅有限，这几种方式的实现和优缺点分析详见我写的这篇博文：
+* 把 App 最低支持系统改为 iOS 10+ ...😅
 
-* https://kangzubin.com/iphonex-detect/ 
-
-你是否有其他判断方式呢？欢迎补充~
-
-参考链接：[Detect if the device is iPhone X](https://stackoverflow.com/questions/46192280/detect-if-the-device-is-iphone-x/)
+* 等待 Xcode 10.2 解决 ...🤣
