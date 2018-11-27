@@ -1,31 +1,29 @@
-Xcode 的 Build Settings 选中 Levels 时不同列的含义
+对于“静态库”和“动态库”的理解总结
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-Build Settings 顾名思议，用于表示 Xcode 工程的编译配置项。我们在 Xcode 工程中，打开一个 Project 或者 Target 的 Build Settings 时，会得到如下图所示，此时在顶部分栏中一般默认选中 `All` 和 `Combined`。
+通常，我们的 Xcode 工程会依赖一些第三方库，包括：.a 静态库（Static Library）和 .framework 动态库（Dynamic Library）。
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/11/2-1.jpg)
+不过简单地把 .framework 后缀的文件称为“动态库”并不严谨，因为在 iOS/macOS 开发中，framework 又分为**静态 framework** 和 **动态 framework**，区别如下：
 
-其中，图中左侧红框内的 `Basic`，`Customized`，`All` 分别表示 `基础配置项`，`已经自定义修改过的配置项` 和 `全部配置项`。
+* `静态 framework`：可以理解为是 `.a 静态文件` + `.h 公共头文件` + `资源文件` 的集合，本质上与 .a 静态库是一致的；
 
-而图中右侧的红框内，有 `Combined` 和 `Levels` 两项，我们最熟悉的是在 `Combined` 模式下，直接修改下方各配置项的值。
+* `动态 framework`：即真正意义上的动态库，一般包括动态二进制文件、头文件和资源文件等。
 
-当我们选中 `Levels` 模式时，会得到如下图所示：
+对于一个 Static Library 工程，其编译产物为 .a 静态二进制文件 + 公共 .h 头文件；
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/11/2-2.jpg)
+对于一个 Framework 工程，其编译的最终产物是动态库还是静态库，我们可以通过在 Build Settings -> Linking -> Mach-O Type 中进行选择设置其值为 `Dynamic Library` 或者 `Static Library`。
 
-我们发现，此时每一个配置项都对应了 4 列值（左侧选中 Project 时只有 3 列；选中 Target 时有 4 列），分别为 `Resolved`，`TargetName`，`ProjectName`，`iOS Default`。它们的含义如下：
+此外，我们知道，对于一个 Mach-O 二进制文件，不管是 static 还是 dynamic，一般都包含了几种不同的处理器架构（Architectures），例如：i386, x86_64, armv7, armv7s, arm64 等。
 
-* `iOS Default` 列：Xcode 工程各编译配置项的默认值，**无法修改**；
+Xcode 在编译链接时，对于静态库和动态库的处理方式是不同的。
 
-* `ProjectName` 列：用于配置 Project 的编译配置项，它会影响其下的所有 Targets 的 Build Settings，优先级高于`iOS Default` 列，**可以手动修改**；
+对于静态库，在链接时（Linking Time），Xcode 会自动筛选出静态库中的不同 architecture 合并到对应处理器架构的主可执行二进制文件中；而在打包归档（Archive）时，Xcode 会自动忽略掉静态库中未用到的 architecture，例如会移除掉 i386, x86_64 等 Mac 上模拟器专用的架构。
 
-* `TargetName` 列：用于配置某一 Target 的编译配置项，优先级高于 `ProjectName` 列，**可以手动修改**；
+而对于动态库，在编译打包时，Xcode 会**直接拷贝**整个动态 framework 文件到最终的 .ipa 包中，只有在 App 真正启动运行时，才会进行动态链接。但是苹果是不允许最终上传到 App Store Connect 后台的 .ipa 文件包含 i386, x86_64 等模拟器架构的，会报 Invalid 错误，所以对于工程中的动态 framework，我们在打 Release 正式包时，一般会通过执行命令或者脚本的方式移除掉这些 Invalid Architectures。
 
-* `Resolved` 列：根据前面 3 列的优先级关系，得到最终的值。**它不可手动修改**，优先取 `TargetName` 列的值，如果该列没设置，则取 `ProjectName` 列的值，最后才取 `iOS Default` 列的默认值（`Resolved` 列的各项最终取的那一列的值，会被浅绿色框选高亮显示）。
+最后，如何在 Xcode 工程中添加这些静态/动态库呢？
 
-通过对比这几列数据，你可以很清晰地看出我们都改了哪些默认配置，都是在哪改动的。其实我们可以发现，`Resolved` 列各项的值，就是选中 `Combined` 模式下，各配置项的值。
+对于 “.a 静态库” 和 “静态 framework” ，直接拖拽到工程中，并勾选 `Copy if needed` 选项即可，无需其他设置；而对于添加“动态 framework”，稍微比较麻烦，**我们将在下一条小集介绍几种不同的方法。**
 
-PS：在 Pods 工程中各 Targets 的 Build Settings 可能会有 5 列值，多了一项 `Config.File`，它的优先级位于 Target 和 Project 之间。
-
-以上，希望对大家在 Xcode 中设置 Build Settings 时有所帮助。
+以上，希望对你能有所帮助，不足之处，欢迎指出。
