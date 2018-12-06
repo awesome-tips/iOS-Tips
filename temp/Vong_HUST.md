@@ -1,11 +1,56 @@
-Xcode 10 文件无法关联的 bug
+覆盖父类同名属性
 --------
 **作者**: [Vong_HUST](https://weibo.com/VongLo)
 
-今天分享一个最近使用 Xcode 遇到的一个坑。相信大家在写（或者看开源库）一些类，都会有一个匹配的 `XXX+Private.h`、`XXX+Subclass.h` 这种头文件，里面专门用来放主类的 `Extension`，主要用途是为了让某些属性和方法模块内“仅模块内（或子类）可见”，这里之所以加双引号是因为在 Objective-C 中所有的公共头文件在任何类中都能被 import 到，所以这里的头文件仅从命名上做一个隔离。`Class Extension` 的创建也很简单，新建文件，然后选择 Objective-C File，下一步 type 选 `Extension` 即可。确认后 Xcode 会自动生成一个 `YourClass+XXX.h` 的文件（XXX 为你新建文件时输入的内容）。但是此时如果使用快捷键（command+ctrl+↑/↓），发现无法和主类关联，即无法跳转到主类的 .h/.m。
+日常开发中，我们都可能会碰到这种情况，继承系统的某个类，但是想要覆盖父类的某个属性名（大部分情况是 `delegate`、`dataSource`）会发现两个烦人的 `warning`，代码如下所示。
 
-这就很难受了，之前版本 Xcode 都是可以的，具体从哪个版本开始不能关联没有去关心，只关心如何解决。恰好最近有看 `IGListKit` 的相关代码，发现里面也大量使用了这种方式，但是它的 `Extension` 头文件名都是类似 `XXXInternal.h`（比如 `IGListAdapterInternal.h`）这种，而且它是能够使用快捷键在主类和 `Extension` 之间跳转的，难道是文件名的原因导致的？后面手动把 `YourClass+XXX.h` 改名为 `YourClassXXX.h`，然后发现还是不行。但是 build 一下之后，又能像从前那样使用快捷键愉快地在文件间切换了。不过值得一提的是，能用快捷键跳转的仅 `XXXX+Private.h` 可行（同事的实践），其余的目前试过的都不行。这锅不知道该不该 Xcode 背。
+```objc
+@protocol VVLTextViewDelegate;
 
-最后如果你也和我有一样的困扰，可以尝试去除文件名中的+号，虽然麻烦了一点，但至少能用了😂。如果你有其他更优雅的解决方案，欢迎分享~
+@interface VVLTextView : UITextView
+
+// warning1: Property type 'id<VVLTextViewDelegate>' is incompatible with type 'id<UITextViewDelegate> _Nullable' inherited from 'UITextView'
+// warning2: Auto property synthesis will not synthesize property 'delegate'; it will be implemented by its superclass, use @dynamic to acknowledge intention
+@property (nonatomic, weak) id<VVLTextViewDelegate> delegate;
+
+@end
+
+@protocol VVLTextViewDelegate <UITextViewDelegate>
+
+- (void)test;
+
+@end
+
+@implementation VVLTextView
+
+@end
+```
+
+这个时候除了重命名 `delegate` 之外，还有没有其它操作能够消除警告而且能正常使用呢？答案是肯定的。
+
+根据警告，我们可以把 `delegate` 在 .m 里声明为 `dynamic` 的，然后再把 `protocol` 的定义放到类定义之前，即可实现，代码如下。
+
+```objc
+@protocol VVLTextViewDelegate <UITextViewDelegate>
+
+- (void)test;
+
+@end
+
+@interface VVLTextView : UITextView
+
+@property (nonatomic, weak) id<VVLTextViewDelegate> delegate;
+
+@end
+
+
+@implementation VVLTextView
+@dynamic delegate;
+
+@end
+```
+
+像系统自带的一些类（比如 `UICollectionView/UITableView`）应该也是用类似方式来实现的吧，我猜。现在也终于想明白为什么系统的大部分协议定义都放在类之前了，应该跟这个有点关系。所以以后有类似需求，可以不需要再去重写一个属性名，然后复写其 `setter` 方法来赋值了。
+如有不对之处，欢迎指出，期待你的分享~
 
 
