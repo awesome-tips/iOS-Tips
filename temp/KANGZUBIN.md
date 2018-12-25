@@ -14,7 +14,7 @@ otool -L /path/to/TestApp.app/TestApp
 
 即可查看当前 App 需要链接的所有动态库，如图 1 所示：
 
-![](hhttps://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/12/3-1.jpg)
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/12/3-1.jpg)
 
 可以看出，一个简单的 iOS 工程，至少会链接 `UIKit.framework`、`Foundation.framework`、`libobjc.A.dylib`（Objective-C Runtime 库）、`libSystem.B.dylib`（系统基础库）等动态库；如果工程依赖了其他系统库，也会在这里看到。
 
