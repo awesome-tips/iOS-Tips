@@ -1,13 +1,11 @@
-# Diff:/Podfile.lock NO such file or directory
+# Xcode更新输入账号密码，账号却不是自己的
 
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/12/2-1.png)
+更新Xcode的时候，需要输入Apple账号和密码，以前一直正常，这次更新的时候遇到一个问题。更新的时候提示输入账号和密码，可是账号并不是我自己的账号，关键这个账号也不能修改，只能输入密码。刚开始以为是系统的问题，把Mac系统升级后发现并不管用。最后想了下，我电脑上的Xcode安装的时候是直接和同事拷贝的，那么这个账号应该就是他的。直接和同事要账号密码并不合适。
 
+最后找到一个解决办法：
 
-
-当 `Pod install` 后，运行项目后发现报错，错误提示如图所示。按提示看了下 `Podfile.lock` 是存在的。试了各种办法，都没有解决（删除 pods 文件夹，重新安装，都不好使）。无奈之下，看了下文件的路径。发现文件路径错了，`XXX/Pods/Pods/Target Support Files/xxx`，发现文件路径多了个 `Pods`。这个路径我并没有设置，是 Pod 自己管理的。最后发现在下图的位置中可以配置路径，把这个路径修改成正确的地址就可以了：
-
-
-
-![![](![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2018/12/2-2.png))
+```
+在应用中找到Xcode -> 显示包内容 -> 找到 _MASReceipt 文件夹，把它删除 -> 更新即可。
+```
