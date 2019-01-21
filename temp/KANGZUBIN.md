@@ -1,32 +1,31 @@
-iOS App 异常捕获相互覆盖问题
+Xcode 工程设置构建版本号自动递增
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-在开发和维护 App 过程中，我们通常需要去捕获并上报导致 App 崩溃的异常信息，以便于分析，一般我们会使用一些成熟的第三方 SDK，例如 Bugly 或者友盟等。
+在一个 iOS 工程中，通常有两种“版本号”，即 `Version` 和 `Build`，如图 1 所示：
 
-但如果我们想自己捕获异常信息，做一些相关处理，其实也很简单，苹果为开发者提供了两个异常捕获的 API，如下：
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/01/8-1.jpg)
 
-```objc
-typedef void NSUncaughtExceptionHandler(NSException *exception);
+* **Version** 为发布版本号，标识应用程序发布的正式版本号，通常为两段式或者三段式，例如：`1.2.1`、`1.0` 等，其 Key 为 `CFBundleShortVersionString`，在 Info.plist 文件中对应 "Bundle versions string, short"；
 
-NSUncaughtExceptionHandler * NSGetUncaughtExceptionHandler(void);
-void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler *);
-```
+* **Build** 为构建版本号，标识应用程序构建（编译）的内部版本号，可以有多种方法表示：时间表示（e.g. "20190122080211"）、字母表示（e.g "ABC"）、以及**递增的数字**（e.g. "100"）等。它一般不对外公开，在开发团队内部使用。其 Key 为 `CFBundleVersion`，在 Info.plist 文件中对应 "Bundle version"；
 
-其中，`NSSetUncaughtExceptionHandler` 函数用于设置异常处理的回调函数，在程序终止前的最后一刻会调用我们设置的回调函数（Handler），进行崩溃日志的记录，代码如下：
+在 App Store 发布应用时，使用的是 “Version” 版本号，在同一个 “Version” 号下， 开发者可以上传不同 “Build” 构建版本。此外，对于 “Build” 号，我们最常使用 “递增的数字” 来表示。
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/01/1-1.jpg)
+同时，苹果为我们提供了一个 `agvtool` 命令行工具，用于自动增加版本号，具体使用方式如下：
 
-但是，大部分第三方 SDK 也是通过这种方式来收集异常的，当我们通过 `NSSetUncaughtExceptionHandler` 设置异常处理函数时，会覆盖其它 SDK 设置的回调函数，导致它们无法上报统计，反之，也可能出现我们设置的回调函数被其他人覆盖。
+首先，在 Build Settings 配置项中，设置 `Current Project Version` 为选定的值，例如 `100`（可以为整数或浮点数，新工程一般设为 `1`），`agvtool` 命令会根据这个值来递增 “Build” 号。另外需要再选择 `Versioning System` 的值为 `Apple Generic`，如图 2 所示。
 
-那如何解决这种覆盖的问题呢？其实很简单，苹果也为我们提供了 `NSGetUncaughtExceptionHandler` 函数，用于获取之前设置的异常处理函数。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/01/8-3.jpg)
 
-所以，我们可以在调用 `NSSetUncaughtExceptionHandler` 注册异常处理函数之前，先通过 `NSGetUncaughtExceptionHandler` 拿到已有的异常处理函数并保存下来。然后在我们自己的处理函数执行之后，再调用之前保存的处理函数就可以了。 
+然后，在 Build Phases 中，点击 “+” 号，选择 “New Run Script Phase” 添加一个执行脚本，并设置以下脚本代码，如图 3 所示：
 
-完整的示例代码如下图所示：
+>xcrun agvtool next-version -all
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/01/1-2.jpg)
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/01/8-2.jpg)
 
-最后，如果你的 App 接入了多个异常捕获 SDK，而出现了其中一个异常上报不生效的情况，有可能就是因为这个覆盖问题导致的。
+以上，我们在每次编译工程时，“Build” 号就会自动递增加 1 了。
 
-参考连接：https://mp.weixin.qq.com/s/vmwj3Hs8JTg3WmB70xhqIQ
+关于 `agvtool` 命令的更多使用方式，可以参考[这里](https://segmentfault.com/a/1190000004678950)。
+
+最后，上述配置在多人开发或者多分支开发时，可能会导致 “Build” 号冲突，因此，我们可以只在日常给测试人员打包的机器上配置就好了。
