@@ -50,6 +50,13 @@
 * [6. Framework 中混合编程时 umbrella header 设置注意事项 【南峰子】](https://github.com/southpeak/iOS-tech-set/blob/master/2019/01.md#framework-%E4%B8%AD%E6%B7%B7%E5%90%88%E7%BC%96%E7%A8%8B%E6%97%B6-umbrella-header-%E8%AE%BE%E7%BD%AE%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9)
 * [7. 关于UIStackView的一个小知识点 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2019/01.md#%E5%85%B3%E4%BA%8Euistackview%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9)
 * [8. Xcode更新输入账号密码，账号却不是自己的 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2019/01.md#xcode%E6%9B%B4%E6%96%B0%E8%BE%93%E5%85%A5%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81%EF%BC%8C%E8%B4%A6%E5%8F%B7%E5%8D%B4%E4%B8%8D%E6%98%AF%E8%87%AA%E5%B7%B1%E7%9A%84)
+* [9. Swift 中实现 synchronized 【南峰子】](https://github.com/southpeak/iOS-tech-set/blob/master/2019/01.md#swift-%E4%B8%AD%E5%AE%9E%E7%8E%B0-synchronized)
+* [10. 点击cell不执行-[UITableView didSelectRowAtIndexPath:]方法的几种方式 【高老师很忙】](https://github.com/southpeak/iOS-tech-set/blob/master/2019/01.md#%E7%82%B9%E5%87%BBcell%E4%B8%8D%E6%89%A7%E8%A1%8C-%5Buitableview-didselectrowatindexpath%3A%5D%E6%96%B9%E6%B3%95%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F)
+* [11. Xcode 工程设置构建版本号自动递增 【KANGZUBIN】](https://github.com/southpeak/iOS-tech-set/blob/master/2019/01.md#xcode-%E5%B7%A5%E7%A8%8B%E8%AE%BE%E7%BD%AE%E6%9E%84%E5%BB%BA%E7%89%88%E6%9C%AC%E5%8F%B7%E8%87%AA%E5%8A%A8%E9%80%92%E5%A2%9E)
+* [12. Command Not Found 【Lefe】](https://github.com/southpeak/iOS-tech-set/blob/master/2019/01.md#command-not-found)
+* [13. NSScanner 过滤字符串 【这个汤圆没有馅】](https://github.com/southpeak/iOS-tech-set/blob/master/2019/01.md#nsscanner-%E8%BF%87%E6%BB%A4%E5%AD%97%E7%AC%A6%E4%B8%B2)
+* [14. 针对 objc_exception_throw 的实用调试技巧 【Vong】](https://github.com/southpeak/iOS-tech-set/blob/master/2019/01.md#%E9%92%88%E5%AF%B9-objc_exception_throw-%E7%9A%84%E5%AE%9E%E7%94%A8%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7)
+* [15. 聊聊 iPad 适配 【halohily】](https://github.com/southpeak/iOS-tech-set/blob/master/2019/01.md#%E8%81%8A%E8%81%8A-ipad-%E9%80%82%E9%85%8D)
 
 [[2019]查看更多 [1] [2] [3] ... ➡️](https://github.com/southpeak/iOS-tech-set/blob/master/2019/目录.md)
 
