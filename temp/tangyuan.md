@@ -9,6 +9,8 @@ willDisplayCell 是 UITableView 的一个代理方法，跟Display相关的方�
 
 通过打断点发现，tableview 中先走 cellForRowAtIndexPath 方法，然后再走 willDisplayCell 方法。网上很多人建议，对于数据绑定填充放到 willDisplayCell 中执行。但是通过试验，一般情况下，在 cellForRowAtIndexPath 中进行数据绑定填充，并不会造成卡顿和过度消耗性能的情况。特别复杂的 cell 除外。
 
+另外，willDisplayCell还有一个用处是可以预加载feed流，当滑动到倒数第几个cell时，预先进行网络请求，加载下一页的数据。(来自小伙伴 @NotFound-- 的补充)
+
 willDisplayCell 平时用的最多的场景是自定义 UITableView 分割线。系统默认情况下，UITableView 的分割线左边是没有置顶的。打印它的 inset 可以得到值为 {0, 15, 0, 0}
 
 ```
