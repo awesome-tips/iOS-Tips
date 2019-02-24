@@ -1,4 +1,4 @@
-自动调用
+聊聊 load 与 __attribute__ 
 ----------
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
