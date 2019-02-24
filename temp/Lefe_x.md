@@ -1,30 +1,84 @@
-Command Not Found
+自动调用
 ----------
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
-使用终端命令的时候常会出现`Command Not Found`这个错误，我们今天聊一聊这个错误出现的基本原因，出现这个问题一般因为下面4种原因；
+通常为了解耦或者其它目的，我们往往在 `+(void)load`方法做一些服务的启动或者利用运行时做方法的替换等。可以添加环境变量 `OBJC_PRINT_LOAD_METHODS=YES`打印 load 方法调用的顺序。如下：
 
-- 输入命令时语法错误，命令行有语法规则，必须按语法规则写；
-- 命令并没有安装，有时候安装的时候忽略了错误；
-- 命令被删除或破坏了；
-- 用户的 `$PATH` 不正确，大部分原因都是这个导致的；
+```js
+......
 
-出现前三种错误都比较好解决，第四中错误比较常见，有时候明明安装完成了，却还会报这个错误。命令行程序之所以可以执行是因为它本身是一个可执行程序或者是一个脚本。当在终端中输入命令的时候，操作系统会找对应的可执行文件并执行。操作系统会从环境变量`$PATH`中依次查找可执行文件，直到找到，如果找不到将报 `Command Not Found` 这个错误。
+objc[159]: LOAD: +[_NSConstantNumberBool load]
 
-查看我电脑的环境变量  `$PATH` 中包含了（每个路径通过冒号分割）：
+objc[159]: LOAD: +[_NSConstantData load]
 
+objc[159]: LOAD: +[_NSConstantDate load]
+
+objc[159]: LOAD: +[_NSConstantDictionary load]
+
+objc[159]: LOAD: class 'Annotation' scheduled for +load
+objc[159]: LOAD: +[Annotation load]
 ```
-➜  ~ echo $PATH
-/opt/MonkeyDev/bin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+load方法是在类被加入运行时中执行的，根据下面的源码即可知道`+(void)load`方法被调用的顺序：父类 > 类 > 分类1、分类2（分类之间的顺序是由编译顺序决定的）：
+
+```c
+void prepare_load_methods(const headerType *mhdr) {
+    // 类的调用
+    classref_t *classlist = 
+        _getObjc2NonlazyClassList(mhdr, &count);
+    for (i = 0; i < count; i++) {
+        schedule_class_load(remapClass(classlist[i]));
+    }
+    // 分类的调用
+    category_t **categorylist = _getObjc2NonlazyCategoryList(mhdr, &count);
+    for (i = 0; i < count; i++) {
+        category_t *cat = categorylist[i];
+        add_category_to_loadable_list(cat);
+    }
+}
+
+static void schedule_class_load(Class cls) {
+    // 第一.调用父类的 +(void)load 方法
+    schedule_class_load(cls->superclass);
+    // 第二.调用类的 +(void)load 方法
+    add_class_to_loadable_list(cls);
+}
+
+void add_class_to_loadable_list(Class cls) {
+    if (PrintLoading) {
+        // 类中Load 方法被调用后的打印，添加环境变量OBJC_PRINT_LOAD_METHODS即可看见这些打印信息
+        _objc_inform("LOAD: class '%s' scheduled for +load", 
+                     cls->nameForLogging());
+    }
+}
+
+void add_category_to_loadable_list(Category cat) {
+    // 分类类中Load 方法被调用后的打印，添加环境变量OBJC_PRINT_LOAD_METHODS即可看见这些打印信息
+    if (PrintLoading) {
+        _objc_inform("LOAD: category '%s(%s)' scheduled for +load", 
+                     _category_getClassName(cat), _category_getName(cat));
+    }
+}
 ```
 
-如果报 `Command Not Found` 这个错误，首先通过`echo $PATH`查看环境变量中是否已经存在了可执行文件的路径。如果没有打开`.bash_profile`把可执行文件地绝对路径写进去即可。
+除了 load 方法之外，我们可以使用编译时的特性来做初始化的服务，比如下面的例子，下面这些方法会在main函数执行前调用，而且可以控制函数的执行顺序，对模块化用来解耦是一个不错的方案：
 
-```
-➜ vi $HOME/.bash_profile
-export PATH="$HOME/Library/Android/flutter/bin:$PATH"
+```c
+// main 函数开始执行时调用
+// 执行顺序为 before101，before102，before103
+__attribute__((constructor(101)))
+void before101() {
+    NSLog(@"before101");
+}
 
-// 想让刚配置的 PATH 生效，需要刷新终端
-➜  source $HOME/.bash_profile
+__attribute__((constructor(103)))
+void before103() {
+    NSLog(@"before103");
+}
+
+__attribute__((constructor(102)))
+void before102() {
+    NSLog(@"before102");
+}
 ```
 
