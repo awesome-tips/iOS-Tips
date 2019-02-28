@@ -1,36 +1,7 @@
-使用 strong 而不是 assign 修饰 dispatch 对象
+使用setViewControllers方法来实现页面跳转
 --------
-**作者**: NotFound--
+**作者**: [NotFound--](https://weibo.com/3951595216)
 
-当运行系统是在 iOS6 以下时，是需要通过 `dispatch_retain` 和 `dispatch_release` 来管理 `dispatch queue` 的生命周期的，此时应该使用 `assign` 来修饰 `dispatch_queue_t` 类型的对象。在 iOS6 及以后是通过 ARC 来管理 `dispatch queue` 对象的生命周期的，所以应该使用 strong 来修饰 `dispatch_queue_t` 类型的对象。这里以支持 iOS5 系统的 `SDWebImage(version:3.7.6)` 的代码举例：
+当我们对UINavigationcontroller控制器进行Push和Pop操作时，其实是对UINavigationcontroller控制器的子控制器栈ViewControllers进行入栈和出栈操作，有些复杂的页面跳转需求，通过Push和Pop并不能很好实现，有例如我们需要由控制器A跳转到控制器B，B控制器返回时要返回到之前没有创建的控制器C，如果是先Pop再Push，在切换过程中，会显示出控制器A的内容， 不能很好的实现我们的需求，我们可以通过调用setViewControllers 方法来更改UINavigationcontroller的子控制器栈并应用到当前的 UINavigationController来完成页面跳转，具体代码如下：
 
-```objc
-#if OS_OBJECT_USE_OBJC
-    #define SDDispatchQueueSetterSementics strong
-#else
-#define SDDispatchQueueSetterSementics assign
-#endif
-
-@property (SDDispatchQueueSetterSementics, nonatomic) dispatch_queue_t barrierQueue;
-```
-
-`OS_OBJECT_USE_OBJC` 是一个编译器选项，当我们工程里面设置的 `Deployment target` 大于或等于 iOS 6 时，`OS_OBJECT_USE_OBJC` 的值会是 1，否则会是 0。因为我们现在的 app 普遍都是支持到 iOS9 或者 iOS8，所以 `dispatch_queue_t` 类型的对象都是使用 ARC 来进行管理的，我们使用 strong 来修饰就好了。
-
-【示例】
-
-在美团近期开源的 `UI` 渲染框架 `Graver` 中也发现，错误得使用 assign 来修饰 `dispatch_queue_t` 类型的属性（如图一所示），
-
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/01/7-1.jpg)
-
-对 Graver 框架实际测试时，发现将一个 dispatch_queue_t 类型的局部变量赋值给对 assign 修饰的 `dispatch_queue_t` 后（如图二所示），
-
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/01/7-2.jpg)
-
-会抛出了野指针异常（如图三所示）。
-
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/01/7-3.jpg)
-
-然后去 github 上搜了一下“`assign dispatch_queue_t`”，发现很多代码也是使用这种错误的写法，所以觉得有必要写个 tip，提醒一下大家。
-
-
-
+![](https://user-gold-cdn.xitu.io/2019/2/28/16931c5f3790ad3e?w=1724&h=414&f=png&s=112998)
