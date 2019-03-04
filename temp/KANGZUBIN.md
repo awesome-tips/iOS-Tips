@@ -24,11 +24,11 @@ iOS 判断设备是否锁屏
 
 * 通过屏幕亮度是否为 0 进行判断。如前面所述，在 App 打开状态下，对于点击 Home 键和锁屏操作，接收到的回调事件是一样的。因此，我们可以在 App 进入后台的 `applicationDidEnterBackground:` 回调中获取当前屏幕的亮度值，如果为 0，则认为是锁屏操作，否则认为是点击了 Home 键，代码如图 4 所示。不过这种方式存在不足，经验证，有时锁屏后获取到的屏幕亮度值并不为 0，且如果手机的亮度调到最低时，获取到的亮度值始终都为 0，就无法区分锁屏和 Home 键了。详细参考[这篇文章](https://a1049145827.github.io/2018/01/06/iOS%E5%BC%80%E5%8F%91-%E5%8C%BA%E5%88%86Home%E9%94%AE%E5%92%8C%E9%94%81%E5%B1%8F%E9%94%AE%E4%BA%8B%E4%BB%B6/)。
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/4-1.png)
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-4.png)
 
 * 此外，[这篇文章](https://www.jianshu.com/p/4d6472735e42)中也提出一种通过是否能更改屏幕亮度进行判断。代码如图 5 所示，不过经验证，这种方式无效！
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/5-1.png)
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-5.png)
 
 更多其它的方式，详见[这篇文章](https://juejin.im/entry/5be54d816fb9a049ea387454)中的介绍。
 
