@@ -1,25 +1,39 @@
-TestFlight 内测邀请弹窗的实现
+iOS 判断设备是否锁屏
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-最近，我们在使用一些 App 时经常会遇到，在 App 刚启动不久后有时我们会看到一些内测弹窗，类似 “恭喜您获得内测资格，诚邀您体验新版本...”，然后点击下载按钮时就会跳转到 TestFlight 中安装测试版本，（注意不是跳转到 App Store 中更新最新版本哦），而且用户无需输入任何测试邀请码。
+在某些特定的业务场景下，我们可能需要判断用户在使用 App 过程中是否锁屏了。那么，我们该如何监听 iOS 设备的锁屏事件呢？
 
-我们知道，TestFlight 是苹果官方提供的内测平台，在刚推出时，使用起来很繁琐，开发者需要先收集用户的邮箱，然后在提交测试版本苹果审核通过后，给他们发邀请码，最后需要用户手机安装 TestFlight App 并输入对应的邀请码才能开始安装内测。
+在 AppDelegate 的回调事件中，当单击 Home 键进入后台时，会依次调用 `applicationWillResignActive:`（App 即将失去焦点）和 `applicationDidEnterBackground:`（App 已经进入后台），而当 App 在前台使用过程中进行锁屏操作时，也是依次执行这两个回调。
 
-于是国内也诞生了很多像蒲公英、fir.im、testflight.top 等内测应用分发平台，优化了体验流程。
+因此，我们无法通过 AppDelegate 的上述相应回调事件来直接判断设备是否锁屏了。
 
-终于，在去年苹果自己也简化了 TestFlight 的使用流程，支持通过同一公开链接邀请 TestFlight 测试员，无需再收集邮箱和发送邀请码了，如图所示。
+在网上搜了一下，目前主要有以下几种方式：
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/02/1-1.jpg)
+* 通过 Darwin 通知监听锁屏事件，代码大致如图 1 所示，**不过这种方式已被禁用，在提交 App Store 审核时会被拒。**
 
-因此我们大致可以使用如下步骤实现开头说的功能：
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-1.png)
 
-1、上传新的构建版本包到 App Store Connect 后台，并提交 Beta Test 申请，苹果审核通过后，我们可以创建一个 TestFlight Public Link，并把这个公开测试邀请链接保存到我们的服务端，通过某一接口灰度下发给 App；
+* 通过 `<notify.h>` 中的 `notify_register_dispatch` 函数添加锁屏和解锁监听，代码如图 2 所示。
 
-2、App 在启动后特定的时机调用接口查询是否有新的内测邀请链接，如果有就弹窗提醒用户是否要参与内测；
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-2.png)
 
-3、如果用户点了确认，就通过 UIApplication 的 openURL 方法打开 TestFlight Public Link，此时就会自动跳转到 TestFlight App 中进行内测版的安装，用户无需输入邀请码，如用户未安装 TestFlight 会先提示安装。
+* 苹果官方其实也提供了另外两个回调：`applicationProtectedDataWillBecomeUnavailable:` 和 `applicationProtectedDataDidBecomeAvailable:` 可以分别用于判断锁屏和解锁事件，如图 3 所示，不过这两个方法只有在手机设置了密码、TouchID 或 FaceID 时才会调用。
 
-但 TestFlight Public Link 有两个限制：最大测试人数上限为 1 万人，且测试版本仍然需要通过苹果的审核。更多细节可以参考这个 [WWDC 视频](https://developer.apple.com/videos/play/wwdc2018/301/)，大概从 10 分钟左右开始讲。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-3.png)
 
-* 参考链接：[https://juejin.im/post/5bac3ba7e51d450e531c9d2c](https://juejin.im/post/5bac3ba7e51d450e531c9d2c)
+* 通过屏幕亮度是否为 0 进行判断。如前面所述，在 App 打开状态下，对于点击 Home 键和锁屏操作，接收到的回调事件是一样的。因此，我们可以在 App 进入后台的 `applicationDidEnterBackground:` 回调中获取当前屏幕的亮度值，如果为 0，则认为是锁屏操作，否则认为是点击了 Home 键，代码如图 4 所示。不过这种方式存在不足，经验证，有时锁屏后获取到的屏幕亮度值并不为 0，且如果手机的亮度调到最低时，获取到的亮度值始终都为 0，就无法区分锁屏和 Home 键了。详细参考[这篇文章](https://a1049145827.github.io/2018/01/06/iOS%E5%BC%80%E5%8F%91-%E5%8C%BA%E5%88%86Home%E9%94%AE%E5%92%8C%E9%94%81%E5%B1%8F%E9%94%AE%E4%BA%8B%E4%BB%B6/)。
+
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/4-1.png)
+
+* 此外，[这篇文章](https://www.jianshu.com/p/4d6472735e42)中也提出一种通过是否能更改屏幕亮度进行判断。代码如图 5 所示，不过经验证，这种方式无效！
+
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/5-1.png)
+
+更多其它的方式，详见[这篇文章](https://juejin.im/entry/5be54d816fb9a049ea387454)中的介绍。
+
+PS1：上述方法仅适用于 App 在使用过程中进行锁屏操作的判断，如果先点击 Home 键进入后台再锁屏，就无法知道了。
+
+PS2：上述代码在 iOS 12+，iPhone XS 上验证通过，对于其它版本系统或者设备，如有不同，欢迎指出~
+
+扩展阅读：[iPhone Objective-C detect Screen Lock](https://stackoverflow.com/questions/37649808/iphone-objective-c-detect-screen-lock)、[Detecting iPhone lock and unlock when app is in the background](https://forums.developer.apple.com/thread/69333)
