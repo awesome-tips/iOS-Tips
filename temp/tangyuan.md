@@ -13,7 +13,7 @@
 
 - (void)reloadSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation NS_AVAILABLE_IOS(3_0);
 ```
-tableview 或者是 collectionview，reload 时默认会有一个隐式的Fade动画，有时视觉上会有闪一下或者抖动的情况。指定区域刷新时，只要将 UITableViewRowAnimation 设为 UITableViewRowAnimationNone 即可取消隐式动画。
+tableview 或者是 collectionview，reload 时默认会有一个隐式的 Fade 动画，有时视觉上会有闪一下的情况。指定区域刷新时，只要将 UITableViewRowAnimation 设为 UITableViewRowAnimationNone 即可取消隐式动画。
 
 那么全局刷新时，该如何取消隐式动画？
 
@@ -23,6 +23,7 @@ tableview 或者是 collectionview，reload 时默认会有一个隐式的Fade�
 [self.tableView beginUpdates];
 [self.tableView endUpdates];
 ```
+(ps: 以上方法用于 tableview 刷新时因预估行高和实际行高不一致情况下抖动的问题，有些人视觉上可能也觉得会闪一下。)
 
 方法二：
 使用 UIView 类方法去取消隐式动画，在 block 回调里去 reloadData。该方法对 collectionview 刷新同样有效。
