@@ -8,10 +8,5 @@ Charles 和上网工具客户端 Shadowsocks 是我们日常开发中经常使�
 
 首先找到 Shadowsocks 的代理地址、端口，记录下来，然后将 Shadowsocks 设置为全局模式，最后启动 Charles，点击菜单 - Proxy - External Proxy Settings，勾选 Use external proxy servers，并且填上刚刚的代理地址、端口并保存。
 
-参考资料：
-- https://tech.meituan.com/react_programming_framework_easyreact_opensource.html
-- https://github.com/meituan/EasyReact
+参考资料：http://wangjiawen.farbox.com/skill/shadowsocks-work-with-charles
 
-更多知识小集的内容，请查看：https://github.com/iOS-Tips/iOS-tech-set/blob/master/README.md
-
-@南峰子_老驴 @Lefe_x @Vong_HUST @高老师很忙 @故胤道长 @halohily @KANGZUBIN @陈满iOS @这个汤圆没有馅 @NotFound--

@@ -1,42 +1,11 @@
-给 如何快速定位哪个 View 出现了约束警告？
---------
+影响App编译速度一大天敌
+----------
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
-```
-[
-	<MASLayoutConstraint:0x1492211d0 UILabel:0x147f56930.right == UITableViewCellContentView:0x147d35140.right - 20>,
-	<MASLayoutConstraint:0x147f529a0 UIButton:0x149222b60.right == UITableViewCellContentView:0x147d35140.right - 20>,
-	<MASLayoutConstraint:0x147f3dbf0 UILabel:0x147f56930.right == UIButton:0x149222b60.right - 20>
-]
-
-Will attempt to recover by breaking constraint 
-<MASLayoutConstraint:0x147f529a0 UIButton:0x149222b60.right == UITableViewCellContentView:0x147d35140.right - 20>
-```
-
-这种约束警告很常见，每次遇到这种问题即使不解决，页面通常也会正常显示（但不一定都会正常），唯一不好的地方就是控制台会打印出一堆无用的信息，看着头疼。
-
-解决这个问题头疼的一点是不知道具体是那个 View 导致的约束警告，如果知道是那个 View 导致的问题，我想这个问题已经有 80% 的把握能解决，剩下的 20%，看你对自动布局的掌握情况了。
-
-我们把上面的警告换成下面这种方式：
+最近在做一些性能和编译速度优化的事情，发现一个比较印象编译速度的因素，叫编译速度感觉不太妥当，姑且这么叫吧。当使用Xcode编译程序的时候，你会发现最后一刻时，Xcode 会提示“Run custom x scripts”, 1秒、2秒、3秒、4秒 …… 12秒过去了，App才启动。为什么执行自定义脚本耗费这么长时间？最终定位到是下面这个脚本：
 
 ```
-[
-
-Label1 距离 Cell1 的右边为 20
-<Label1.right == Cell1.right - 20>,
-
-Button1 距离 Cell1 的右边为 20
-<Button1.right == Cell1.right - 20>,
-
-Label1 距离 Button1 的右边为 20
-<Label1.right == Button1.right - 20>
-]
-
-通过移除下面这个约束来纠正约束
-<Button1.right == Cell1.right - 20>
-
+"${SRCROOT}/Pods/Target Support Files/Pods-xxx-Dev/Pods-xx-Dev-resources.sh"
 ```
 
-相信你看完上面的注释已经知道为什么会出现了约束警告，我只是简单的做了个替换操作。
-
-我这里做的就是把 View 的内存地址换成了具体的 View，其实我们可以通过 Xcode 中的 【Debug View Hierarchy】，根据约束警告的内存地址（比如：0x147f56930）找到内存地址对应的 View（）把内存地址粘贴到搜索框，然后和我一样做替换操作，即可解决约束警告。
+通过路径，我们可以找到这个脚本的存放的目录，查看源码发现这个脚本就是把需要的资源文件复制到指定位置供App使用。每次只需 pod install 或者 pod update 的时候，	这个脚本会自动添加到 Build Phases 中的 [CP] Copy Pods Resources 下。而大多数资源文件不会发生变化，我们不需要执行这个脚本。所以如果你的项目执行这个脚本会花费很长时间，可以把这个路径删掉，就会像我一样节约 10秒左右的时间。当然如果项目中使用的Pod资源文件比较少，耗费的时间比较短，做这件事的收益也不会太大。

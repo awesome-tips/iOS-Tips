@@ -1,58 +1,39 @@
-iOS App 的反调试（Anti-Debug）
+iOS 判断设备是否锁屏
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-当我们上线一个 App，当然是不希望自己的 App 被攻击者/黑客玩弄于股掌之间。虽然说没有绝对的安全，但是我们可以做一些防护措施，增加攻击的成本和难度。
+在某些特定的业务场景下，我们可能需要判断用户在使用 App 过程中是否锁屏了。那么，我们该如何监听 iOS 设备的锁屏事件呢？
 
-在越狱后的 iPhone 上运行 App，然后通过 GDB 进行动态调试，是大多数攻击者的首选，我们今天就来聊一聊如何防止 App 被别人调试。
+在 AppDelegate 的回调事件中，当单击 Home 键进入后台时，会依次调用 `applicationWillResignActive:`（App 即将失去焦点）和 `applicationDidEnterBackground:`（App 已经进入后台），而当 App 在前台使用过程中进行锁屏操作时，也是依次执行这两个回调。
 
-在类 Unix 系统中，提供了一个系统调用 `ptrace` 用于实现断点调试和对进程进行跟踪和控制，而 `PT_DENY_ATTACH` 是苹果增加的一个 `ptrace` 选项，用于阻止 GDB 等调试器依附到某进程，用法如下：
+因此，我们无法通过 AppDelegate 的上述相应回调事件来直接判断设备是否锁屏了。
 
-```
-ptrace(PT_DENY_ATTACH, 0, 0, 0);
-```
+在网上搜了一下，目前主要有以下几种方式：
 
-根据念茜的博客[《iOS 安全攻防：阻止 GDB 依附》](https://blog.csdn.net/yiyaaixuexi/article/details/18222339)，我们可以在 `main.m` 中添加如下阻止调试的代码：
+* 通过 Darwin 通知监听锁屏事件，代码大致如图 1 所示，**不过这种方式已被禁用，在提交 App Store 审核时会被拒。**
 
-```objc
-// 阻止 gdb/lldb 调试
-// 调用 ptrace 设置参数 PT_DENY_ATTACH，如果有调试器依附，则会产生错误并退出
-#import <dlfcn.h>
-#import <sys/types.h>
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-1.png)
 
-typedef int (*ptrace_ptr_t)(int _request, pid_t _pid, caddr_t _addr, int _data);
-#if !defined(PT_DENY_ATTACH)
-#define PT_DENY_ATTACH 31
-#endif
+* 通过 `<notify.h>` 中的 `notify_register_dispatch` 函数添加锁屏和解锁监听，代码如图 2 所示。
 
-void anti_gdb_debug() {
-    void *handle = dlopen(0, RTLD_GLOBAL | RTLD_NOW);
-    ptrace_ptr_t ptrace_ptr = dlsym(handle, "ptrace");
-    ptrace_ptr(PT_DENY_ATTACH, 0, 0, 0);
-    dlclose(handle);
-}
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-2.png)
 
-int main(int argc, char * argv[]) {
-#ifndef DEBUG
-    // 非 DEBUG 模式下禁止调试
-    anti_gdb_debug();
-#endif
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
-    }
-}
-```
+* 苹果官方其实也提供了另外两个回调：`applicationProtectedDataWillBecomeUnavailable:` 和 `applicationProtectedDataDidBecomeAvailable:` 可以分别用于判断锁屏和解锁事件，如图 3 所示，不过这两个方法只有在手机设置了密码、TouchID 或 FaceID 时才会调用。
 
-此时，如果尝试对 App 进行 GDB 依附，则会得到一个 Segmentation fault 错误。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-3.png)
 
-另外，AloneMonkey 的[《关于反调试 & 反反调试那些事》](http://bbs.iosre.com/t/topic/8179)文中也介绍了可以通过 `sysctl`，`syscall`，... 等其他几种检测调试的手段。
+* 通过屏幕亮度是否为 0 进行判断。如前面所述，在 App 打开状态下，对于点击 Home 键和锁屏操作，接收到的回调事件是一样的。因此，我们可以在 App 进入后台的 `applicationDidEnterBackground:` 回调中获取当前屏幕的亮度值，如果为 0，则认为是锁屏操作，否则认为是点击了 Home 键，代码如图 4 所示。不过这种方式存在不足，经验证，有时锁屏后获取到的屏幕亮度值并不为 0，且如果手机的亮度调到最低时，获取到的亮度值始终都为 0，就无法区分锁屏和 Home 键了。详细参考[这篇文章](https://a1049145827.github.io/2018/01/06/iOS%E5%BC%80%E5%8F%91-%E5%8C%BA%E5%88%86Home%E9%94%AE%E5%92%8C%E9%94%81%E5%B1%8F%E9%94%AE%E4%BA%8B%E4%BB%B6/)。
 
-但是，这些方式只能简单地防止 App 被动态调试，其实 `ptrace`、`sysctl`、`syscall` 等函数本身也可以被静态修改或 Hook。而且即便能有效阻止了调试，App 仍然可以通过 tweak 去 Hook App 内部的方法实现，也可以通过 dylib 注入去修改 App 的功能。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-4.png)
 
-我们只好从多方面考虑，尽可能提高安全性，比如防止 tweak 依附（ 参考：[http://bbs.iosre.com/t/tweak-app-app-tweak/438](http://bbs.iosre.com/t/tweak-app-app-tweak/438) ）、防止网络请求抓包、对敏感数据进行加解密、代码混淆、检查二进制 binary 签名是否匹配；关键逻辑用更底层的 C 函数实现（虽然 C 函数也是可以被 Hook，例如 Facebook 开源的 fishhook），等等，同时我们也可以检查手机是否已越狱（ 参考：[https://blog.csdn.net/yiyaaixuexi/article/details/20286929](https://blog.csdn.net/yiyaaixuexi/article/details/20286929) ），并对越狱机做特殊处理。 
+* 此外，[这篇文章](https://www.jianshu.com/p/4d6472735e42)中也提出一种通过是否能更改屏幕亮度进行判断。代码如图 5 所示，不过经验证，这种方式无效！
 
-这里讲的只是冰山一角，更多关于 iOS 逆向和安全的知识，推荐阅读《iOS 应用逆向工程》和《iOS 应用逆向与安全》这两本书以及念茜的博客，相信你会有新的收获。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-5.png)
 
-安全本身就是矛与盾的关系，对于未涉及该领域的人来说，常常处于两个极端，一种认为非常简单，一种认为难如登天。我们常说没有绝对的安全，上述书籍和博文介绍的各种 iOS 安全防护，也都有相应手段来绕过，只不过是更加繁琐了一点而已。
+更多其它的方式，详见[这篇文章](https://juejin.im/entry/5be54d816fb9a049ea387454)中的介绍。
 
-曾经有人说过这么一句话，**“当一个系统的攻击成本远远高于攻击所带来的收益时，这个系统就相对安全了”**，你觉得呢？
+PS1：上述方法仅适用于 App 在使用过程中进行锁屏操作的判断，如果先点击 Home 键进入后台再锁屏，就无法知道了。
+
+PS2：上述代码在 iOS 12+，iPhone XS 上验证通过，对于其它版本系统或者设备，如有不同，欢迎指出~
+
+扩展阅读：[iPhone Objective-C detect Screen Lock](https://stackoverflow.com/questions/37649808/iphone-objective-c-detect-screen-lock)、[Detecting iPhone lock and unlock when app is in the background](https://forums.developer.apple.com/thread/69333)
