@@ -1,39 +1,60 @@
-iOS 判断设备是否锁屏
+iOS 判断设备是否静音
 --------
 **作者**: [KANGZUBIN](https://weibo.com/kangzubin)
 
-在某些特定的业务场景下，我们可能需要判断用户在使用 App 过程中是否锁屏了。那么，我们该如何监听 iOS 设备的锁屏事件呢？
+在 iOS 设备中，主要有以下两种类型的声音：
 
-在 AppDelegate 的回调事件中，当单击 Home 键进入后台时，会依次调用 `applicationWillResignActive:`（App 即将失去焦点）和 `applicationDidEnterBackground:`（App 已经进入后台），而当 App 在前台使用过程中进行锁屏操作时，也是依次执行这两个回调。
+* **铃声和提醒**：包括电话、短信、通知等系统类的声音（也包括按键音、锁定声，这两者可在设置中设置是否开启），它们受物理静音开关键的控制，也就是说，当设备开启静音时，这些声音是不会播放的。
 
-因此，我们无法通过 AppDelegate 的上述相应回调事件来直接判断设备是否锁屏了。
+* **媒体声音**：一般为 App 播放音视频时的声音，音量大小可通过物理音量 + - 键来控制，但它不受设备静音开关键的控制，即当静音键开启时，我们仍然可以通过相关 API 正常播放声音。
 
-在网上搜了一下，目前主要有以下几种方式：
+因此，这里说的静音分为两种情况，“通过物理静音键开启静音” 和 “将媒体音量调小至 0”。对于后者比较简单，我们可以通过 `[AVAudioSession sharedInstance].outputVolume` 获取当前音量大小是否为 0 来判断。
 
-* 通过 Darwin 通知监听锁屏事件，代码大致如图 1 所示，**不过这种方式已被禁用，在提交 App Store 审核时会被拒。**
+下面我们介绍一下如何检测设备静音开关键的状态。
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-1.png)
+在 iOS 5 之前，我们可以使用以下方式判断静音键的开关：
 
-* 通过 `<notify.h>` 中的 `notify_register_dispatch` 函数添加锁屏和解锁监听，代码如图 2 所示。
+```objc
+- (BOOL)isMuted {
+    CFStringRef route;
+    UInt32 routeSize = sizeof(CFStringRef);
+    OSStatus status = AudioSessionGetProperty(kAudioSessionProperty_AudioRoute, &routeSize, &route);
+    if (status == kAudioSessionNoError) {
+        if (route == NULL || !CFStringGetLength(route))
+            return YES;
+    }
+    return NO;
+}
+```
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-2.png)
+但苹果在 iOS 5 之后禁止了这种方式的使用，并且也没有提供相关新的 API 来判断，于是网上有一种曲线救国的方式，大致实现为：
 
-* 苹果官方其实也提供了另外两个回调：`applicationProtectedDataWillBecomeUnavailable:` 和 `applicationProtectedDataDidBecomeAvailable:` 可以分别用于判断锁屏和解锁事件，如图 3 所示，不过这两个方法只有在手机设置了密码、TouchID 或 FaceID 时才会调用。
+使用 AudioServicesPlaySystemSound 函数播放一段极短的空白音频（假设为 0.2s），并监听音频播放完成事件，如果从开始播放到回调完成方法的间隔时间小于 0.1s，则意味当前静音开关为开启状态。这是因为，AudioServicesPlaySystemSound 有一个特性是：它播放的声音属于系统音效，所以是受静音按键控制的，且如果当前处于静音模式的话，调用此函数后会**立即**执行播放完成的回调，这样计算得到的时间间隔会很小，就可以用来判断设备是否静音了。代码大致如下：
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-3.png)
+```objc
+static CFTimeInterval startPlayTime;
 
-* 通过屏幕亮度是否为 0 进行判断。如前面所述，在 App 打开状态下，对于点击 Home 键和锁屏操作，接收到的回调事件是一样的。因此，我们可以在 App 进入后台的 `applicationDidEnterBackground:` 回调中获取当前屏幕的亮度值，如果为 0，则认为是锁屏操作，否则认为是点击了 Home 键，代码如图 4 所示。不过这种方式存在不足，经验证，有时锁屏后获取到的屏幕亮度值并不为 0，且如果手机的亮度调到最低时，获取到的亮度值始终都为 0，就无法区分锁屏和 Home 键了。详细参考[这篇文章](https://a1049145827.github.io/2018/01/06/iOS%E5%BC%80%E5%8F%91-%E5%8C%BA%E5%88%86Home%E9%94%AE%E5%92%8C%E9%94%81%E5%B1%8F%E9%94%AE%E4%BA%8B%E4%BB%B6/)。
+- (void)monitorMute {
+    // 记录开始播放的时间
+    startPlayTime = CACurrentMediaTime();
+    // 假设本地存放一个长度为 0.2s 的空白音频，detection.aiff
+    CFURLRef soundFileURLRef = CFBundleCopyResourceURL(CFBundleGetMainBundle(), CFSTR("detection"), CFSTR("aiff"), NULL);
+    SystemSoundID soundFileID;
+    AudioServicesCreateSystemSoundID(soundFileURLRef, &soundFileID);
+    AudioServicesAddSystemSoundCompletion(soundFileID, NULL, NULL, PlaySoundCompletionBlock, (__bridge void *)self);
+    AudioServicesPlaySystemSound(soundFileID);
+}
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-4.png)
+static void PlaySoundCompletionBlock(SystemSoundID SSID, void *clientData) {
+    AudioServicesRemoveSystemSoundCompletion(SSID);
+    // 播放结束时，记录时间差，如果小于 0.1s，则认为是静音
+    CFTimeInterval playDuring = CACurrentMediaTime() - startPlayTime;
+    if (playDuring < 0.1) {
+        NSLog(@"静音");
+    } else {
+        NSLog(@"非静音");
+    }
+}
+```
 
-* 此外，[这篇文章](https://www.jianshu.com/p/4d6472735e42)中也提出一种通过是否能更改屏幕亮度进行判断。代码如图 5 所示，不过经验证，这种方式无效！
-
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/1-5.png)
-
-更多其它的方式，详见[这篇文章](https://juejin.im/entry/5be54d816fb9a049ea387454)中的介绍。
-
-PS1：上述方法仅适用于 App 在使用过程中进行锁屏操作的判断，如果先点击 Home 键进入后台再锁屏，就无法知道了。
-
-PS2：上述代码在 iOS 12+，iPhone XS 上验证通过，对于其它版本系统或者设备，如有不同，欢迎指出~
-
-扩展阅读：[iPhone Objective-C detect Screen Lock](https://stackoverflow.com/questions/37649808/iphone-objective-c-detect-screen-lock)、[Detecting iPhone lock and unlock when app is in the background](https://forums.developer.apple.com/thread/69333)
+[参考连接1](https://www.jianshu.com/p/6db6065b6b3d)、[参考链接2](https://mp.weixin.qq.com/s/yYCaPMxHGT9LyRyAPewVWQ)
