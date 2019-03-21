@@ -1,35 +1,42 @@
-解决 tableview 刷新闪一下或抖动的问题
+使用 iconfont 替换 Assets 里的图标资源
 -------
 **作者**: [这个汤圆没有馅](https://weibo.com/u/6603469503)
 
-我们知道 tableview 刷新有分全局刷新和指定区域刷新。
+我们一般对 App 的体积大小会有一定的要求，一般会先从图标资源着手。这边推荐两个压缩图标的网站，不会影响画质，也不会变形或模糊。
 
-- 全局刷新 `- (void)reloadData`;
+* **[Optimizilla](https://imagecompressor.com)**
 
-- 指定区域刷新有以下两个方法。
+* **[img.top](https://img.top)**
 
+不过今天主要介绍的是 iconfont，像使用字体一样的使用图标。它可以减小 App 的体积，同时也省去 @2x 和 @3x 图的适配。
+
+> 先在 [阿里巴巴矢量图标库](https://imagecompressor.com) 注册账号，再按照下图的步骤将 UI 设计好的图标下载到本地。每个图标都会对应一个`unicode码`和名称。 这些代码是`&#xXXXX`格式的，但是在 Xcode 中需要转换成`\U0000XXXX`格式的。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/4-1.jpg)
+
+> 下载完以后，我们会发现文件夹里包含如下图文件。我们只需要将`iconfont.tff`拖入工程中即可。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/4-2.jpg)
+
+> 为了保证 `iconfont.tff `已导入成功，在`Target--Build Phases--Bundle Resource` 里检查一下。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/4-3.jpg)
+
+> 打开 `info.plist `文件，添加 `Fonts provided by application `字段。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/4-4.jpg)
+
+关于使用方法，把之前项目里的 iconfont 整理了一下，[iconfont 封装](https://github.com/TangyuanLiu/TYIconfont)可直接下载使用。可以像设置文字一样设置图标。
 ```
-- (void)reloadRowsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation NS_AVAILABLE_IOS(3_0);
+#define IconfontName(name)  [IconFont iconFontUnicodeWithName:(name)]
+#define IconFontSize(value) [IconFont iconFontWithSize:(value)]
 
-- (void)reloadSections:(NSIndexSet *)sections withRowAnimation:(UITableViewRowAnimation)animation NS_AVAILABLE_IOS(3_0);
-```
-tableview 或者是 collectionview，reload 时默认会有一个隐式的 Fade 动画，有时视觉上会有闪一下的情况。指定区域刷新时，只要将 UITableViewRowAnimation 设为 UITableViewRowAnimationNone 即可取消隐式动画。
 
-那么全局刷新时，该如何取消隐式动画？
+label.text = IconfontName(@"mine_logout"); // 这里的“mine_logout”就是图标的名称。
+label.font = IconFontSize(64);
+label.textColor = [UIColor grayColor];
+label.textAlignment = NSTextAlignmentCenter;
 
-方法一：
-如果你的 tableview 的行高是根据数据自适应的，那么在设置完 estimatedRowHeight 后，在需要 reloadData 的地方加上。
+// 如果是设置 button 的图标
+[btn setTitle:IconfontName(@"chat_voice_normal") forState:(UIControlStateNormal)];
+[btn setTitle:IconfontName(@"chat_voice_pressed") forState:(UIControlStateSelected)];
 ```
-[self.tableView beginUpdates];
-[self.tableView endUpdates];
-```
-(ps: 以上方法用于 tableview 刷新时因预估行高和实际行高不一致情况下抖动的问题，有些人视觉上可能也觉得会闪一下。)
 
-方法二：
-使用 UIView 类方法去取消隐式动画，在 block 回调里去 reloadData。该方法对 collectionview 刷新同样有效。
-```
-+ (void)performWithoutAnimation:(void (NS_NOESCAPE ^)(void))actionsWithoutAnimation NS_AVAILABLE_IOS(7_0);
-```
-参考链接：https://stackoverflow.com/questions/15196927/reload-uitableview-with-new-data-caused-flickering
 
 如有表述不当，欢迎指出~~
