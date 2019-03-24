@@ -1,11 +1,22 @@
-影响App编译速度一大天敌
+让线程携带数据
 ----------
 **作者**: [Lefe_x](https://weibo.com/u/5953150140)
 
-最近在做一些性能和编译速度优化的事情，发现一个比较印象编译速度的因素，叫编译速度感觉不太妥当，姑且这么叫吧。当使用Xcode编译程序的时候，你会发现最后一刻时，Xcode 会提示“Run custom x scripts”, 1秒、2秒、3秒、4秒 …… 12秒过去了，App才启动。为什么执行自定义脚本耗费这么长时间？最终定位到是下面这个脚本：
+有时候我们需要在某个线程中传递一些数据， `pthread_t` 或者 `NSThread`提供了相关API。`NSThread`中有一个属性 `threadDictionary`，可以通过这个字典进行数据传递，比如：
 
-```
-"${SRCROOT}/Pods/Target Support Files/Pods-xxx-Dev/Pods-xx-Dev-resources.sh"
+```objective-c
+[mainThread.threadDictionary setObject:@"Lefex" forKey:@"name"];
 ```
 
-通过路径，我们可以找到这个脚本的存放的目录，查看源码发现这个脚本就是把需要的资源文件复制到指定位置供App使用。每次只需 pod install 或者 pod update 的时候，	这个脚本会自动添加到 Build Phases 中的 [CP] Copy Pods Resources 下。而大多数资源文件不会发生变化，我们不需要执行这个脚本。所以如果你的项目执行这个脚本会花费很长时间，可以把这个路径删掉，就会像我一样节约 10秒左右的时间。当然如果项目中使用的Pod资源文件比较少，耗费的时间比较短，做这件事的收益也不会太大。
+`pthread_t`通过 `pthread_setspecific` 和 `pthread_getspecific`这两个API进行数据传递：
+
+```objective-c
+pthread_key_t thread_key;
+pthread_key_create(&thread_key, pthreadKey);
+pthread_setspecific(thread_key, "Lefe_x");
+
+char *name = pthread_getspecific(thread_key);
+```
+
+ `NSThread`是 `pthread_t` 的一个封装，`pthread_t`是跨平台的。
+
