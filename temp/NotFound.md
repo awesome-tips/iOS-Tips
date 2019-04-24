@@ -1,9 +1,7 @@
-如何让多个手势识别器并存
+数组去重的新姿势
 --------
 **作者**: [NotFound--](https://weibo.com/3951595216)
 
-如果我们的一个View既支持长按手势，也支持拖动手势，长按时，View背景色变红，拖拽时，View进行位移。如果不进行特殊设置，当用户对View长按0.5s后，View的长按手势会触发，并被长按手势识别器识别，用户的触摸行为就已经被长按手势识别器拦截了，其他手势识别器就没有机会再接触到用户的触摸行为。为了让用户的触摸行为
-被多个手势识别器识别，我们可以通过实现手势识别器的代理UIGestureRecognizerDelegate中的shouldRecognizeSimultaneouslyWithGestureRecognizer方法来让用户的触摸行为在被一个手势识别器识别后，还能继续传递，被其他手势识别器处理。这样就达到了我们想要的，长按0.5s后，长按手势识别器触发，View变红，还能继续触发拖动手势，进行位移。使用这种方式来让用户操作被多个手势触发器来处理其实应用得很广泛。例如像那种比较复杂的页面，多个TableView之间进行嵌套，当滑动TableView重叠的部分时，为了让底层的TableView也能接收到用户的滑动操作，也是会使用这种方式来实现。代码如图一，图二所示。[Demo地址](https://github.com/577528249/SwiftDemo/tree/master/GestureDemo)，大家也可以下载下来运行体验一下。
+当我们需要对一个数组进行去重操作时，通过会初始化一个新数组，遍历旧数组，在遍历过程中，如果新数组中不包含当前的元素，便将元素加入到新数组中去，但其实KVC集合运算符可以valueForKeyPath:方法中使用keyPath符号来执行方法，最简单的就是@distinctUnionOfArrays，他会返回了一个去除重复元素的数组。在图一中，uniqueArray便是oldArray去重后的结果，因为oldArray是一个字符串数组，所以@distinctUnionOfObjects.self里面用到是.self,代表元素本身作为是否重复的key。
+![](https://user-gold-cdn.xitu.io/2019/4/24/16a4f8818caf876a?w=1936&h=1114&f=jpeg&s=242251)
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/6-1.png?raw=true)
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/03/6-2.png?raw=true)
