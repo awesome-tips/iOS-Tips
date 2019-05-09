@@ -9,7 +9,7 @@
 
 运行后，能看到控制台打印出日志。
 ![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/05/1-2.jpg)
-可以看到在进入`main()`函数之前，一共耗时396.73ms，并且列举了加载比较慢的文件。
+可以看到在进入`main()`函数之前，一共耗时452.61ms，并且列举了加载比较慢的文件。
 
 把 `DYLD_PRINT_STATISTICS` 改成 `DYLD_PRINT_STATISTICS_DETAILS` 后运行，能打印出更加详细的日志，如下图。
 ![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/05/1-3.jpg)
