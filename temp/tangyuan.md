@@ -1,18 +1,20 @@
-关于Xcode Simulator无法启动的原因
+获取App冷启动所耗时长
 -------
 **作者**: [这个汤圆没有馅](https://weibo.com/u/6603469503)
 
-前几天为了清理Xcode缓存，误删了文件，编译时仍然有一堆模拟器可以选择，但是却无法启动模拟器。
+在App性能优化中，有一块就是启动时间的优化。那如何获取App冷启动所需要的时间呢？
 
-先是`Command + R`后等待一段时间报出超时错误。
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/04/1-1.jpg)
+找到 `Edit scheme -> Run -> Auguments` 将环境变量 `DYLD_PRINT_STATISTICS` 设为 1，如下图，然后运行。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/05/1-1.jpg)
 
-再在应用程序中找到Xcode，打开包内容，找到`Developer-->Applications-->Simulator`，双击后提示磁盘中并没有模拟器设备。
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/04/1-2.jpg)
+运行后，能看到控制台打印出日志。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/05/1-2.jpg)
+可以看到在进入`main()`函数之前，一共耗时396.73ms，并且列举了加载比较慢的文件。
 
-进入文件夹`~/Library/Developer/CoreSimulator/Devices`，发现目录下是空的，这就是导致模拟器无法启动的原因。
+把 `DYLD_PRINT_STATISTICS` 改成 `DYLD_PRINT_STATISTICS_DETAILS` 后运行，能打印出更加详细的日志，如下图。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/05/1-3.jpg)
 
-按顺序找到`Xcode-->Window-->Devices and Simulators`，点击左下角的【+】添加新的模拟器，完成后再次打开 `~/Library/Developer/CoreSimulator/Devices`，会发现目录下有内容，如下图。进入文件夹，打开`device.plist`，里面就是刚添加的模拟器的设备信息，然后就可以正常运行项目了
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/04/1-3.jpg)
+另外推荐一个[代码耗时打点计时器](https://github.com/beiliao-mobile/BLStopwatch)，可以记录SDK加载时间、广告页加载时间、首页加载时间等等。
+
 
 如有表述不当，欢迎指出~~
