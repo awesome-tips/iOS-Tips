@@ -1,7 +1,12 @@
-数组去重的新姿势
+使用__kindof关键字来扩大变量类型限定范围
 --------
 **作者**: [NotFound--](https://weibo.com/3951595216)
 
-当我们需要对一个数组进行去重操作时，通过会初始化一个新数组，遍历旧数组，在遍历过程中，如果新数组中不包含当前的元素，便将元素加入到新数组中去，但其实KVC集合运算符可以valueForKeyPath:方法中使用keyPath符号来执行方法，最简单的就是@distinctUnionOfArrays，他会返回了一个去除重复元素的数组。在图一中，uniqueArray便是oldArray去重后的结果，因为oldArray是一个字符串数组，所以@distinctUnionOfObjects.self里面用到是.self,代表元素本身作为是否重复的key。
-![](https://user-gold-cdn.xitu.io/2019/4/24/16a4f8818caf876a?w=1936&h=1114&f=jpeg&s=242251)
+通常来说，如果我们不确定一个变量的类型，可以使用id来代表变量的类型，但是这样做的坏处是编译器在编译时不会对真实类型进行类型检查，如果我们只是想指定一个变量为一个类的类型或其子类的类型，我们可以使用__kindof来表示。例如在图一的代码中，我们定义了一个元素类型为UIView或者UIView子类的数组，如果往数组中添加UIImageView类型的对象，编译器会报错"Incompatible pointer types initializing 'UIImageView *' with an expression of type 'UIView *'"
+
+如图二所示，当我们对数组元素类型使用__kindof UIView * 来对数组元素进行修饰，就不会报错了。
+
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/05/4-1.png?raw=true)
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/05/4-2.png?raw=true)
+
 
