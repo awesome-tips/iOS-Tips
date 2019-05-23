@@ -1,20 +1,23 @@
-获取App冷启动所耗时长
+关于 UITableViewCell 的 indentationLevel
 -------
 **作者**: [这个汤圆没有馅](https://weibo.com/u/6603469503)
 
-在App性能优化中，有一块就是启动时间的优化。那如何获取App冷启动所需要的时间呢？
+`UITableViewCell` 的 `textLabel` 是有一个默认左边距为10px的。实际上，这是由`indentationLevel` 和 `indentationWidth` 控制的缘故。`indentationLevel` 默认为0，`indentationWidth` 默认为10。
 
-找到 `Edit scheme -> Run -> Auguments` 将环境变量 `DYLD_PRINT_STATISTICS` 设为 1，如下图，然后运行。
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/05/1-1.jpg)
+现在重新对这两个属性赋值。
 
-运行后，能看到控制台打印出日志。
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/05/1-2.jpg)
-可以看到在进入`main()`函数之前，一共耗时452.61ms，并且列举了加载比较慢的文件。
+```
+cell.indentationLevel = 2;
+cell.indentationWidth = 50;
+```
 
-把 `DYLD_PRINT_STATISTICS` 改成 `DYLD_PRINT_STATISTICS_DETAILS` 后运行，能打印出更加详细的日志，如下图。
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/05/1-3.jpg)
+运行之后，如下图。cell 的缩进量明显变大了。
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/05/5-1.jpg)
 
-另外推荐一个[代码耗时打点计时器](https://github.com/beiliao-mobile/BLStopwatch)，可以记录SDK加载时间、广告页加载时间、首页加载时间等等。
+`缩进量 = indentationLevel * indentationWidth`。值得注意的是，当`indentationLevel = 0`时，无论`indentationWidth`设为多少，最后缩进量都为10。
+
+但是对于自定义cell来说，`indentationLevel` 并不能起到缩进效果。如下图。要解决这个问题的话，可能只能通过改变约束来达到目的。如果有其他更好的解决方案，欢迎交流~   
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/05/5-2.jpg)
 
 
 如有表述不当，欢迎指出~~
