@@ -8,12 +8,12 @@
 
 - `Command + f` 搜索当前文件内并替换
 
-![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/07/1-1.jpg)
+![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/07/1-1.png)
 
 
 那如果在一个方法内，想替换某个变量名，但是又不想一遍一遍去修改。（假使页面中其他地方有相同的变量名）
-1.先选中需要修改的变量名
-2.按 `Command + Control + e`，再编辑新的变量名。如下图所示。
+- 先选中需要修改的变量名
+- 按 `Command + Control + e`，再编辑新的变量名。如下图所示。
 ![](https://github.com/awesome-tips/iOS-Tips/blob/master/images/2019/07/1-2.gif)
 
 但是，这个技能的作用域是在一个方法内，只能针对当前方法函数内的同一个变量名进行修改。
